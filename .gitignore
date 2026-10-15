@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Caches and testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Local secrets & credentials (preserve example template)
+.env
+.env.*
+silo-bench/configs/config.yaml
+configs/config.yaml
+!silo-bench/configs/config.example.yaml
+
+# Local experiment runtime artifacts (preserve source benchmarks)
+workspace/
+silo-bench/workspace/
+*.log
+
+# OS artifacts
+.DS_Store
+Thumbs.db

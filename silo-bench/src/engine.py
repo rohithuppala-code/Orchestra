@@ -94,8 +94,8 @@ def init_case(
     else:
         num_agents = 1
 
-    # Sanitize model name for directory (replace / with -)
-    model_safe = model.replace("/", "-")
+    # Sanitize model name for directory (replace /, :, and other invalid chars)
+    model_safe = model.replace("/", "-").replace(":", "-")
     # Map protocol to short label for directory naming
     protocol_label = {"msg": "p2p", "broadcast": "bp", "sfs": "sfs"}[protocol]
     timestamp = _timestamp_compact()

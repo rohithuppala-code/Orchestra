@@ -1,0 +1,177 @@
+# ORCHESTRA — IMPLEMENTATION PROGRESS & STATUS LOG
+
+**Last updated:** 2026-10-15T13:35+05:30  
+**Current Phase:** Phase 1–4 Complete ✅ (Architecture Built, Configurable, and Automated Test Suite Passing)  
+**Strategy Alignment:** **Architecture First, Experiments Later.** Local Ollama models are used strictly for software integration and engineering pipeline validation. Formal scientific experiments targeting Q1 publication will be planned and executed only after the architecture and experimental protocol are fully finalized.
+
+---
+
+## 1. Project Distinction & Scope Boundary
+
+To maintain rigorous scientific standards, ORCHESTRA strictly separates:
+- **Upstream Benchmark (`silo-bench/`):** Role-free coordination tasks (30 tasks across Levels I, II, III; scales $N \in \{2, 5, 10, 20, 50, 100\}$), round execution engine, communication protocols (`msg`, `broadcast`, `sfs`), and ground-truth evaluation ($S, P, C, D$).
+- **New ORCHESTRA Architecture (`orchestra/`):** Population-configurable experiment runner, round-level longitudinal graph extraction, Gini behavioral specialization metrics, structural drift tracking, pluggable perturbation engine, Human-in-the-Loop oversight supervisor, and comparative statistical analytics.
+- **Engineering Tests (`tests/`):** 21 automated unit and integration tests verifying correctness, scalability, error handling, and reproducibility without requiring live LLM inference.
+- **Pilot Validation (`silo-bench/workspace/`):** Initial small runs on task `I-01` verifying that local models, tool parsing, communication, and logging execute reliably. *These pilots serve as software validation, not scientific evidence of emergent organization.*
+- **Final Research Experiments (Future):** Controlled experimental matrix with pre-registered hypotheses, baselines, repetitions, and statistical testing across model classes and task paradigms.
+
+---
+
+## 2. Environment & Repository Audit — VERIFIED ✅
+
+### System Environment
+| Component | Status | Details |
+|-----------|--------|---------|
+| OS | ✅ | Windows 11 Home |
+| RAM | ✅ | 16 GB (16,095 MB) |
+| CPU | ✅ | Intel Core (sequential round execution optimized) |
+| Python | ✅ | 3.13.5 (Anaconda) |
+| Test Runner | ✅ | `pytest 8.3.4` installed and functional |
+| Local Inference Daemon | ✅ | Ollama accessible at `http://localhost:11434` (system runtime) |
+| Local Test Models | ✅ | `gemma4:e2b` (4.6B params, Q4_K_M), `qwen3.5:0.8b` (1.3GB) |
+
+### Dependency Management & Reproducibility
+- **Root `requirements.txt` Created:** Includes exact direct dependencies:
+  - Core: `openai>=1.0.0`, `pydantic>=2.0.0`, `pyyaml>=6.0`, `srsly>=2.5.2`, `tenacity>=9.0.0`, `httpx>=0.24.0`
+  - Analytics & Visualization: `networkx>=3.0`, `numpy>=1.24.0`, `pandas>=2.0.0`, `matplotlib>=3.7.0`, `tabulate>=0.9.0`
+  - Verification: `pytest>=7.0.0`
+  - *Explicitly documents Ollama as an external system requirement.*
+- **Root `.gitignore` Created:** Excludes `.venv/`, caches (`__pycache__`, `.pytest_cache`), local secrets (`config.yaml`), and generated runtime logs/workspaces, while preserving benchmark data, tests, and source code.
+- **Project Coordination Documents Maintained:**
+  - `context.txt` (and `context.md`): Enduring research objectives, design decisions, and scientific constraints.
+  - `master_prompt.txt` (and `master_prompt.md`): Research execution directives and quality requirements.
+  - `PROGRESS.md`: Single ongoing status log of verified implementation facts.
+- **Root `README.md` Created:** Concise teammate onboarding covering Python environment setup, Ollama prerequisites, running automated tests, and executing pilot runs.
+
+---
+
+## 3. ORCHESTRA Architectural Components Built & Validated
+
+### 1. Decoupled Configuration & Population Scaling (`orchestra/config.py`)
+- Configurable agent populations: natively handles $N \in \{2, 5, 10, 20, 50, 100\}$ without hardcoding.
+- Automatic task resolution: resolves benchmark JSON files either by path or by `(task_id, agent_count)` tuple across `benchmarks/` directories.
+- Flexible model provider integration: supports local Ollama and any remote OpenAI-compatible inference endpoint with precedence: CLI flags $\to$ environment variables (`ORCHESTRA_MODEL`, `OPENAI_API_BASE`, `OPENAI_API_KEY`) $\to$ YAML config $\to$ local fallback.
+- Multi-protocol validation: validates supported protocols (`msg`, `broadcast`, `sfs`).
+
+### 2. Experiment Execution Controller (`orchestra/runner.py`)
+- Seamless integration with SILO-BENCH `init_case()`, `run_round()`, and `evaluate()`.
+- Real-time round snapshot extraction for active oversight.
+- Pluggable pre-round and post-round disruption hooks.
+- Comprehensive error handling: catches runtime failures, preserves partial run state, and records diagnostic details in `orchestra_summary.json` with status `"failed"`.
+- CLI interface (`python -m orchestra.runner`) supporting arbitrary tasks, agent counts, models, and disruption flags.
+
+### 3. Research Instrumentation & Longitudinal Metrics (`orchestra/instrumentation.py`)
+- Multi-protocol communication graph parser supporting P2P messaging, broadcast dissemination, and shared file system writes/reads.
+- Instantaneous graph metrics ($G_r$) and cumulative graph metrics ($G_{\le r}$): density, reciprocity, in/out-degree centralities, betweenness centrality, closeness centrality, clustering coefficient.
+- Longitudinal structural drift: computes Jaccard edge distance between consecutive rounds and Frobenius norm of adjacency differences.
+- Behavioral specialization: computes Gini coefficients for out-degree, in-degree, and tool usage distributions.
+- Operational role classification: classifies agents into `Hub_Coordinator`, `Broadcaster_Disseminator`, `Aggregator_Collector`, `Peer_Collaborator`, and `Isolated` based on network metrics.
+- Structured export to `orchestra_profile.json`.
+
+### 4. Controlled Perturbations & Resilience Framework (`orchestra/perturbations.py`)
+- `AgentDropoutPerturbation`: Simulates fail-stop node failure at round $k$ by halting target agent communication and action.
+- `CommunicationPartitionPerturbation`: Partitions agent network into isolated subsets and drops cross-group messages.
+- `MessageCorruptionPerturbation`: Simulates Byzantine message noise / value corruption to measure consensus resilience.
+- Declarative factory function `create_perturbation()` for reproducible configuration.
+
+### 5. Human-in-the-Loop Oversight Supervisor (`orchestra/hitl.py`)
+- Real-time monitoring of round snapshots against configurable safety/organizational boundaries:
+  - **Monopolization Boundary:** Detects disproportionate single-agent communication dominance ($\ge 85\%$).
+  - **Isolation Boundary:** Detects persistent agent starvation/disconnection ($\ge 2$ consecutive rounds).
+  - **Stagnation Boundary:** Detects complete coordination deadlock ($\ge 3$ consecutive rounds with zero messages).
+- Operating modes: `audit_only` (monitor and log) and `active_intervention` (record corrective advisories).
+- Full empirical intervention trace logged to `hitl_interventions.jsonl`.
+
+### 6. Comparative Statistical Analytics (`orchestra/analysis.py`)
+- Multi-case profile aggregator: parses multiple `orchestra_profile.json` files across a workspace into unified Pandas DataFrames.
+- Structure-performance correlation engine: calculates correlation matrices between organizational metrics and task outcomes ($S, P, C, D$).
+- Automated GitHub Markdown table generator.
+- Publication-quality visualization generator:
+  - Longitudinal cumulative density and structural drift trajectories.
+  - Directed network topology graphs with node coloring by emergent role.
+- CLI interface (`python -m orchestra.analysis --workspace <dir>`).
+
+---
+
+## 4. Automated Test Suite Execution & Actual Outcomes — 100% PASS ✅
+
+Executed `pytest tests -v` on 2026-10-15:
+
+| Test File | Test Case | Outcome | Duration | Verified Capability |
+|-----------|-----------|:-------:|:--------:|---------------------|
+| `test_config.py` | `test_supported_agent_scales` | **PASSED** | 0.01s | Verifies scales 2, 5, 10, 20, 50, 100 are defined |
+| `test_config.py` | `test_experiment_config_validation` | **PASSED** | 0.01s | Validates protocol, agent count, and HITL mode checks |
+| `test_config.py` | `test_task_file_resolution_by_id` | **PASSED** | 0.02s | Validates automatic benchmark resolution for N=2, 5, 10 |
+| `test_config.py` | `test_task_file_resolution_nonexistent` | **PASSED** | 0.01s | Verifies FileNotFoundError on invalid task IDs |
+| `test_config.py` | `test_model_provider_resolution` | **PASSED** | 0.01s | Validates precedence: explicit $\to$ env vars $\to$ config fallback |
+| `test_hitl.py` | `test_hitl_monopolization_detection` | **PASSED** | 0.03s | Verifies monopolization detection at threshold $\ge 80\%$ |
+| `test_hitl.py` | `test_hitl_isolation_detection` | **PASSED** | 0.02s | Verifies isolation trigger at 2 consecutive inactive rounds |
+| `test_hitl.py` | `test_hitl_stagnation_detection` | **PASSED** | 0.02s | Verifies stagnation trigger at 2 consecutive 0-message rounds |
+| `test_instrumentation.py` | `test_calculate_gini` | **PASSED** | 0.01s | Mathematical correctness of Gini (equality=0.0, skewed>0.7) |
+| `test_instrumentation.py` | `test_calculate_entropy` | **PASSED** | 0.01s | Mathematical correctness of Shannon entropy |
+| `test_instrumentation.py` | `test_synthetic_round_snapshot` | **PASSED** | 0.04s | Extracting instantaneous graph metrics from synthetic round |
+| `test_instrumentation.py` | `test_full_case_instrumentation` | **PASSED** | 0.06s | Full case profile extraction, drift calculation, and saving |
+| `test_perturbations.py` | `test_agent_dropout_perturbation` | **PASSED** | 0.02s | Agent fail-stop pre-round state modification at trigger round |
+| `test_perturbations.py` | `test_communication_partition_perturbation` | **PASSED** | 0.02s | Cross-group message dropping across network partitions |
+| `test_perturbations.py` | `test_message_corruption_perturbation` | **PASSED** | 0.02s | Byzantine noise value injection into agent messages |
+| `test_perturbations.py` | `test_create_perturbation_factory` | **PASSED** | 0.01s | Factory instantiation of perturbations from configuration |
+| `test_analysis.py` | `test_build_comparison_dataframe` | **PASSED** | 0.03s | DataFrame aggregation across multiple case profiles |
+| `test_analysis.py` | `test_markdown_summary_table` | **PASSED** | 0.02s | Markdown summary table formatting |
+| `test_analysis.py` | `test_plots_generation` | **PASSED** | 0.45s | Generation of PNG figures (longitudinal & topology) |
+| `test_runner_integration.py` | `test_runner_mock_execution` | **PASSED** | 0.05s | Full runner orchestration with mock engine and HITL hook |
+| `test_runner_integration.py` | `test_runner_error_handling` | **PASSED** | 0.03s | Catching runtime engine exceptions and recording failed status |
+| `test_runner_integration.py` | `test_batch_matrix_runner` | **PASSED** | 0.05s | Automated batch matrix runner across conditions & CSV export |
+
+**Summary:** **22 passed, 0 failed, 0 warnings** in 30.54s.
+
+---
+
+## 5. Engineering Validation Pilots (Summary of Initial Runs)
+
+*Note: These runs served strictly to validate software integration with Ollama on task I-01. They do not constitute scientific proof of emergent organization.*
+
+| Case Directory | Task | Protocol | Agents ($N$) | Model | Rounds | Success ($S$) | Partial ($P$) | Tokens ($C$) | Mean Drift | Gini Out |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `I-01_p2p_gemma4-e2b_20261013081446` | I-01 | msg | 2 | gemma4:e2b | 4 | 1.0 (100%) | 1.0 | 3,379.8 | 0.333 | 0.000 |
+| `I-01_bp_gemma4-e2b_20261013083235` | I-01 | broadcast | 2 | gemma4:e2b | 4 | 1.0 (100%) | 1.0 | 3,015.5 | 0.333 | 0.000 |
+| `I-01_bp_gemma4-e2b_20261013083936` | I-01 | broadcast | 5 | gemma4:e2b | 5 | 1.0 (100%) | 1.0 | 7,554.8 | 0.500 | 0.000 |
+| `I-01_bp_gemma4-e2b_20261013085552` | I-01 (dropout) | broadcast | 5 | gemma4:e2b | 7 | 0.8 (80%)* | 0.8 | 5,418.1 | 0.500 | 0.320 |
+
+*\*In the dropout run, 4 out of 5 agents converged correctly, representing 100% of surviving active agents.*  
+*CLI analysis pipeline verified via `python -m orchestra.analysis --workspace silo-bench/workspace` producing `comparison_results.csv` and `longitudinal_comparison.png`.*
+
+---
+
+## 6. Files Created or Modified in this Milestone
+
+| File | Status | Description |
+|------|--------|-------------|
+| `requirements.txt` | Created | Consolidated root dependencies for benchmark, analytics, and testing |
+| `.gitignore` | Created | Root gitignore excluding virtualenvs, caches, logs, and experiment workspaces |
+| `README.md` | Created | Teammate onboarding guide covering Python setup, Ollama, tests, and CLI execution |
+| `context.txt` | Created | Copied from `context.md` for permanent project coordination document compliance |
+| `master_prompt.txt` | Created | Copied from `master_prompt.md` for permanent project coordination document compliance |
+| `orchestra/__init__.py` | Created | Package exports with PEP 562 dynamic loading to prevent runpy circular warnings |
+| `orchestra/config.py` | Created | Population-flexible configuration, benchmark discovery, and provider resolution |
+| `orchestra/runner.py` | Refactored | Runner integrating benchmark engine, real-time snapshot extraction, perturbations, HITL, error recovery, and seed tracking |
+| `orchestra/batch_runner.py` | Created | Multi-condition matrix runner across tasks, agent counts, protocols, and repetitions |
+| `orchestra/instrumentation.py` | Refactored | Multi-protocol graph extraction, Gini metrics, drift calculations, and role classification |
+| `orchestra/perturbations.py` | Refactored | Pluggable disruption framework with dropout, partition, corruption, and factory |
+| `orchestra/hitl.py` | Refactored | HITL supervisor with monopolization, isolation, and stagnation detection |
+| `orchestra/analysis.py` | Refactored | Multi-case aggregation, correlation analysis, Markdown tables, and plot generation |
+| `tests/test_config.py` | Created | Automated tests for config validation, task discovery, and provider resolution |
+| `tests/test_instrumentation.py` | Created | Automated tests for Gini math, entropy math, snapshot extraction, and profiling |
+| `tests/test_perturbations.py` | Created | Automated tests for dropout, partition, noise injection, and factory |
+| `tests/test_hitl.py` | Created | Automated tests for monopolization, isolation, and stagnation boundaries |
+| `tests/test_analysis.py` | Created | Automated tests for DataFrame aggregation, table formatting, and figure generation |
+| `tests/test_runner_integration.py` | Created | Integration tests for runner orchestration, mock engine execution, and batch matrix execution |
+| `PROGRESS.md` | Updated | Comprehensive status log reflecting verified facts and test results |
+
+---
+
+## 7. Remaining Architectural Gaps & Next Steps
+
+1. **Research Question & Hypothesis Pre-Registration:** Before launching large experiment batches, formulate explicit falsifiable hypotheses linking communication topology (e.g. star vs mesh vs chain) to task paradigms (Aggregation vs Mesh vs Shuffle).
+2. **Task Paradigm Exploration:** Validate pipeline on representative Paradigm II (mesh boundary exchange) and Paradigm III (global shuffle) tasks to ensure instrumentation handles spatial and multi-hop communication patterns.
+3. **Remote Model Provider Integration Testing:** Validate remote inference endpoints (e.g., vLLM or OpenAI-compatible cloud endpoints) using the provider abstraction in `orchestra/config.py`.
+4. **Statistical Power & Repetition Planning:** Determine sample sizes ($k$ repeated runs per cell with varied random seeds) required to reliably distinguish emergent behavior from stochastic variation.

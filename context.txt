@@ -1,0 +1,508 @@
+# ORCHESTRA — PROJECT CONTEXT AND HANDOVER
+
+## 1. Project Identity
+
+**Project Title:** ORCHESTRA: Emergent Organizational Evolution in Autonomous AI Agent Societies
+
+**Research Target:** Aim for a high-quality Q1 journal publication through a rigorous, reproducible experimental study.
+
+**Project Type:** Multi-agent AI research framework focused on organizational emergence, evolution, adaptation, resilience, and collective performance.
+
+This document is the permanent context for the project. Any new AI coding assistant or IDE must read it before making major decisions. It describes the research vision and established project decisions, not the detailed implementation instructions. Current implementation status must be maintained separately in `PROGRESS.md`.
+
+---
+
+## 2. What Is ORCHESTRA?
+
+ORCHESTRA is a research framework for studying how organizational structures emerge and evolve within societies of autonomous AI agents without explicitly assigning predefined roles such as leader, worker, planner, or reviewer.
+
+The agents initially operate with minimal role specification. They interact, communicate, make decisions, and coordinate to complete tasks in controlled environments.
+
+The research investigates whether repeated interactions naturally lead to the emergence of:
+
+- Behavioral roles and specialization.
+- Leadership or influence patterns.
+- Coordination strategies.
+- Communication and interaction structures.
+- Organizational stability and evolution.
+- Adaptation and recovery after disruptions.
+
+These are research questions, not guaranteed outcomes. ORCHESTRA must measure actual agent behavior rather than assume that organizational roles or effective leadership will emerge.
+
+The objective is not merely to build another multi-agent application. It is to understand how agent societies organize themselves, how their organization changes over time, and how organizational patterns relate to collective outcomes.
+
+## 3. Research Problem
+
+Many multi-agent systems use predefined roles, fixed workflows, explicit hierarchies, or manually designed coordination structures.
+
+ORCHESTRA investigates:
+
+**How do organizational structures emerge and evolve in autonomous AI-agent societies without explicitly assigned fixed roles, and how do these structures influence collective performance, stability, adaptation, and resilience?**
+
+The framework should examine organizational behavior under different experimental conditions, including:
+
+- Number of agents.
+- Task complexity and task coupling.
+- Communication protocols and constraints.
+- Agent capabilities.
+- Information and resource availability.
+- Changes in tasks or environmental conditions.
+- Agent removal and communication disruptions.
+
+The research should distinguish correlation from causation. For example, an agent that sends many messages is not automatically a leader, and a high-performing group does not automatically possess an effective organizational structure.
+
+## 4. Research Objectives
+
+### Objective 1: Emergent Roles and Specialization
+
+Investigate whether agents develop distinct behavioral patterns without being explicitly assigned roles.
+
+Possible evidence includes task contributions, tool usage, information aggregation, communication patterns, and recurring behavior across rounds and repeated runs.
+
+### Objective 2: Organizational Structure
+
+Analyze communication and interaction graphs to understand how agents connect and coordinate.
+
+Potential measurements include communication density, centrality, connectivity, network structure, topology changes, and structural stability.
+
+### Objective 3: Organization and Collective Performance
+
+Investigate how observed organizational patterns relate to task success, partial correctness, communication cost, token consumption, execution time, and other relevant performance measures.
+
+### Objective 4: Organizational Evolution
+
+Study how behavioral patterns and communication structures change over time, across tasks, and across experimental conditions.
+
+Longitudinal observations are important. A single final output is insufficient to establish organizational evolution.
+
+### Objective 5: Adaptation and Resilience
+
+Study how an organization responds to controlled perturbations, such as removing an agent, restricting communication, redistributing tasks, changing agent capabilities, or modifying available resources.
+
+Potential measurements include performance degradation, structural reorganization, adaptation, and recovery.
+
+### Objective 6: Human-in-the-Loop Control
+
+ORCHESTRA includes a Human-in-the-Loop (HITL) component to monitor organizational evolution and prevent excessively aggressive or unintended structural changes.
+
+Human oversight may constrain or guide organizational changes when they exceed defined experimental boundaries, while preserving agent autonomy and avoiding predefined organizational roles.
+
+The implementation must eventually define measurable intervention conditions and record when and why human oversight is applied. HITL behavior must not be claimed as implemented until it actually exists and has been tested.
+
+### Objective 7: Reproducible Research
+
+Record agent interactions, system states, task execution, communication, experimental configurations, and outcomes so that organizational behavior can be analyzed and experiments can be reproduced.
+
+---
+
+## 5. Intended Research Novelty
+
+SILO-BENCH already provides a benchmark for multi-agent coordination. ORCHESTRA must not claim novelty merely because it uses multiple agents, role-free prompts, or communication protocols.
+
+The intended contribution is a systematic research framework for analyzing organizational behavior and evolution.
+
+Potential contributions to establish through literature review and experiments include:
+
+1. Quantitative analysis of emergent behavioral roles and specialization.
+2. Longitudinal analysis of organizational and communication structures.
+3. Investigation of relationships between organizational structure and collective performance.
+4. Controlled studies of organizational changes following agent or communication disruptions.
+5. Reproducible instrumentation and analysis for studying organizational evolution.
+6. A Human-in-the-Loop mechanism for monitoring and constraining organizational evolution.
+
+These are intended contributions, not proven scientific discoveries.
+
+The final paper must establish what existing research already provides, identify a defensible research gap, formulate testable hypotheses, use appropriate baselines, validate metrics, conduct repeated experiments, and report statistical evidence and limitations.
+
+A Q1 publication is an ambition, not a guarantee. No results or novelty claims should be fabricated.
+
+---
+
+## 6. Primary Benchmark: SILO-BENCH
+
+**Decision: SILO-BENCH is the sole primary benchmark for the initial ORCHESTRA study.**
+
+Repository: https://github.com/jwyjohn/acl26-silo-bench
+
+Associated paper: https://aclanthology.org/2026.acl-long.1354/
+
+The repository already exists in the local project folder. Its actual contents must be inspected before implementation decisions are made.
+
+Previously reported benchmark characteristics include:
+
+- 30 algorithmic tasks.
+- 180 task JSON files across six agent scales.
+- Agent counts reported as 2, 5, 10, 20, 50, and 100.
+- Three communication protocols: P2P messaging (`msg`), broadcast, and shared file system (`SFS`).
+- Three task levels: Aggregation, Mesh Network, and Global Shuffle.
+- Task-specific inputs, expected outputs, verification logic, and metadata.
+- Existing execution, communication, evaluation, logging, and experiment-running components.
+
+Reported repository paths include:
+
+- `benchmarks/*.json`
+- `benchmark_summary.json`
+- `src/engine.py`
+- `src/msg/tools.py`
+- `src/broadcast/tools.py`
+- `src/sfs/tools.py`
+- `src/utils/metrics.py`
+- `src/utils/prompts.py`
+- `src/batch_run.py`
+- `src/analyze.py`
+- `src/models.py`
+
+These paths and capabilities must be verified against the local repository. Do not assume that reported interfaces or function signatures are correct without inspection.
+
+### Existing Benchmark Metrics
+
+The benchmark is reported to provide:
+
+- **S:** Success rate.
+- **P:** Partial correctness.
+- **C:** Token consumption.
+- **D:** Communication density.
+
+Inspect the actual definitions and reuse valid existing metrics rather than silently changing their meaning.
+
+### Important Dataset Distinction
+
+SILO-BENCH supplies task definitions and an execution/evaluation framework. It does not automatically provide all the behavioral trajectories or experimental results ORCHESTRA needs.
+
+ORCHESTRA must generate behavioral data by running experiments. This includes interaction logs, messages, tool usage, submissions, task outcomes, and derived organizational measurements.
+
+Having the benchmark downloaded does not mean the experiments have been conducted.
+
+### Dataset Decision
+
+- Use SILO-BENCH as the primary task benchmark.
+- Do not add external datasets unless a demonstrated scientific gap makes one necessary.
+- Do not vectorize benchmark JSON files merely to pass tasks to agents.
+- Do not introduce a vector database without a demonstrated retrieval requirement.
+- Reuse existing task definitions, communication protocols, execution, and evaluation wherever possible.
+
+---
+
+## 7. Scientific Limitations and Risks
+
+### Coordination Hints
+
+Some task descriptions may contain algorithmic guidance or suggested topologies. Such hints could influence the structures that agents develop.
+
+Inspect the prompts and metadata. Where appropriate, compare conditions with and without hints while preserving valid task execution and evaluation.
+
+### Role Emergence
+
+A role-free prompt does not prove that roles have emerged independently. Behavior may be shaped by agent IDs, private inputs, task hints, model characteristics, or other asymmetries.
+
+Roles must be operationally defined and supported by observable, repeatable evidence.
+
+### Leadership and Influence
+
+Communication centrality alone does not prove leadership or causal influence. Distinguish network position from evidence that an agent affected another agent's decisions or the final outcome.
+
+### Stability and Evolution
+
+Repeated observations and round-level logs are needed to assess stability and evolution. A single run cannot establish robust organizational behavior.
+
+### Perturbation Support
+
+The existing benchmark may not support dynamic agent removal, message loss, message delay, or persistent memory across tasks. Verify the actual implementation. Any missing capability must be added deliberately and documented rather than assumed to exist.
+
+### Model Dependence
+
+Organizational behavior can depend on the selected LLM. Record the model identifier, version or tag, quantization when available, inference settings, and relevant runtime details.
+
+Results from different models must not be treated as directly interchangeable without suitable controls or analysis.
+
+---
+
+## 8. Experimental Direction
+
+The immediate goal is to validate the implementation pipeline, not to run a massive experiment matrix.
+
+### Initial Pilot
+
+- Select one suitable, small SILO-BENCH task.
+- Start with two agents.
+- Start with one communication protocol.
+- Connect the agents to a local Ollama model.
+- Execute the task through the actual benchmark framework.
+- Verify agent inputs, communication, execution, evaluation, and logs.
+- Confirm that the experiment can be repeated.
+
+### Next Stage
+
+After the two-agent pilot works, validate the system with five agents.
+
+Check execution time, resource consumption, communication, correctness, and repeatability before expanding the experimental scope.
+
+### Later Research Experiments
+
+Once the baseline is reliable:
+
+- Select representative tasks.
+- Compare communication protocols.
+- Conduct repeated runs.
+- Analyze organizational and behavioral metrics.
+- Investigate structural and performance changes under controlled perturbations.
+- Introduce additional agent scales only when justified by the research questions and available resources.
+
+Do not commit prematurely to hundreds or thousands of runs. Finalize the experiment matrix after pilot results, runtime, costs, and statistical requirements are understood.
+
+---
+
+## 9. Development Environment and Constraints
+
+Current development machine:
+
+- HP Envy x360.
+- Windows 11.
+- 16 GB RAM.
+- Intel processor.
+- Ollama installed.
+
+The initial experiments will use a local model through Ollama. The exact model has not yet been selected.
+
+Choose a suitable small, quantized instruction-following model after checking resource requirements and compatibility with the benchmark. Test response quality, latency, memory use, and output-format reliability.
+
+Do not assume the laptop can efficiently run large models or many concurrent requests.
+
+### Portability
+
+The code must be designed so that later experiments can run on a high-end machine or use a compatible remote inference endpoint without redesigning the entire framework.
+
+Model access, configuration, experiment execution, and logging should be modular. Avoid hardcoded hardware assumptions and absolute paths.
+
+Changing the model or hardware can affect behavior, so record relevant configuration details and account for those differences in scientific analysis.
+
+---
+
+## 10. Software and Framework Decisions
+
+The initial default is:
+
+- Python.
+- Existing SILO-BENCH execution and communication framework.
+- Ollama Python client or an appropriate direct client interface.
+- JSON/JSONL for experiment configurations and logs.
+- pandas and NetworkX where useful for analysis.
+- Standard Python logging and testing tools.
+
+Do not initially introduce LangChain, LangGraph, AutoGen, CrewAI, a vector database, a dashboard, or another multi-agent execution framework.
+
+The existing benchmark should remain the execution foundation unless repository inspection reveals a specific technical reason to change this decision.
+
+The architecture should separate these responsibilities where appropriate:
+
+- Model adapter.
+- Agent integration.
+- Benchmark adapter.
+- Communication integration.
+- Instrumentation and logging.
+- Experiment configuration and runner.
+- Organizational analysis.
+- Testing.
+
+Keep the implementation simple and modular. Do not create unnecessary abstractions or rewrite existing benchmark functionality.
+
+---
+
+## 11. Reproducibility and Behavioral Data
+
+The framework should preserve enough information to analyze and reproduce experiments.
+
+Where available, record:
+
+- Experiment and task identifiers.
+- Agent IDs.
+- Round or step number.
+- Message sender, recipient, protocol, and content.
+- Tool usage and shared-resource interactions.
+- Model identifier and inference settings.
+- Agent responses and submission records.
+- Expected and actual task results.
+- Existing benchmark metrics.
+- Errors, timeouts, and failed runs.
+- Execution duration and resource measurements where practical.
+
+Keep raw observations separate from derived organizational metrics. JSONL is suitable for event and interaction records; JSON is suitable for configurations and experiment summaries.
+
+Do not assume every desired field is already logged. Add instrumentation only where necessary, and do not log credentials or secrets.
+
+---
+
+## 12. Current Project Status
+
+The following status reflects the latest known information and must be verified by the active IDE before implementation continues.
+
+- Project concept and research direction: defined.
+- ORCHESTRA title and abstract: drafted.
+- Primary benchmark decision: SILO-BENCH.
+- SILO-BENCH local folder: present in the project directory.
+- External dataset acquisition: not planned.
+- Vector database: not required for the current design.
+- Development machine: HP Envy x360, Windows 11, 16 GB RAM, Intel.
+- Ollama: installed.
+- Local LLM selection: pending.
+- ORCHESTRA implementation code: not yet written, according to the last reported status.
+- Two-agent pilot: not yet completed.
+- Five-agent validation: pending.
+- Research instrumentation and organizational analysis: pending.
+- Perturbation experiments: pending.
+- Experimental results: not yet established.
+- Q1 journal submission: future objective.
+
+If the actual repository or progress log shows a different status, inspect the evidence and update `PROGRESS.md`. Do not treat this list as proof that a task remains incomplete if it has since been implemented.
+
+---
+
+## 13. How a New AI Assistant Should Use This File
+
+Any new AI assistant or IDE working on ORCHESTRA must:
+
+1. Read this file before making major technical or research decisions.
+2. Inspect the existing local SILO-BENCH repository before coding.
+3. Read `PROGRESS.md` to establish the current implementation state.
+4. Preserve established project decisions unless evidence justifies changing them.
+5. Avoid rebuilding existing benchmark functionality unnecessarily.
+6. Keep the research objectives in view when making engineering decisions.
+7. Separate verified repository facts, planned functionality, hypotheses, and measured results.
+8. Test changes and report what actually passed or failed.
+9. Update `PROGRESS.md` with completed work, modified files, tests, errors, and the exact next step.
+10. Leave a clear checkpoint so work can continue in another session or IDE.
+
+The implementation must proceed incrementally. A working, validated two-agent pipeline is more important than a large amount of untested code.
+
+---
+
+## 14. Final Project Direction
+
+ORCHESTRA aims to provide a reproducible experimental framework for investigating emergent organization and organizational evolution in autonomous AI-agent societies.
+
+Use SILO-BENCH as the initial benchmark. Begin with local Ollama inference and two agents, validate the complete task-execution and logging pipeline, then expand to five agents. Build the organizational-analysis layer on real behavioral data and introduce controlled perturbation experiments only after the baseline is reliable.
+
+The intended scientific contribution is a rigorous empirical investigation of organizational emergence, specialization, structural evolution, adaptation, resilience, and collective performance, including Human-in-the-Loop oversight.
+
+All scientific claims must be grounded in literature and actual experimental evidence.
+## NON-NEGOTIABLE OBJECTIVE: Q1 JOURNAL PUBLICATION AND RESEARCH RESULTS
+
+### 1. Primary Goal
+
+**ORCHESTRA's primary objective is to produce a rigorous, novel, experimentally validated research paper targeting publication in a Q1-ranked journal.** Building a working software system is necessary, but it is not the final goal. The system must be developed specifically to generate credible scientific evidence that can support a strong journal submission.
+
+Every architectural decision, implementation task, experiment, and analysis must serve this objective. Do not treat this as a normal student project, a basic multi-agent demonstration, or a software engineering exercise. Treat it as a serious research program whose final deliverable is a defensible scientific contribution.
+
+Q1 publication is the target we must work toward as a team. No one can guarantee a journal's acceptance decision, but we must maximize the probability of success through novelty, methodological rigor, high-quality experiments, reliable evidence, appropriate statistical analysis, clear scientific contributions, and a carefully selected target journal.
+
+### 2. Research Results Are Mandatory
+
+The project must produce actual experimental results, not assumed outcomes, illustrative numbers, fabricated data, or claims based only on a successful software run.
+
+The final research must answer clearly defined research questions using evidence generated by executing experiments. Results may support or reject our hypotheses; both outcomes are scientifically valid. Never alter experimental design or selectively report findings simply to make ORCHESTRA appear successful.
+
+The implementation must enable us to:
+
+- Execute SILO-BENCH tasks through a reliable, configurable experimental pipeline.
+- Observe and record agent behavior, communications, task execution, interactions, organizational changes, and outcomes.
+- Investigate whether behavioral specialization, leadership-like influence, coordination structures, or other organizational patterns actually emerge without explicitly assigning those roles.
+- Quantify organizational properties using operationally defined, validated metrics.
+- Investigate relationships between organizational structure and collective performance without confusing correlation with causation.
+- Evaluate how organizations respond to controlled disruptions, changing conditions, and interventions.
+- Compare experimental conditions against appropriate baselines and controls.
+- Repeat experiments and quantify variability and uncertainty.
+- Preserve raw data, failed runs, experiment configurations, analysis scripts, and derived results.
+- Produce publication-ready tables, figures, statistical summaries, and evidence supporting every major claim.
+
+### 3. Scientific Novelty Must Be Demonstrated
+
+Do not assume that ORCHESTRA is novel merely because it uses autonomous agents, role-free prompts, multiple communication protocols, or a benchmark that already exists.
+
+Before finalizing the research contribution, conduct a focused and systematic literature review of relevant work on multi-agent systems, emergent specialization, organizational dynamics, collective intelligence, agent communication networks, resilience, adaptation, and human oversight.
+
+Identify the precise research gap, explain why existing approaches do not adequately answer it, and establish how ORCHESTRA addresses that gap. Select the research questions, hypotheses, baselines, metrics, and experiments to directly test the proposed contribution.
+
+Potential contributions include longitudinal measurement of organizational evolution, quantitative relationships between organizational structure and performance, controlled studies of organizational resilience, reproducible behavioral instrumentation, and human-in-the-loop oversight of organizational change. These are candidate contributions until the literature review and experimental evidence establish their significance.
+
+If the initial concept lacks sufficient novelty for a competitive Q1 submission, identify the weakness early and recommend the smallest scientifically justified changes needed to strengthen the contribution. Do not hide novelty gaps or proceed under the false assumption that a working implementation guarantees publishability.
+
+### 4. Publication-Quality Experimental Design
+
+Experiments must be designed to answer research questions, not merely to demonstrate that agents can communicate.
+
+The experimental protocol must define, where relevant:
+
+- Independent variables, dependent variables, controls, and confounding factors.
+- Research questions and testable hypotheses.
+- Baselines and comparison conditions.
+- Task selection, agent scales, communication protocols, model configurations, and experimental repetitions.
+- Conditions with and without coordination hints when needed to distinguish genuine behavioral emergence from task-provided guidance.
+- Controlled perturbations and appropriate recovery measurements.
+- Failure handling, exclusion criteria, and treatment of incomplete runs.
+- Statistical methods, uncertainty estimates, effect sizes, and appropriate significance testing.
+- Limitations, threats to validity, and the scope of conclusions supported by the evidence.
+
+Determine the final experimental matrix only after the literature review, pilot experiments, resource assessment, and statistical planning. Begin with small runs to validate the pipeline, then scale the experiments according to the research design. Initial two-agent or five-agent tests are implementation validation, not sufficient evidence for a Q1 paper.
+
+### 5. Reproducibility and Research Integrity
+
+Every experiment must be traceable and reproducible to the extent technically possible. Record the model and version, inference parameters, task configuration, agent count, communication protocol, random seeds where supported, software versions, experiment identifiers, timestamps, errors, raw logs, and analysis configuration.
+
+Separate raw observations from derived metrics and interpretations. Validate instrumentation and metrics before relying on them. Preserve unsuccessful runs and document deviations from the planned protocol.
+
+Never fabricate results, silently change benchmark evaluation, invent citations, overstate statistical significance, label agents as leaders without an operational definition and supporting evidence, or claim that ORCHESTRA outperforms a baseline without an appropriate comparison.
+
+If a measurement cannot be validated, explicitly document the limitation and improve or replace it before using it to support a major scientific claim.
+
+### 6. Human-in-the-Loop Research Requirement
+
+Human-in-the-Loop (HITL) oversight is part of the ORCHESTRA research concept. It must be treated as a research component, not merely a descriptive feature.
+
+Define what the oversight mechanism observes, which organizational changes or boundary violations can trigger intervention, what actions a human can authorize or restrict, and how autonomy and intervention are measured.
+
+Where HITL is claimed as a contribution, design suitable experiments to compare relevant oversight conditions and measure its effects on organizational behavior, safety constraints, task performance, adaptation, and recovery. Do not claim that HITL improves outcomes unless the results demonstrate that conclusion.
+
+### 7. Implementation Priorities
+
+Prioritize work in this order:
+
+1. Establish a defensible research gap and precise research questions through literature review.
+2. Inspect and understand the existing SILO-BENCH implementation before modifying or extending it.
+3. Establish a reproducible baseline execution pipeline.
+4. Validate model integration, benchmark evaluation, instrumentation, and raw data collection.
+5. Implement and validate the minimum organizational-analysis capabilities required by the research questions.
+6. Run pilot experiments and inspect the quality and interpretability of the resulting data.
+7. Refine the experimental design, baselines, repetitions, and statistical plan.
+8. Execute the full justified experiment matrix and preserve all results.
+9. Perform statistical analysis, robustness checks, and sensitivity analyses.
+10. Interpret the findings honestly, identify limitations, and prepare a rigorous manuscript.
+11. Verify the target journal's current Q1 status, scope, article requirements, and publication standards before submission.
+
+Avoid unnecessary architecture, dashboards, vector databases, extra datasets, or complex frameworks unless they have a clear research or engineering justification. Conversely, do not omit essential logging, controls, validation, statistical analysis, or reproducibility simply to finish coding faster.
+
+### 8. Definition of Success
+
+ORCHESTRA is not complete merely because the code runs, agents communicate, or plots can be generated.
+
+The research is ready for submission only when it has:
+
+- A clearly articulated and defensible contribution relative to prior literature.
+- A reliable, validated experimental implementation.
+- Sufficient well-designed experiments to support the research questions.
+- Appropriate baselines, controls, and repeated observations.
+- Validated metrics and transparent statistical analysis.
+- Reproducible evidence supporting the paper's principal claims.
+- Honest discussion of limitations and threats to validity.
+- A coherent manuscript suitable for a carefully selected Q1 journal.
+
+These are minimum research-readiness requirements, not a guarantee of acceptance. If any requirement is unmet, identify the gap, explain its impact, and propose the next highest-priority action.
+
+### 9. Instructions to Any AI or Developer Continuing ORCHESTRA
+
+Act as a research-focused technical lead, not merely a code generator. Understand the research objective before making implementation decisions. Challenge weak assumptions, verify technical claims against the actual repository, and distinguish established facts from hypotheses and recommendations.
+
+Do not rush into large-scale experiments before validating the pipeline. Do not stop at a prototype. Do not claim success without examining the evidence. Maintain a current progress record containing completed work, changed files, validation results, experiment status, unresolved problems, research decisions, and the next concrete task.
+
+**The governing principle is: every implementation milestone must move ORCHESTRA toward a scientifically defensible Q1 journal submission. Working software enables the research; reproducible experimental evidence and a meaningful original contribution are what make the paper publishable.**
+
+END OF ORCHESTRA PROJECT CONTEXT
