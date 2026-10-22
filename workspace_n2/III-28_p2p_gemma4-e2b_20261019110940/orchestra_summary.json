@@ -1,0 +1,35 @@
+{
+  "experiment_id": "III-28_n2_msg_rep1",
+  "case_dir": "workspace\\III-28_p2p_gemma4-e2b_20261019110940",
+  "task_id": "III-28",
+  "num_agents": 2,
+  "protocol": "msg",
+  "model": "gemma4:e2b",
+  "total_time_seconds": 848.4199030399323,
+  "total_rounds": 3,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.0,
+  "token_consumption": 1320.3333333333,
+  "communication_density": 0.0,
+  "gini_out_degree": 0.0,
+  "gini_in_degree": 0.0,
+  "mean_structural_drift": 0.0,
+  "agent_roles": {
+    "0": "Isolated",
+    "1": "Isolated"
+  },
+  "perturbation_applied": null,
+  "hitl_violations_count": 5,
+  "hitl_summary": {
+    "total_violations": 5,
+    "mode": "audit_only",
+    "violations_by_type": {
+      "isolation": 4,
+      "stagnation": 1
+    }
+  },
+  "error_message": null,
+  "seed": 43
+}

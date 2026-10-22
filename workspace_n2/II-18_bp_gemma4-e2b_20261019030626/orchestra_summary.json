@@ -1,0 +1,32 @@
+{
+  "experiment_id": "II-18_n2_broadcast_rep1",
+  "case_dir": "workspace\\II-18_bp_gemma4-e2b_20261019030626",
+  "task_id": "II-18",
+  "num_agents": 2,
+  "protocol": "broadcast",
+  "model": "gemma4:e2b",
+  "total_time_seconds": 455.07251811027527,
+  "total_rounds": 3,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.0,
+  "token_consumption": 2243.6666666667,
+  "communication_density": 1.0,
+  "gini_out_degree": 0.0,
+  "gini_in_degree": 0.0,
+  "mean_structural_drift": 1.0,
+  "agent_roles": {
+    "0": "Peer_Collaborator",
+    "1": "Peer_Collaborator"
+  },
+  "perturbation_applied": null,
+  "hitl_violations_count": 0,
+  "hitl_summary": {
+    "total_violations": 0,
+    "mode": "audit_only",
+    "violations_by_type": {}
+  },
+  "error_message": null,
+  "seed": 43
+}

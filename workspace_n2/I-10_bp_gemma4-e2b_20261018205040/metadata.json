@@ -1,0 +1,39 @@
+{
+  "case_id":"I-10_bp_gemma4-e2b_20261018205040",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\I-10_n2.json",
+  "task":{
+    "case_id":"I-10",
+    "case_name":"Standard Deviation",
+    "paradigm":"Paradigm I",
+    "num_agents":2,
+    "task_description":"**Task: Standard Deviation (Two-Phase)**\n\nCompute the population standard deviation of all numbers across all agents' data.\n\n**Your Data:**\nYou (Agent {agent_id}) hold: {input_shard}\n\n**Algorithm (Two Phases):**\n**Phase 1: Compute Global Mean**\n- Calculate local_sum and local_count\n- Coordinate to compute global_mean = total_sum / total_count\n\n**Phase 2: Compute Variance**\n- Calculate local variance contribution: sum((x - global_mean)\u00b2 for x in local_data)\n- Coordinate to sum all variance contributions\n- Compute std_dev = sqrt(total_variance / total_count)\n\n**Output:**\nA floating-point number (precision: 2 decimal places).\n\n**Communication Protocol:**\nTopology: Star/Tree with two-phase protocol \u2192 broadcast after each phase.\nAll agents must submit the same final answer using submit_result(std_dev).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        30.58,
+        30.58
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(abs(agent_outputs[i] - expected_output) <= 0.01 for i in range(num_agents))",
+      "verification_logic_hint":"all(abs(submitted_std - global_std) < 0.01)",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":2,
+    "protocol":"broadcast",
+    "model":"gemma4:e2b",
+    "api_base":"http://localhost:11434/v1",
+    "api_key":"ollama",
+    "max_rounds":3
+  },
+  "execution":{
+    "started_at":"2026-10-18T20:50:40.574746+00:00",
+    "finished_at":"2026-10-18T20:55:14.648740+00:00",
+    "status":"completed",
+    "current_round":3,
+    "total_input_tokens":5008,
+    "total_output_tokens":234,
+    "all_submitted":false
+  }
+}

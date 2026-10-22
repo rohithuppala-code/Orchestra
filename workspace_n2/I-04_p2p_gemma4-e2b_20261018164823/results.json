@@ -1,0 +1,32 @@
+{
+  "evaluated_at":"2026-10-18T16:52:49.987233+00:00",
+  "ground_truth":[
+    true,
+    true
+  ],
+  "submissions":[
+    {
+      "agent_id":0,
+      "answer":true,
+      "correct":true,
+      "round":3
+    },
+    {
+      "agent_id":1,
+      "answer":null,
+      "correct":false,
+      "round":null
+    }
+  ],
+  "metrics":{
+    "S_success_rate":0.5,
+    "P_partial_correctness":0.5,
+    "C_token_consumption":2222.3333333333,
+    "D_communication_density":1.5,
+    "success_rate":0.5,
+    "partial_correctness":0.5,
+    "token_consumption":2222.3333333333,
+    "communication_density":1.5
+  },
+  "success":false
+}

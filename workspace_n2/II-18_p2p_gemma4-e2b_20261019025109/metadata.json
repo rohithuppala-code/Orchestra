@@ -1,0 +1,73 @@
+{
+  "case_id":"II-18_p2p_gemma4-e2b_20261019025109",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\II-18_n2.json",
+  "task":{
+    "case_id":"II-18",
+    "case_name":"List Ranking",
+    "paradigm":"Paradigm II",
+    "num_agents":2,
+    "task_description":"**Task: List Ranking (Compute Rank from Head)**\n\nReconstruct a distributed linked list and compute each node's rank from the head.\n\n**Data Distribution:**\n- Total nodes: 16, SCATTERED across agents\n- Each node has \"id\" and \"next\" pointer (-1 for end)\n- Forms ONE logical chain\n\n**Your Data:**\nAgent {agent_id} holds: {input_shard}\n\n**Algorithm:**\n1. Reconstruct the logical chain starting from head node\n2. Compute each node's rank (head=0, next=1, ...)\n\n**Output:**\nDictionary mapping node_id to its rank: {node_id: rank, ...}\n\n**Communication Protocol:**\nTopology: Share pointers to reconstruct chain, then broadcast ranks.\nAll agents must submit the same final answer using submit_result({node_id: rank, ...}).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        {
+          "4":0,
+          "8":1,
+          "5":2,
+          "6":3,
+          "10":4,
+          "7":5,
+          "15":6,
+          "11":7,
+          "2":8,
+          "9":9,
+          "13":10,
+          "14":11,
+          "3":12,
+          "0":13,
+          "12":14,
+          "1":15
+        },
+        {
+          "4":0,
+          "8":1,
+          "5":2,
+          "6":3,
+          "10":4,
+          "7":5,
+          "15":6,
+          "11":7,
+          "2":8,
+          "9":9,
+          "13":10,
+          "14":11,
+          "3":12,
+          "0":13,
+          "12":14,
+          "1":15
+        }
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output for i in range(num_agents))",
+      "verification_logic_hint":"all(agent_outputs) == compute_distances(nodes)",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":2,
+    "protocol":"msg",
+    "model":"gemma4:e2b",
+    "api_base":"http://localhost:11434/v1",
+    "api_key":"ollama",
+    "max_rounds":3
+  },
+  "execution":{
+    "started_at":"2026-10-19T02:51:09.789580+00:00",
+    "finished_at":"2026-10-19T02:59:56.573338+00:00",
+    "status":"completed",
+    "current_round":3,
+    "total_input_tokens":6401,
+    "total_output_tokens":257,
+    "all_submitted":false
+  }
+}
