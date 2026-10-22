@@ -1,0 +1,6 @@
+case_id,task_id,protocol,num_agents,total_rounds,success,success_rate,partial_correctness,token_consumption,communication_density,gini_out_degree,gini_in_degree,mean_structural_drift,final_network_entropy,network_diameter,is_connected
+I-01_bp_gemma4-e2b_20261018103630,I-01,broadcast,2,9,True,1.0,1.0,2638.1111111111,1.0,0.0,0.0,0.25,1.0,1,True
+I-01_bp_gemma4-e2b_20261018104643,I-01,broadcast,2,3,False,0.5,0.5,2111.3333333333,1.0,0.0,0.0,0.5,1.0,1,True
+I-01_p2p_gemma4-e2b_20261018100634,I-01,msg,2,3,True,1.0,1.0,3520.6666666667,1.0,0.0,0.0,0.5,1.0,1,True
+I-01_p2p_gemma4-e2b_20261018102718,I-01,msg,2,4,True,1.0,1.0,2836.5,1.0,0.0,0.0,0.3333333333333333,1.0,1,True
+I-01_p2p_gemma4-e2b_20261018103234,I-01,msg,2,4,False,0.5,0.5,2117.5,1.0,0.0,0.0,0.3333333333333333,1.0,1,True

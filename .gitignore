@@ -26,8 +26,9 @@ configs/config.yaml
 !silo-bench/configs/config.example.yaml
 
 # Local experiment runtime artifacts (preserve source benchmarks)
-workspace/
-silo-bench/workspace/
+workspace*/
+final_workspace*/
+silo-bench/workspace*/
 *.log
 
 # OS artifacts

@@ -114,17 +114,19 @@ def run_batch_matrix(matrix: MatrixConfig) -> List[ExperimentSummary]:
     print("=" * 70)
     
     # Aggregate and print comparative table
-    if case_dirs:
-        df = build_comparison_dataframe(case_dirs)
+    ws_path = Path(matrix.workspace)
+    all_case_dirs = sorted([d for d in ws_path.iterdir() if d.is_dir() and (d / "orchestra_profile.json").exists()]) if ws_path.exists() else []
+    target_dirs = all_case_dirs if all_case_dirs else case_dirs
+    if target_dirs:
+        df = build_comparison_dataframe(target_dirs)
         print("\n=== Experimental Comparison Summary ===")
         print(generate_markdown_summary_table(df))
         
         # Save batch summary table
-        ws_path = Path(matrix.workspace)
         ws_path.mkdir(parents=True, exist_ok=True)
         csv_file = ws_path / "batch_comparison_results.csv"
         df.to_csv(csv_file, index=False)
-        print(f"\n[ORCHESTRA] Saved batch comparison CSV to {csv_file}")
+        print(f"\n[ORCHESTRA] Saved cumulative batch comparison CSV to {csv_file}")
         
     return summaries
 
@@ -149,8 +151,18 @@ def main() -> None:
     
     perts = [None if p == "none" else p for p in args.perturbations]
     
+    task_ids = args.task_ids
+    if any(t.lower() == "all" for t in task_ids):
+        task_ids = [
+            f"I-{i:02d}" for i in range(1, 11)
+        ] + [
+            f"II-{i:02d}" for i in range(11, 21)
+        ] + [
+            f"III-{i:02d}" for i in range(21, 31)
+        ]
+    
     matrix = MatrixConfig(
-        task_ids=args.task_ids,
+        task_ids=task_ids,
         agent_counts=args.agent_counts,
         protocols=args.protocols,
         repetitions=args.repetitions,

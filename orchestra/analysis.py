@@ -265,6 +265,13 @@ def main() -> None:
     df.to_csv(csv_file, index=False)
     print(f"[ORCHESTRA] Saved comparative CSV to {csv_file}")
     
+    # Save structure-performance correlations
+    corr = compute_structural_performance_correlations(df)
+    if not corr.empty:
+        corr_file = out_dir / "structure_performance_correlations.csv"
+        corr.to_csv(corr_file)
+        print(f"[ORCHESTRA] Saved correlations to {corr_file}")
+        
     # Generate longitudinal plot
     plot_longitudinal_evolution(case_paths, out_dir / "longitudinal_comparison.png")
 

@@ -140,6 +140,20 @@ Executed `pytest tests -v` on 2026-10-15:
 *\*In the dropout run, 4 out of 5 agents converged correctly, representing 100% of surviving active agents.*  
 *CLI analysis pipeline verified via `python -m orchestra.analysis --workspace silo-bench/workspace` producing `comparison_results.csv` and `longitudinal_comparison.png`.*
 
+### Live 4-Condition Batch Matrix Sweep (`I-01`, $N=2$) — VERIFIED ✅
+- **Execution Date:** 2026-10-18 (Completed in 1,293.5s / ~21.5 minutes)
+- **Model:** `gemma4:e2b` (Local Ollama, CPU execution on Intel Iris Xe / 16GB RAM)
+- **Task:** `I-01` ($N=2$, Global Maximum finding across partitioned silos)
+- **Experimental Matrix (4 conditions):**
+  1. `I-01_n2_msg_rep1`: P2P normal baseline $\to$ 100% success ($S=1.0$), 4 rounds, 2,836.5 tokens, drift 0.333
+  2. `I-01_n2_msg_rep1_agent_dropout`: P2P dropout (Agent 1 dropped at R2) $\to$ 50% system success ($100\%$ surviving agent success), 4 rounds, 2,117.5 tokens, drift 0.333
+  3. `I-01_n2_broadcast_rep1`: Broadcast normal baseline $\to$ 100% success ($S=1.0$), 9 rounds, 2,638.1 tokens, drift 0.250
+  4. `I-01_n2_broadcast_rep1_agent_dropout`: Broadcast dropout (Agent 1 dropped at R2) $\to$ 50% system success ($100\%$ surviving agent success), 3 rounds, 2,111.3 tokens, drift 0.500
+- **Artifacts Generated:**
+  - Master CSV: `workspace/batch_comparison_results.csv`
+  - Comparative CSV: `orchestra/figures/comparison_results.csv`
+  - Publication Plot: `orchestra/figures/longitudinal_comparison.png`
+
 ---
 
 ## 6. Files Created or Modified in this Milestone
