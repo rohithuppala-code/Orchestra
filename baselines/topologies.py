@@ -1,20 +1,18 @@
 """ORCHESTRA: Multi-Agent Baseline Communication Topologies & Role Injections.
 
-Implements the 6 foundational and state-of-the-art multi-agent baselines
-without modifying core benchmark or engine logic:
-1. Independent Agents (No Communication / Majority Vote Ensemble; Wang et al., 2023)
-2. Fully Connected Broadcast (Flat Multi-Agent Debate; Qian et al., ACL 2024; Du et al., 2023)
-3. Random Topology (Erdős-Rényi p=0.5 dynamic graph; Watts & Strogatz)
-4. Central Coordinator (Star Hub-and-Spoke; Wu et al., AutoGen 2024)
-5. Hierarchical Coordinator (Multi-Tier Tree / Chain of Command; MacNet 2024/2025)
-6. Fixed Predefined Roles (Static Prompt Role Assignment; MetaGPT, Hong et al., ICLR 2024)
+Implements the 5 foundational and state-of-the-art multi-agent baselines
+derived directly from published literature without modifying core benchmark logic:
+1. Independent Agents (No Communication / Majority Vote Ensemble; Wang et al., ICLR 2023)
+2. Fully Connected Broadcast (Flat Multi-Agent Debate; ChatDev, Qian et al., ACL 2024; Du et al., 2023)
+3. Central Coordinator (Star Hub-and-Spoke; AutoGen, Wu et al., ICLR 2024)
+4. Hierarchical Coordinator (Multi-Tier Tree / Chain of Command; MacNet, Wang et al., 2024/2025)
+5. Fixed Predefined Roles (Static Prompt Role Assignment; MetaGPT, Hong et al., ICLR 2024 Oral)
 + ORCHESTRA (Emergent Dynamic Self-Organization)
 """
 
 from __future__ import annotations
 
 import json
-import random
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Set, Tuple
@@ -93,53 +91,8 @@ class BroadcastTopology(BaseTopologyEnforcer):
         return {"applied": False, "rule": "all_to_all_permitted"}
 
 
-class RandomTopology(BaseTopologyEnforcer):
-    """Baseline 3: Random Topology (Erdős-Rényi Graph, p=0.5).
-    In each round, peer communication links exist with 50% probability.
-    Messages sent across non-existent links are dropped.
-    """
-
-    def __init__(self, p: float = 0.5, seed: int = 42) -> None:
-        self.p = p
-        self.seed = seed
-
-    @property
-    def name(self) -> str:
-        return "random_topology"
-
-    @property
-    def citation(self) -> str:
-        return "Erdős & Rényi (1960); Watts & Strogatz (1998)"
-
-    def apply_post_round(self, case_dir: Path, current_round: int, num_agents: int) -> Dict[str, Any]:
-        round_dir = case_dir / "rounds" / f"round-{current_round:06d}"
-        msg_dir = round_dir / "env" / "messages"
-        dropped = 0
-        kept = 0
-
-        if msg_dir.exists():
-            for mf in list(msg_dir.glob("*.json")):
-                try:
-                    with open(mf, "r", encoding="utf-8") as f:
-                        mdata = json.load(f)
-                    u = mdata.get("sender_id", 0)
-                    v = mdata.get("recipient_id", 0)
-
-                    # Deterministic pseudo-randomness based on (seed, round, u, v)
-                    rng = random.Random(self.seed + current_round * 1000 + u * 31 + v)
-                    if rng.random() > self.p:
-                        mf.unlink(missing_ok=True)
-                        dropped += 1
-                    else:
-                        kept += 1
-                except Exception:
-                    pass
-
-        return {"applied": True, "dropped_messages": dropped, "kept_messages": kept}
-
-
 class CentralCoordinatorTopology(BaseTopologyEnforcer):
-    """Baseline 4: Central Coordinator / Star Hub (Wu et al., AutoGen 2024).
+    """Baseline 3: Central Coordinator / Star Hub (Wu et al., AutoGen 2024).
     Agent 0 is the designated central hub.
     Worker agents (1..N-1) can only communicate with Agent 0.
     Direct worker-to-worker messages are strictly dropped.
@@ -183,7 +136,7 @@ class CentralCoordinatorTopology(BaseTopologyEnforcer):
 
 
 class HierarchicalCoordinatorTopology(BaseTopologyEnforcer):
-    """Baseline 5: Hierarchical Tree Coordinator (MacNet, Wang et al., 2024/2025).
+    """Baseline 4: Hierarchical Tree Coordinator (MacNet, Wang et al., 2024/2025).
     Enforces a strict multi-tier organizational tree / chain-of-command.
     For N=2: 0 <-> 1
     For N=5: 0 (Executive) <-> {1, 2} (Leads); 1 <-> 3 (Worker); 2 <-> 4 (Worker)
@@ -262,7 +215,7 @@ class HierarchicalCoordinatorTopology(BaseTopologyEnforcer):
 
 
 class FixedRolesTopology(BaseTopologyEnforcer):
-    """Baseline 6: Fixed Predefined Roles (MetaGPT, Hong et al., ICLR 2024 Oral).
+    """Baseline 5: Fixed Predefined Roles (MetaGPT, Hong et al., ICLR 2024 Oral).
     Static upfront role conditioning via prompt injection:
     - Agent 0 is designated Chief Project Coordinator.
     - Agents 1..N-1 are designated Subordinate Functional Specialists.
@@ -374,7 +327,6 @@ class OrchestraTopology(BaseTopologyEnforcer):
 SUPPORTED_BASELINES: Dict[str, type[BaseTopologyEnforcer]] = {
     "independent": IndependentTopology,
     "broadcast": BroadcastTopology,
-    "random_topology": RandomTopology,
     "central_coordinator": CentralCoordinatorTopology,
     "hierarchical_coordinator": HierarchicalCoordinatorTopology,
     "fixed_roles": FixedRolesTopology,
@@ -394,8 +346,6 @@ def create_baseline_topology(baseline_name: str, seed: int = 42, **kwargs: Any) 
         return IndependentTopology()
     elif bname == "broadcast":
         return BroadcastTopology()
-    elif bname == "random_topology":
-        return RandomTopology(p=float(kwargs.get("p", 0.5)), seed=seed)
     elif bname == "central_coordinator":
         hub_id = int(kwargs.get("hub_id", kwargs.get("leader_id", 0)))
         return CentralCoordinatorTopology(hub_id=hub_id)

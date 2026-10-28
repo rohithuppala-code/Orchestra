@@ -30,12 +30,6 @@ BASELINE_METADATA = {
         "type": "Complete Mesh",
         "color": "#f97316",  # orange
     },
-    "random_topology": {
-        "display": "Random Topology (p=0.5)",
-        "citation": "Watts & Strogatz (1998)",
-        "type": "Random Graph",
-        "color": "#a855f7",  # purple
-    },
     "central_coordinator": {
         "display": "Central Coordinator",
         "citation": "Wu et al. (AutoGen / ICLR 2024)",

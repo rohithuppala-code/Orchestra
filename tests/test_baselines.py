@@ -23,7 +23,6 @@ def test_supported_baselines_registry():
     expected = [
         "independent",
         "broadcast",
-        "random_topology",
         "central_coordinator",
         "hierarchical_coordinator",
         "fixed_roles",

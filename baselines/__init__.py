@@ -13,7 +13,6 @@ from baselines.topologies import (
     HierarchicalCoordinatorTopology,
     IndependentTopology,
     OrchestraTopology,
-    RandomTopology,
     create_baseline_topology,
 )
 
@@ -21,7 +20,6 @@ __all__ = [
     "BaseTopologyEnforcer",
     "IndependentTopology",
     "BroadcastTopology",
-    "RandomTopology",
     "CentralCoordinatorTopology",
     "HierarchicalCoordinatorTopology",
     "FixedRolesTopology",

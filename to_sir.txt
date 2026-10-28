@@ -157,6 +157,13 @@ ORCHESTRA automatically measures 7 comprehensive layers of organizational dynami
   The system automatically generates a master spreadsheet (batch_comparison_results.csv)
   and publication figures (longitudinal_comparison.png) without manual effort.
 
+gemma4 : 2bill
+Qwen 3.8 : 27bill
+
+qwen 3.5 : 0.8b
+
+qwen 2.5 : 7bill
+
 --------------------------------------------------------------------------------
 8. PROPOSED NEXT STEPS TO DISCUSS WITH PROFESSOR
 --------------------------------------------------------------------------------
@@ -203,7 +210,7 @@ qwen 2.5 : 7bill
 8. MULTI-AGENT BASELINE METHODOLOGIES & COMPARATIVE SUITE
 ================================================================================
 To benchmark ORCHESTRA against established literature for our paper submission,
-we have implemented 6 foundational and state-of-the-art baselines under a
+we have implemented 5 foundational and state-of-the-art baselines under a
 completely isolated, modular package (`baselines/`):
 
 1. Independent Agents (No Communication / Majority Vote Ensemble)
@@ -215,27 +222,22 @@ completely isolated, modular package (`baselines/`):
    - Citation: Qian et al. (ChatDev, ACL 2024); Du et al. (ICML 2023)
    - Mechanism: Unconstrained all-to-all broadcast across every round.
 
-3. Random Topology (Erdos-Renyi Random Graph, p=0.5)
-   - Citation: Erdos & Renyi (1960); Watts & Strogatz (1998)
-   - Mechanism: Communication links form randomly with 50% probability each round.
-     Serves as an essential ablation proving structured organization is required.
-
-4. Central Coordinator (Star Hub-and-Spoke Architecture)
+3. Central Coordinator (Star Hub-and-Spoke Architecture)
    - Citation: Wu et al. (AutoGen, ICLR 2024)
    - Mechanism: Agent 0 is designated as the sole hub. Worker-to-worker messages
      are dropped; all traffic bottlenecks through Agent 0.
 
-5. Hierarchical Coordinator (Multi-Tier Tree / Chain of Command)
+4. Hierarchical Coordinator (Multi-Tier Tree / Chain of Command)
    - Citation: Wang et al. (MacNet, ICLR 2024 / Neural Networks 2025)
    - Mechanism: Strict multi-tier tree hierarchy (Executive -> Division Leads -> Workers).
      Skip-level and cross-branch communications are restricted.
 
-6. Fixed Predefined Roles (Static Prompt Specialization)
+5. Fixed Predefined Roles (Static Prompt Specialization)
    - Citation: Hong et al. (MetaGPT, ICLR 2024 Oral)
    - Mechanism: Explicit role prompts injected upfront (Agent 0 = Chief Architect;
      Agents 1..N = Subordinate Specialists).
 
-7. ORCHESTRA (Our Proposed Framework)
+★ ORCHESTRA (Our Proposed Framework)
    - Mechanism: Emergent dynamic self-organization with zero hardcoded roles
      and spontaneous division of labor.
 
@@ -243,7 +245,7 @@ completely isolated, modular package (`baselines/`):
 EMPIRICAL COMPARISON & PAPER SYNTHESIS AUTOMATION
 --------------------------------------------------------------------------------
 - Controlled Apples-to-Apples Evaluation:
-  All 6 baselines are evaluated against ORCHESTRA on the identical benchmark tasks
+  All 5 baselines are evaluated against ORCHESTRA on the identical benchmark tasks
   (SILO-BENCH), identical agent population scales (N=2, 5, 10), and identical
   LLM backends under both healthy conditions and Agent Dropout perturbations.
 
