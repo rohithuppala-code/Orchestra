@@ -264,3 +264,6 @@ EMPIRICAL COMPARISON & PAPER SYNTHESIS AUTOMATION
   - Figure 2: Fault Tolerance & Dropout Resilience Bar Chart
   - Figure 3: Solution Accuracy vs. Token Cost Pareto Frontier
 ================================================================================
+
+Baselines = 5 baselines* 30tasks * 2 cases (with and without agent dropped) = 300 per agent system * 3 agent system = 900 runs  
+Orchestra = 30 tasks *3 communication protocols * 2 cases (with and without agent dropped) = 180 per agent system * 3 systems = 540 runs
