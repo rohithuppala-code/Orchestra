@@ -176,6 +176,149 @@ def generate_paper_comparison_table(df: pd.DataFrame, output_dir: Path) -> pd.Da
     return table_df
 
 
+def generate_scale_breakdown_table(df: pd.DataFrame, output_dir: Path) -> pd.DataFrame:
+    """Generate Table 2: Detailed Evaluation Metrics by Agent Scale (N=2, 5, 10)."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    ctrl_df = df[df["perturbation"] == "none"]
+    if len(ctrl_df) == 0:
+        ctrl_df = df
+
+    records = []
+    unique_baselines = set(df["baseline"].astype(str).tolist())
+    baselines = [b for b in BASELINE_METADATA if b in unique_baselines] or list(unique_baselines)
+    
+    unique_scales = sorted([int(n) for n in df["num_agents"].unique() if n in [2, 5, 10]])
+    if not unique_scales:
+        unique_scales = sorted([int(n) for n in df["num_agents"].unique()])
+
+    for bname in baselines:
+        meta = BASELINE_METADATA.get(bname, {"display": bname.title()})
+        b_df = ctrl_df[ctrl_df["baseline"] == bname]
+        for n in unique_scales:
+            sub = b_df[b_df["num_agents"] == n]
+            if len(sub) == 0:
+                continue
+            records.append({
+                "Baseline": meta["display"],
+                "Scale_N": n,
+                "Runs": len(sub),
+                "Success_Rate": f"{float(sub['success_rate'].mean()):.1%}",
+                "Partial_Correctness": f"{float(sub['partial_correctness'].mean()):.3f}" if "partial_correctness" in sub else "-",
+                "Avg_Tokens": f"{float(sub['token_consumption'].mean()):,.0f}",
+                "Avg_Rounds": f"{float(sub['total_rounds'].mean()):.2f}",
+                "Gini_Hierarchy": f"{float(sub['gini_out_degree'].mean()):.3f}" if "gini_out_degree" in sub else "-",
+                "Comm_Density": f"{float(sub['communication_density'].mean()):.3f}" if "communication_density" in sub else "-",
+                "Avg_Latency_s": f"{float(sub['total_time_seconds'].mean()):.1f}" if "total_time_seconds" in sub else "-",
+            })
+
+    table_df = pd.DataFrame(records)
+    csv_file = output_dir / "table2_metrics_by_agent_scale.csv"
+    table_df.to_csv(csv_file, index=False)
+    md_file = output_dir / "table2_metrics_by_agent_scale.md"
+    with open(md_file, "w", encoding="utf-8") as f:
+        f.write("# Table 2: Detailed Evaluation Metrics Across Agent Scales (N=2, 5, 10)\n\n")
+        f.write(str(table_df.to_markdown(index=False)))
+        f.write("\n\n*Evaluated under healthy conditions (perturbation=none).*\n")
+    print(f"[COMPARE] Saved Table 2 to: {csv_file}")
+    return table_df
+
+
+def generate_complexity_tier_table(df: pd.DataFrame, output_dir: Path) -> pd.DataFrame:
+    """Generate Table 3: Performance Across Algorithmic Hardness Tiers (Level I, II, III)."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    ctrl_df = df[df["perturbation"] == "none"].copy()
+    if len(ctrl_df) == 0:
+        ctrl_df = df.copy()
+
+    def get_tier(t: str) -> str:
+        t = str(t)
+        if t.startswith("I-"):
+            return "Level I (Aggregation)"
+        elif t.startswith("II-"):
+            return "Level II (Mesh Routing)"
+        elif t.startswith("III-"):
+            return "Level III (Global Shuffle)"
+        return "Unknown"
+
+    ctrl_df["complexity_tier"] = [get_tier(t) for t in ctrl_df["task_id"].tolist()]
+    tiers = ["Level I (Aggregation)", "Level II (Mesh Routing)", "Level III (Global Shuffle)"]
+
+    records = []
+    unique_baselines = set(df["baseline"].astype(str).tolist())
+    baselines = [b for b in BASELINE_METADATA if b in unique_baselines] or list(unique_baselines)
+
+    for bname in baselines:
+        meta = BASELINE_METADATA.get(bname, {"display": bname.title()})
+        b_df = ctrl_df[ctrl_df["baseline"] == bname]
+        for tier in tiers:
+            sub = b_df[b_df["complexity_tier"] == tier]
+            if len(sub) == 0:
+                continue
+            records.append({
+                "Baseline": meta["display"],
+                "Complexity_Tier": tier,
+                "Runs": len(sub),
+                "Success_Rate": f"{float(sub['success_rate'].mean()):.1%}",
+                "Partial_Correctness": f"{float(sub['partial_correctness'].mean()):.3f}" if "partial_correctness" in sub else "-",
+                "Avg_Tokens": f"{float(sub['token_consumption'].mean()):,.0f}",
+                "Avg_Rounds": f"{float(sub['total_rounds'].mean()):.2f}",
+                "Gini_Hierarchy": f"{float(sub['gini_out_degree'].mean()):.3f}" if "gini_out_degree" in sub else "-",
+            })
+
+    table_df = pd.DataFrame(records)
+    csv_file = output_dir / "table3_task_complexity_breakdown.csv"
+    table_df.to_csv(csv_file, index=False)
+    md_file = output_dir / "table3_task_complexity_breakdown.md"
+    with open(md_file, "w", encoding="utf-8") as f:
+        f.write("# Table 3: Performance Breakdown by Algorithmic Complexity Tier\n\n")
+        f.write(str(table_df.to_markdown(index=False)))
+        f.write("\n\n*Task Tiers: Level I (1-10), Level II (11-20), Level III (21-30).*\n")
+    print(f"[COMPARE] Saved Table 3 to: {csv_file}")
+    return table_df
+
+
+def generate_perturbation_resilience_table(df: pd.DataFrame, output_dir: Path) -> pd.DataFrame:
+    """Generate Table 4: Fault-Tolerance & Perturbation Resilience Breakdown."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    records = []
+    unique_baselines = set(df["baseline"].astype(str).tolist())
+    baselines = [b for b in BASELINE_METADATA if b in unique_baselines] or list(unique_baselines)
+
+    for bname in baselines:
+        meta = BASELINE_METADATA.get(bname, {"display": bname.title()})
+        b_ctrl = df[(df["baseline"] == bname) & (df["perturbation"] == "none")]
+        b_drop = df[(df["baseline"] == bname) & (df["perturbation"] == "agent_dropout")]
+
+        ctrl_acc = float(b_ctrl["success_rate"].mean()) if len(b_ctrl) > 0 else np.nan
+        drop_acc = float(b_drop["success_rate"].mean()) if len(b_drop) > 0 else np.nan
+        delta = drop_acc - ctrl_acc if not np.isnan(ctrl_acc) and not np.isnan(drop_acc) else np.nan
+
+        ctrl_tok = float(b_ctrl["token_consumption"].mean()) if len(b_ctrl) > 0 else np.nan
+        drop_tok = float(b_drop["token_consumption"].mean()) if len(b_drop) > 0 else np.nan
+        delta_tok = ((drop_tok - ctrl_tok) / ctrl_tok) if not np.isnan(ctrl_tok) and ctrl_tok > 0 and not np.isnan(drop_tok) else np.nan
+
+        records.append({
+            "Baseline": meta["display"],
+            "Healthy_Accuracy": f"{ctrl_acc:.1%}" if not np.isnan(ctrl_acc) else "-",
+            "Dropout_Accuracy": f"{drop_acc:.1%}" if not np.isnan(drop_acc) else "-",
+            "Accuracy_Delta": f"{delta:+.1%}" if not np.isnan(delta) else "-",
+            "Healthy_Tokens": f"{ctrl_tok:,.0f}" if not np.isnan(ctrl_tok) else "-",
+            "Dropout_Tokens": f"{drop_tok:,.0f}" if not np.isnan(drop_tok) else "-",
+            "Token_Delta": f"{delta_tok:+.1%}" if not np.isnan(delta_tok) else "-",
+        })
+
+    table_df = pd.DataFrame(records)
+    csv_file = output_dir / "table4_perturbation_resilience_breakdown.csv"
+    table_df.to_csv(csv_file, index=False)
+    md_file = output_dir / "table4_perturbation_resilience_breakdown.md"
+    with open(md_file, "w", encoding="utf-8") as f:
+        f.write("# Table 4: Fault Tolerance and Agent Dropout Degradation Breakdown\n\n")
+        f.write(str(table_df.to_markdown(index=False)))
+        f.write("\n\n*Agent Dropout: Node dropped at Round 2 during active coordination.*\n")
+    print(f"[COMPARE] Saved Table 4 to: {csv_file}")
+    return table_df
+
+
 def plot_baseline_figures(df: pd.DataFrame, output_dir: Path) -> None:
     """Generate high-resolution publication charts."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -302,8 +445,11 @@ def main() -> None:
     print(f"[COMPARE] Saved combined multi-scale results CSV to: {master_csv}")
 
     generate_paper_comparison_table(df, out_dir)
+    generate_scale_breakdown_table(df, out_dir)
+    generate_complexity_tier_table(df, out_dir)
+    generate_perturbation_resilience_table(df, out_dir)
     plot_baseline_figures(df, out_dir)
-    print("\n[COMPARE COMPLETE] All paper tables and figures successfully generated!")
+    print("\n[COMPARE COMPLETE] All 4 paper tables and 3 figures successfully generated!")
 
 
 if __name__ == "__main__":

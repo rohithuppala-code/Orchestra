@@ -76,12 +76,14 @@ if ($allCsvPaths.Count -gt 0) {
         Write-Host "    - N=$n Agents: ${Prefix}_n${n}/" -ForegroundColor Green
     }
     Write-Host "  Paper Draft Artifacts in $OutputDir/:" -ForegroundColor Green
-    Write-Host "    - Table 1 (CSV):  $OutputDir/table1_master_baseline_comparison.csv" -ForegroundColor Green
-    Write-Host "    - Table 1 (MD):   $OutputDir/table1_master_baseline_comparison.md" -ForegroundColor Green
-    Write-Host "    - Figure 1 (PNG): $OutputDir/figure_baseline_accuracy_comparison.png" -ForegroundColor Green
-    Write-Host "    - Figure 2 (PNG): $OutputDir/figure_perturbation_resilience.png" -ForegroundColor Green
-    Write-Host "    - Figure 3 (PNG): $OutputDir/figure_token_accuracy_pareto.png" -ForegroundColor Green
-    Write-Host "    - Master Raw CSV: $OutputDir/master_baseline_results.csv" -ForegroundColor Green
+    Write-Host "    - Table 1 (Master Comparison):   $OutputDir/table1_master_baseline_comparison.*" -ForegroundColor Green
+    Write-Host "    - Table 2 (Metrics by Scale):     $OutputDir/table2_metrics_by_agent_scale.*" -ForegroundColor Green
+    Write-Host "    - Table 3 (Task Complexity Tier): $OutputDir/table3_task_complexity_breakdown.*" -ForegroundColor Green
+    Write-Host "    - Table 4 (Dropout Resilience):   $OutputDir/table4_perturbation_resilience_breakdown.*" -ForegroundColor Green
+    Write-Host "    - Figure 1 (Accuracy Bar Chart):  $OutputDir/figure_baseline_accuracy_comparison.png" -ForegroundColor Green
+    Write-Host "    - Figure 2 (Dropout Resilience):  $OutputDir/figure_perturbation_resilience.png" -ForegroundColor Green
+    Write-Host "    - Figure 3 (Pareto Token Cost):   $OutputDir/figure_token_accuracy_pareto.png" -ForegroundColor Green
+    Write-Host "    - Master Raw CSV of All 900 Runs: $OutputDir/master_baseline_results.csv" -ForegroundColor Green
     Write-Host "========================================================================" -ForegroundColor Green
 } else {
     Write-Host "`n[ERROR] No baseline CSV files were produced to synthesize." -ForegroundColor Red
