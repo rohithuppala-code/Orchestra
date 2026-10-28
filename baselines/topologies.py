@@ -16,9 +16,8 @@ from __future__ import annotations
 import json
 import random
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, Set, Tuple
 
 
 class BaseTopologyEnforcer(ABC):
@@ -28,13 +27,13 @@ class BaseTopologyEnforcer(ABC):
     @abstractmethod
     def name(self) -> str:
         """Unique identifier for this baseline."""
-        pass
+        ...
 
     @property
     @abstractmethod
     def citation(self) -> str:
         """Paper citation defining this paradigm."""
-        pass
+        ...
 
     def apply_initialization(self, case_dir: Path, num_agents: int) -> Dict[str, Any]:
         """Apply pre-execution role conditioning or prompt injection in round-000000."""
@@ -100,7 +99,7 @@ class RandomTopology(BaseTopologyEnforcer):
     Messages sent across non-existent links are dropped.
     """
 
-    def __init__(self, p: float = 0.5, seed: int = 42):
+    def __init__(self, p: float = 0.5, seed: int = 42) -> None:
         self.p = p
         self.seed = seed
 
@@ -146,7 +145,7 @@ class CentralCoordinatorTopology(BaseTopologyEnforcer):
     Direct worker-to-worker messages are strictly dropped.
     """
 
-    def __init__(self, hub_id: int = 0):
+    def __init__(self, hub_id: int = 0) -> None:
         self.hub_id = hub_id
 
     @property
@@ -229,7 +228,7 @@ class HierarchicalCoordinatorTopology(BaseTopologyEnforcer):
                 curr_lead_idx += 1
 
         # Symmetric set for undirected communication
-        symmetric_edges = set()
+        symmetric_edges: Set[Tuple[int, int]] = set()
         for u, v in edges:
             symmetric_edges.add((u, v))
             symmetric_edges.add((v, u))
@@ -251,7 +250,7 @@ class HierarchicalCoordinatorTopology(BaseTopologyEnforcer):
                     u = mdata.get("sender_id")
                     v = mdata.get("recipient_id")
 
-                    if (u, v) not in allowed_edges:
+                    if u is not None and v is not None and (u, v) not in allowed_edges:
                         mf.unlink(missing_ok=True)
                         dropped += 1
                     else:
@@ -270,7 +269,7 @@ class FixedRolesTopology(BaseTopologyEnforcer):
     Communication is structured strictly through Agent 0.
     """
 
-    def __init__(self, leader_id: int = 0):
+    def __init__(self, leader_id: int = 0) -> None:
         self.leader_id = leader_id
 
     @property
@@ -372,7 +371,7 @@ class OrchestraTopology(BaseTopologyEnforcer):
         return {"applied": True, "rule": "emergent_unconstrained_p2p"}
 
 
-SUPPORTED_BASELINES = {
+SUPPORTED_BASELINES: Dict[str, type[BaseTopologyEnforcer]] = {
     "independent": IndependentTopology,
     "broadcast": BroadcastTopology,
     "random_topology": RandomTopology,
@@ -383,17 +382,29 @@ SUPPORTED_BASELINES = {
 }
 
 
-def create_baseline_topology(baseline_name: str, seed: int = 42, **kwargs) -> BaseTopologyEnforcer:
-    """Instantiate a baseline topology enforcer by name."""
+def create_baseline_topology(baseline_name: str, seed: int = 42, **kwargs: Any) -> BaseTopologyEnforcer:
+    """Instantiate a baseline topology enforcer with strict typing."""
     bname = baseline_name.lower().strip()
     if bname not in SUPPORTED_BASELINES:
         raise ValueError(
             f"Unknown baseline: '{baseline_name}'. Supported baselines: {list(SUPPORTED_BASELINES.keys())}"
         )
 
-    cls = SUPPORTED_BASELINES[bname]
-    if bname == "random_topology":
-        return cls(p=kwargs.get("p", 0.5), seed=seed)
-    elif bname in ("central_coordinator", "fixed_roles"):
-        return cls(leader_id=kwargs.get("leader_id", 0)) if "leader_id" in kwargs else cls()
-    return cls()
+    if bname == "independent":
+        return IndependentTopology()
+    elif bname == "broadcast":
+        return BroadcastTopology()
+    elif bname == "random_topology":
+        return RandomTopology(p=float(kwargs.get("p", 0.5)), seed=seed)
+    elif bname == "central_coordinator":
+        hub_id = int(kwargs.get("hub_id", kwargs.get("leader_id", 0)))
+        return CentralCoordinatorTopology(hub_id=hub_id)
+    elif bname == "hierarchical_coordinator":
+        return HierarchicalCoordinatorTopology()
+    elif bname == "fixed_roles":
+        leader_id = int(kwargs.get("leader_id", 0))
+        return FixedRolesTopology(leader_id=leader_id)
+    elif bname == "orchestra":
+        return OrchestraTopology()
+
+    return OrchestraTopology()

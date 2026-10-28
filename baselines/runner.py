@@ -9,15 +9,13 @@ token consumption, structural Gini, and disruption resilience.
 from __future__ import annotations
 
 import argparse
-import collections
 import json
-import os
 import sys
 import time
 import traceback
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Optional
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
 SILO_BENCH_ROOT = WORKSPACE_ROOT / "silo-bench"
@@ -26,7 +24,7 @@ if str(SILO_BENCH_ROOT) not in sys.path:
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
-from src.engine import evaluate, init_case, run_round
+from src.engine import evaluate, init_case, run_round  # type: ignore[import-not-found]
 from orchestra.config import ExperimentConfig
 from orchestra.instrumentation import (
     extract_case_instrumentation,
@@ -34,7 +32,11 @@ from orchestra.instrumentation import (
     save_orchestra_instrumentation,
 )
 from orchestra.perturbations import create_perturbation
-from baselines.topologies import BaseTopologyEnforcer, create_baseline_topology
+from baselines.topologies import (
+    SUPPORTED_BASELINES,
+    BaseTopologyEnforcer,
+    create_baseline_topology,
+)
 
 
 @dataclass
@@ -270,14 +272,12 @@ def _evaluate_independent_majority_vote(case_path: Path, num_agents: int) -> Non
 
         # Simple majority vote for scalar answers or per-agent matching
         if submitted_answers and expected_values:
-            # Check if each agent matched its expected shard
             correct_count = 0
             for i, ans in enumerate(submitted_answers):
                 if i < len(expected_values) and ans == expected_values[i]:
                     correct_count += 1
             success_rate = correct_count / max(1, len(expected_values))
 
-            # Update results.json with ensemble outcome
             eval_data = {
                 "success": success_rate >= 0.99,
                 "success_rate": success_rate,

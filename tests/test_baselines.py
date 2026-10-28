@@ -1,25 +1,21 @@
 """Unit tests for the 6 Multi-Agent Baselines and Topology Enforcers."""
 
+from __future__ import annotations
+
 import json
-import shutil
 import tempfile
 from pathlib import Path
 
-import pytest
+import pandas as pd
 
+from baselines.compare import generate_paper_comparison_table
 from baselines.topologies import (
     SUPPORTED_BASELINES,
-    BroadcastTopology,
     CentralCoordinatorTopology,
-    FixedRolesTopology,
     HierarchicalCoordinatorTopology,
     IndependentTopology,
-    OrchestraTopology,
-    RandomTopology,
     create_baseline_topology,
 )
-from baselines.compare import generate_paper_comparison_table
-import pandas as pd
 
 
 def test_supported_baselines_registry():

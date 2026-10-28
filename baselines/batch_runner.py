@@ -12,7 +12,6 @@ Automatically aggregates all runs into a master CSV table for paper synthesis.
 from __future__ import annotations
 
 import argparse
-import json
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -20,7 +19,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-from baselines.runner import BaselineRunSummary, run_baseline_experiment
+from baselines.runner import run_baseline_experiment
 from baselines.topologies import SUPPORTED_BASELINES
 
 

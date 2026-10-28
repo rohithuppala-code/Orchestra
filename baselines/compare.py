@@ -9,9 +9,7 @@ Generates:
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 import matplotlib
 matplotlib.use("Agg")
@@ -74,13 +72,14 @@ def load_and_standardize_results(csv_path: Path) -> pd.DataFrame:
 
     # Standardize baseline names
     if "baseline" in df.columns:
-        df["baseline"] = df["baseline"].str.lower().str.strip()
+        df["baseline"] = df["baseline"].astype(str).str.lower().str.strip()
     elif "protocol" in df.columns:
-        df["baseline"] = df["protocol"].map({
+        mapping = {
             "msg": "orchestra",
             "broadcast": "broadcast",
             "sfs": "independent",
-        }).fillna("orchestra")
+        }
+        df["baseline"] = df["protocol"].astype(str).replace(mapping)
 
     # Fill default perturbation
     if "perturbation" not in df.columns:
@@ -95,9 +94,10 @@ def generate_paper_comparison_table(df: pd.DataFrame, output_dir: Path) -> pd.Da
     output_dir.mkdir(parents=True, exist_ok=True)
 
     records = []
-    baselines_present = [b for b in BASELINE_METADATA.keys() if b in df["baseline"].unique()]
+    unique_baselines = set(df["baseline"].astype(str).tolist())
+    baselines_present = [b for b in BASELINE_METADATA if b in unique_baselines]
     if not baselines_present:
-        baselines_present = list(df["baseline"].unique())
+        baselines_present = list(unique_baselines)
 
     for bname in baselines_present:
         meta = BASELINE_METADATA.get(bname, {
@@ -109,29 +109,28 @@ def generate_paper_comparison_table(df: pd.DataFrame, output_dir: Path) -> pd.Da
 
         # Control condition metrics
         ctrl_df = b_df[b_df["perturbation"] == "none"]
-        if ctrl_df.empty:
+        if len(ctrl_df) == 0:
             ctrl_df = b_df
 
         # Scales breakdown
-        n2_acc = ctrl_df[ctrl_df["num_agents"] == 2]["success_rate"].mean() if 2 in ctrl_df["num_agents"].values else np.nan
-        n5_acc = ctrl_df[ctrl_df["num_agents"] == 5]["success_rate"].mean() if 5 in ctrl_df["num_agents"].values else np.nan
-        n10_acc = ctrl_df[ctrl_df["num_agents"] == 10]["success_rate"].mean() if 10 in ctrl_df["num_agents"].values else np.nan
+        agents_list = ctrl_df["num_agents"].tolist()
+        n2_acc = float(ctrl_df[ctrl_df["num_agents"] == 2]["success_rate"].mean()) if 2 in agents_list else np.nan
+        n5_acc = float(ctrl_df[ctrl_df["num_agents"] == 5]["success_rate"].mean()) if 5 in agents_list else np.nan
+        n10_acc = float(ctrl_df[ctrl_df["num_agents"] == 10]["success_rate"].mean()) if 10 in agents_list else np.nan
 
-        overall_acc = ctrl_df["success_rate"].mean()
-        mean_tokens = ctrl_df["token_consumption"].mean()
-        mean_rounds = ctrl_df["total_rounds"].mean()
-        mean_gini = ctrl_df["gini_out_degree"].mean() if "gini_out_degree" in ctrl_df.columns else 0.0
+        overall_acc = float(ctrl_df["success_rate"].mean())
+        mean_tokens = float(ctrl_df["token_consumption"].mean())
+        mean_rounds = float(ctrl_df["total_rounds"].mean())
+        mean_gini = float(ctrl_df["gini_out_degree"].mean()) if "gini_out_degree" in ctrl_df else 0.0
 
         # Dropout degradation
         drop_df = b_df[b_df["perturbation"] == "agent_dropout"]
-        if not drop_df.empty:
-            drop_acc = drop_df["success_rate"].mean()
+        if len(drop_df) > 0:
+            drop_acc = float(drop_df["success_rate"].mean())
             delta_drop = drop_acc - overall_acc
-            resilience_ratio = (drop_acc / overall_acc) if overall_acc > 0 else 0.0
         else:
             drop_acc = np.nan
             delta_drop = np.nan
-            resilience_ratio = np.nan
 
         records.append({
             "Baseline": meta["display"],
@@ -159,7 +158,7 @@ def generate_paper_comparison_table(df: pd.DataFrame, output_dir: Path) -> pd.Da
     md_file = output_dir / "table1_master_baseline_comparison.md"
     with open(md_file, "w", encoding="utf-8") as f:
         f.write("# Table 1: Master Empirical Multi-Agent Baseline Comparison\n\n")
-        f.write(table_df.to_markdown(index=False))
+        f.write(str(table_df.to_markdown(index=False)))
         f.write("\n\n*Note: N=2, 5, 10 evaluated on SILO-BENCH. Resilience Delta denotes accuracy change under agent dropout failure.*\n")
     print(f"[COMPARE] Saved Table 1 Markdown to: {md_file}")
 
@@ -173,25 +172,27 @@ def plot_baseline_figures(df: pd.DataFrame, output_dir: Path) -> None:
 
     # 1. Figure 1: Success Rate by Scale (Grouped Bar Chart)
     fig, ax = plt.subplots(figsize=(10, 5), dpi=300)
-    baselines = [b for b in BASELINE_METADATA.keys() if b in df["baseline"].unique()]
+    unique_baselines = set(df["baseline"].astype(str).tolist())
+    baselines = [b for b in BASELINE_METADATA if b in unique_baselines]
     if not baselines:
-        baselines = list(df["baseline"].unique())
+        baselines = list(unique_baselines)
 
     scales = sorted([n for n in df["num_agents"].unique() if n in [2, 5, 10]])
     if not scales:
-        scales = sorted(list(df["num_agents"].unique()))
+        scales = sorted([int(x) for x in df["num_agents"].unique()])
 
     x = np.arange(len(baselines))
     width = 0.8 / max(1, len(scales))
 
     ctrl_df = df[df["perturbation"] == "none"]
-    if ctrl_df.empty:
+    if len(ctrl_df) == 0:
         ctrl_df = df
 
     for i, n in enumerate(scales):
         sub_df = ctrl_df[ctrl_df["num_agents"] == n]
+        sub_baselines = sub_df["baseline"].tolist()
         accs = [
-            sub_df[sub_df["baseline"] == b]["success_rate"].mean() * 100.0 if b in sub_df["baseline"].values else 0.0
+            float(sub_df[sub_df["baseline"] == b]["success_rate"].mean() * 100.0) if b in sub_baselines else 0.0
             for b in baselines
         ]
         offset = (i - (len(scales) - 1) / 2) * width
@@ -206,20 +207,20 @@ def plot_baseline_figures(df: pd.DataFrame, output_dir: Path) -> None:
     plt.tight_layout()
     fig1_path = output_dir / "figure_baseline_accuracy_comparison.png"
     plt.savefig(fig1_path)
-    plt.close()
+    plt.close(fig)
     print(f"[COMPARE] Saved Figure 1 to: {fig1_path}")
 
     # 2. Figure 2: Fault Tolerance & Resilience Under Dropout
     fig, ax = plt.subplots(figsize=(10, 5), dpi=300)
     drop_df = df[df["perturbation"] == "agent_dropout"]
-    if not drop_df.empty:
+    if len(drop_df) > 0:
         ctrl_accs = []
         drop_accs = []
         labels = []
 
         for b in baselines:
-            b_ctrl = df[(df["baseline"] == b) & (df["perturbation"] == "none")]["success_rate"].mean() * 100.0
-            b_drop = df[(df["baseline"] == b) & (df["perturbation"] == "agent_dropout")]["success_rate"].mean() * 100.0
+            b_ctrl = float(df[(df["baseline"] == b) & (df["perturbation"] == "none")]["success_rate"].mean() * 100.0)
+            b_drop = float(df[(df["baseline"] == b) & (df["perturbation"] == "agent_dropout")]["success_rate"].mean() * 100.0)
             if not np.isnan(b_ctrl) and not np.isnan(b_drop):
                 ctrl_accs.append(b_ctrl)
                 drop_accs.append(b_drop)
@@ -240,16 +241,16 @@ def plot_baseline_figures(df: pd.DataFrame, output_dir: Path) -> None:
             plt.tight_layout()
             fig2_path = output_dir / "figure_perturbation_resilience.png"
             plt.savefig(fig2_path)
-            plt.close()
+            plt.close(fig)
             print(f"[COMPARE] Saved Figure 2 to: {fig2_path}")
 
     # 3. Figure 3: Token Cost vs Success Rate (Pareto Frontier)
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     for b in baselines:
         b_df = ctrl_df[ctrl_df["baseline"] == b]
-        if not b_df.empty:
-            mean_tok = b_df["token_consumption"].mean()
-            mean_acc = b_df["success_rate"].mean() * 100.0
+        if len(b_df) > 0:
+            mean_tok = float(b_df["token_consumption"].mean())
+            mean_acc = float(b_df["success_rate"].mean() * 100.0)
             meta = BASELINE_METADATA.get(b, {})
             disp = meta.get("display", b)
             col = meta.get("color", "#64748b")
@@ -266,7 +267,7 @@ def plot_baseline_figures(df: pd.DataFrame, output_dir: Path) -> None:
     plt.tight_layout()
     fig3_path = output_dir / "figure_token_accuracy_pareto.png"
     plt.savefig(fig3_path)
-    plt.close()
+    plt.close(fig)
     print(f"[COMPARE] Saved Figure 3 to: {fig3_path}")
 
 
