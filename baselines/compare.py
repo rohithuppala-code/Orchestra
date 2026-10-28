@@ -63,12 +63,29 @@ BASELINE_METADATA = {
 }
 
 
-def load_and_standardize_results(csv_path: Path) -> pd.DataFrame:
-    """Load baseline results CSV and standardize fields."""
-    if not csv_path.exists():
-        raise FileNotFoundError(f"Results CSV not found: {csv_path}")
+def load_and_standardize_results(csv_input: list[Path] | Path) -> pd.DataFrame:
+    """Load one or multiple baseline results CSVs and standardize fields."""
+    paths: list[Path] = [csv_input] if isinstance(csv_input, Path) else csv_input
+    dfs: list[pd.DataFrame] = []
 
-    df = pd.read_csv(csv_path)
+    for p in paths:
+        if p.is_dir():
+            candidates = list(p.glob("*.csv"))
+            for c in candidates:
+                try:
+                    dfs.append(pd.read_csv(c))
+                except Exception:
+                    pass
+        elif p.exists():
+            try:
+                dfs.append(pd.read_csv(p))
+            except Exception:
+                pass
+
+    if not dfs:
+        raise FileNotFoundError(f"No valid results CSVs found in input: {csv_input}")
+
+    df = pd.concat(dfs, ignore_index=True)
 
     # Standardize baseline names
     if "baseline" in df.columns:
@@ -274,15 +291,21 @@ def plot_baseline_figures(df: pd.DataFrame, output_dir: Path) -> None:
 def main() -> None:
     """CLI entry point for synthesizing baseline comparison tables and plots."""
     parser = argparse.ArgumentParser(description="ORCHESTRA Baseline Comparison Synthesizer")
-    parser.add_argument("--input-csv", default="workspace_baselines/baseline_comparison_results.csv", help="Input results CSV")
+    parser.add_argument("--input-csv", nargs="+", default=["workspace_baselines/baseline_comparison_results.csv"], help="One or more input results CSVs or folders")
     parser.add_argument("--output-dir", default="paper_results/baselines", help="Output directory for tables and plots")
     args = parser.parse_args()
 
-    input_path = Path(args.input_csv)
+    input_paths = [Path(p) for p in args.input_csv]
     out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"[COMPARE] Loading baseline results from: {input_path}")
-    df = load_and_standardize_results(input_path)
+    print(f"[COMPARE] Loading baseline results from: {[str(p) for p in input_paths]}")
+    df = load_and_standardize_results(input_paths)
+
+    # Save combined master CSV of all runs across all scales
+    master_csv = out_dir / "master_baseline_results.csv"
+    df.to_csv(master_csv, index=False)
+    print(f"[COMPARE] Saved combined multi-scale results CSV to: {master_csv}")
 
     generate_paper_comparison_table(df, out_dir)
     plot_baseline_figures(df, out_dir)

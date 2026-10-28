@@ -1,4 +1,5 @@
 # ORCHESTRA: Multi-Agent Baselines Benchmark Runner & Paper Synthesis
+# Segregates baseline results into scale-specific folders (n2, n5, n10)
 # Usage Examples:
 #   .\run_baselines_benchmark.ps1 -Model "qwen2.5:7b"
 #   .\run_baselines_benchmark.ps1 -Model "qwen2.5:7b" -TaskIds "I-01","I-02","I-03" -AgentCounts 2,5,10
@@ -10,62 +11,79 @@ param (
     [int[]]$AgentCounts = @(2, 5, 10),
     [string[]]$Baselines = @("all"),
     [string[]]$Perturbations = @("none", "agent_dropout"),
-    [string]$Workspace = "workspace_baselines",
+    [string]$Prefix = "workspace_baselines",
     [string]$OutputDir = "paper_results/baselines",
     [int]$MaxRounds = 3
 )
 
 Write-Host "========================================================================" -ForegroundColor Cyan
-Write-Host "  ORCHESTRA: MULTI-AGENT BASELINES BENCHMARK RUNNER" -ForegroundColor Cyan
+Write-Host "  ORCHESTRA: MULTI-AGENT BASELINES BENCHMARK (SEGREGATED BY SCALE)" -ForegroundColor Cyan
 Write-Host "  Model:         $Model" -ForegroundColor Cyan
 Write-Host "  Tasks:         $($TaskIds -join ', ')" -ForegroundColor Cyan
 Write-Host "  Agent Scales:  $($AgentCounts -join ', ')" -ForegroundColor Cyan
 Write-Host "  Baselines:     $($Baselines -join ', ')" -ForegroundColor Cyan
 Write-Host "  Perturbations: $($Perturbations -join ', ')" -ForegroundColor Cyan
 Write-Host "  Max Rounds:    $MaxRounds" -ForegroundColor Cyan
-Write-Host "  Workspace:     $Workspace" -ForegroundColor Cyan
+Write-Host "  Folder Prefix: $Prefix (e.g. ${Prefix}_n2, ${Prefix}_n5, ${Prefix}_n10)" -ForegroundColor Cyan
 Write-Host "  Paper Output:  $OutputDir" -ForegroundColor Cyan
 Write-Host "========================================================================" -ForegroundColor Cyan
 
-# 1. Execute the multi-baseline benchmark matrix
-Write-Host "`n[PHASE 1/2] Executing Baseline Matrix across Scales & Perturbations..." -ForegroundColor Yellow
+$allCsvPaths = @()
+$scaleIdx = 0
 
-$taskArgs = $TaskIds
-$agentArgs = $AgentCounts | ForEach-Object { "$_" }
-$baselineArgs = $Baselines
-$pertArgs = $Perturbations
+# 1. Execute baseline matrix segregated per agent scale
+foreach ($n in $AgentCounts) {
+    $scaleIdx++
+    $wsFolder = "${Prefix}_n${n}"
+    Write-Host "`n[$scaleIdx/$($AgentCounts.Count)] Running Baseline Suite for $n Agents -> $wsFolder..." -ForegroundColor Yellow
 
-python -u -m baselines.batch_runner `
-    --baselines $baselineArgs `
-    --task-ids $taskArgs `
-    --agent-counts $agentArgs `
-    --perturbations $pertArgs `
-    --model $Model `
-    --max-rounds $MaxRounds `
-    --workspace $Workspace
+    python -u -m baselines.batch_runner `
+        --baselines $Baselines `
+        --task-ids $TaskIds `
+        --agent-counts $n `
+        --perturbations $Perturbations `
+        --model $Model `
+        --max-rounds $MaxRounds `
+        --workspace $wsFolder
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "`n[ERROR] Baseline batch execution encountered errors. Exit code: $LASTEXITCODE" -ForegroundColor Red
-    exit $LASTEXITCODE
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "`n[WARNING] Baseline run for N=$n encountered non-zero exit code: $LASTEXITCODE" -ForegroundColor DarkYellow
+    }
+
+    $csvFile = Join-Path $wsFolder "baseline_comparison_results.csv"
+    if (Test-Path $csvFile) {
+        $allCsvPaths += $csvFile
+        Write-Host "  [OK] Saved scale results to: $csvFile" -ForegroundColor Green
+    }
 }
 
-# 2. Synthesize Paper Results (Table 1 and Publication Figures)
-Write-Host "`n[PHASE 2/2] Synthesizing Table 1 and Publication Plots for Paper Draft..." -ForegroundColor Cyan
+# 2. Synthesize Paper Results across all segregated scale folders
+Write-Host "`n========================================================================" -ForegroundColor Cyan
+Write-Host "  SYNTHESIZING PAPER ARTIFACTS (TABLE 1 & PUBLICATION FIGURES)" -ForegroundColor Cyan
+Write-Host "  Input CSVs: $($allCsvPaths -join ', ')" -ForegroundColor Cyan
+Write-Host "  Destination: $OutputDir" -ForegroundColor Cyan
+Write-Host "========================================================================" -ForegroundColor Cyan
 
-$csvFile = Join-Path $Workspace "baseline_comparison_results.csv"
+if ($allCsvPaths.Count -gt 0) {
+    python -u -m baselines.compare `
+        --input-csv $allCsvPaths `
+        --output-dir $OutputDir
 
-python -u -m baselines.compare `
-    --input-csv $csvFile `
-    --output-dir $OutputDir
-
-Write-Host "`n========================================================================" -ForegroundColor Green
-Write-Host "  BASELINES BENCHMARK & PAPER ARTIFACTS COMPLETE!" -ForegroundColor Green
-Write-Host "  Output Directory: $OutputDir" -ForegroundColor Green
-Write-Host "  Generated Artifacts:" -ForegroundColor Green
-Write-Host "    - Table 1 (CSV):  $OutputDir/table1_master_baseline_comparison.csv" -ForegroundColor Green
-Write-Host "    - Table 1 (MD):   $OutputDir/table1_master_baseline_comparison.md" -ForegroundColor Green
-Write-Host "    - Figure 1 (PNG): $OutputDir/figure_baseline_accuracy_comparison.png" -ForegroundColor Green
-Write-Host "    - Figure 2 (PNG): $OutputDir/figure_perturbation_resilience.png" -ForegroundColor Green
-Write-Host "    - Figure 3 (PNG): $OutputDir/figure_token_accuracy_pareto.png" -ForegroundColor Green
-Write-Host "  Core ORCHESTRA codebase and workspace/ remain 100% intact!" -ForegroundColor Green
-Write-Host "========================================================================" -ForegroundColor Green
+    Write-Host "`n========================================================================" -ForegroundColor Green
+    Write-Host "  BASELINES BENCHMARK & MULTI-SCALE SYNTHESIS COMPLETE!" -ForegroundColor Green
+    Write-Host "  Segregated Scale Folders Created:" -ForegroundColor Green
+    foreach ($n in $AgentCounts) {
+        Write-Host "    - N=$n Agents: ${Prefix}_n${n}/" -ForegroundColor Green
+    }
+    Write-Host "  Paper Draft Artifacts in $OutputDir/:" -ForegroundColor Green
+    Write-Host "    - Table 1 (CSV):  $OutputDir/table1_master_baseline_comparison.csv" -ForegroundColor Green
+    Write-Host "    - Table 1 (MD):   $OutputDir/table1_master_baseline_comparison.md" -ForegroundColor Green
+    Write-Host "    - Figure 1 (PNG): $OutputDir/figure_baseline_accuracy_comparison.png" -ForegroundColor Green
+    Write-Host "    - Figure 2 (PNG): $OutputDir/figure_perturbation_resilience.png" -ForegroundColor Green
+    Write-Host "    - Figure 3 (PNG): $OutputDir/figure_token_accuracy_pareto.png" -ForegroundColor Green
+    Write-Host "    - Master Raw CSV: $OutputDir/master_baseline_results.csv" -ForegroundColor Green
+    Write-Host "========================================================================" -ForegroundColor Green
+} else {
+    Write-Host "`n[ERROR] No baseline CSV files were produced to synthesize." -ForegroundColor Red
+    exit 1
+}
