@@ -5,6 +5,7 @@ for rigorous empirical benchmark comparisons against ORCHESTRA.
 """
 
 from baselines.topologies import (
+    EXTERNAL_BASELINES,
     SUPPORTED_BASELINES,
     BaseTopologyEnforcer,
     BroadcastTopology,
@@ -25,5 +26,6 @@ __all__ = [
     "FixedRolesTopology",
     "OrchestraTopology",
     "SUPPORTED_BASELINES",
+    "EXTERNAL_BASELINES",
     "create_baseline_topology",
 ]

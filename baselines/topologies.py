@@ -333,6 +333,15 @@ SUPPORTED_BASELINES: Dict[str, type[BaseTopologyEnforcer]] = {
     "orchestra": OrchestraTopology,
 }
 
+# The 5 external competing baselines from literature (excluding ORCHESTRA)
+EXTERNAL_BASELINES: list[str] = [
+    "independent",
+    "broadcast",
+    "central_coordinator",
+    "hierarchical_coordinator",
+    "fixed_roles",
+]
+
 
 def create_baseline_topology(baseline_name: str, seed: int = 42, **kwargs: Any) -> BaseTopologyEnforcer:
     """Instantiate a baseline topology enforcer with strict typing."""

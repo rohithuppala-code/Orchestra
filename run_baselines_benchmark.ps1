@@ -1,13 +1,13 @@
 # ORCHESTRA: Multi-Agent Baselines Benchmark Runner & Paper Synthesis
 # Segregates baseline results into scale-specific folders (n2, n5, n10)
+# Full Benchmark: 30 Tasks x 5 Baselines x 2 Perturbations = 300 runs/scale -> 900 runs total
 # Usage Examples:
-#   .\run_baselines_benchmark.ps1 -Model "qwen2.5:7b"
-#   .\run_baselines_benchmark.ps1 -Model "qwen2.5:7b" -TaskIds "I-01","I-02","I-03" -AgentCounts 2,5,10
-#   .\run_baselines_benchmark.ps1 -Model "qwen2.5:7b" -TaskIds "all" -Baselines "all"
+#   .\run_baselines_benchmark.ps1 -Model "qwen2.5:7b"                                        # Full 900 runs
+#   .\run_baselines_benchmark.ps1 -Model "qwen2.5:7b" -TaskIds "I-01","I-02","I-03"        # Quick 90 runs test
 
 param (
     [string]$Model = "qwen2.5:7b",
-    [string[]]$TaskIds = @("I-01", "I-02", "I-03"),
+    [string[]]$TaskIds = @("all"),
     [int[]]$AgentCounts = @(2, 5, 10),
     [string[]]$Baselines = @("all"),
     [string[]]$Perturbations = @("none", "agent_dropout"),
