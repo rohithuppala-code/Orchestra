@@ -62,6 +62,36 @@ class IndependentTopology(BaseTopologyEnforcer):
     def citation(self) -> str:
         return "Wang et al. (ICLR 2023)"
 
+    def apply_initialization(self, case_dir: Path, num_agents: int) -> Dict[str, Any]:
+        """Condition agents that they operate independently without peer communication."""
+        round0_dir = case_dir / "rounds" / "round-000000"
+        if not round0_dir.exists():
+            return {"applied": False, "reason": "round0_dir not found"}
+
+        for i in range(num_agents):
+            agent_ctx_file = round0_dir / f"agent-{i:03d}" / "context.json"
+            if not agent_ctx_file.exists():
+                continue
+            try:
+                with open(agent_ctx_file, "r", encoding="utf-8") as f:
+                    ctx_data = json.load(f)
+                info_text = (
+                    "\n\n[INDEPENDENT ENSEMBLE EXECUTION]\n"
+                    "You are operating independently without peer communication. "
+                    "Analyze your local data shard directly, compute your solution, and submit your final answer using submit_result."
+                )
+                messages = ctx_data.get("messages", [])
+                if messages and messages[0].get("role") == "system":
+                    messages[0]["content"] += info_text
+                else:
+                    messages.insert(0, {"role": "system", "content": info_text.strip()})
+                ctx_data["messages"] = messages
+                with open(agent_ctx_file, "w", encoding="utf-8") as f:
+                    json.dump(ctx_data, f, indent=2)
+            except Exception:
+                pass
+        return {"applied": True, "rule": "independent_prompt_conditioning"}
+
     def apply_post_round(self, case_dir: Path, current_round: int, num_agents: int) -> Dict[str, Any]:
         round_dir = case_dir / "rounds" / f"round-{current_round:06d}"
         msg_dir = round_dir / "env" / "messages"
@@ -108,6 +138,47 @@ class CentralCoordinatorTopology(BaseTopologyEnforcer):
     @property
     def citation(self) -> str:
         return "Wu et al. (AutoGen / ICLR 2024)"
+
+    def apply_initialization(self, case_dir: Path, num_agents: int) -> Dict[str, Any]:
+        """Condition agents on the Star Hub-and-Spoke coordination protocol."""
+        round0_dir = case_dir / "rounds" / "round-000000"
+        if not round0_dir.exists():
+            return {"applied": False, "reason": "round0_dir not found"}
+
+        for i in range(num_agents):
+            agent_ctx_file = round0_dir / f"agent-{i:03d}" / "context.json"
+            if not agent_ctx_file.exists():
+                continue
+            try:
+                with open(agent_ctx_file, "r", encoding="utf-8") as f:
+                    ctx_data = json.load(f)
+
+                if i == self.hub_id:
+                    role_text = (
+                        f"\n\n[STAR HUB COORDINATOR TOPOLOGY (AutoGen Style)]\n"
+                        f"You are designated as the Central Hub Coordinator (Agent {self.hub_id}). "
+                        f"All worker agents (1 to {num_agents - 1}) can only communicate with you. "
+                        f"Collect data from all workers, synthesize the global result, and coordinate the response."
+                    )
+                else:
+                    role_text = (
+                        f"\n\n[STAR SPOKE WORKER TOPOLOGY (AutoGen Style)]\n"
+                        f"You are operating in a Central Coordinator Star Topology. "
+                        f"Agent {self.hub_id} is the designated Central Coordinator. All communication must flow through Agent {self.hub_id}. "
+                        f"Send your local data and report to Agent {self.hub_id} (target_id: {self.hub_id}). Do NOT message other worker peers."
+                    )
+
+                messages = ctx_data.get("messages", [])
+                if messages and messages[0].get("role") == "system":
+                    messages[0]["content"] += role_text
+                else:
+                    messages.insert(0, {"role": "system", "content": role_text.strip()})
+                ctx_data["messages"] = messages
+                with open(agent_ctx_file, "w", encoding="utf-8") as f:
+                    json.dump(ctx_data, f, indent=2)
+            except Exception:
+                pass
+        return {"applied": True, "hub_id": self.hub_id, "num_agents": num_agents}
 
     def apply_post_round(self, case_dir: Path, current_round: int, num_agents: int) -> Dict[str, Any]:
         round_dir = case_dir / "rounds" / f"round-{current_round:06d}"
@@ -186,6 +257,44 @@ class HierarchicalCoordinatorTopology(BaseTopologyEnforcer):
             symmetric_edges.add((u, v))
             symmetric_edges.add((v, u))
         return symmetric_edges
+
+    def apply_initialization(self, case_dir: Path, num_agents: int) -> Dict[str, Any]:
+        """Condition agents on the Hierarchical Tree communication channels."""
+        round0_dir = case_dir / "rounds" / "round-000000"
+        if not round0_dir.exists():
+            return {"applied": False, "reason": "round0_dir not found"}
+
+        allowed_edges = self._get_tree_edges(num_agents)
+
+        for i in range(num_agents):
+            agent_ctx_file = round0_dir / f"agent-{i:03d}" / "context.json"
+            if not agent_ctx_file.exists():
+                continue
+            try:
+                with open(agent_ctx_file, "r", encoding="utf-8") as f:
+                    ctx_data = json.load(f)
+
+                # Find allowed communication partners for agent i
+                partners = sorted([v for (u, v) in allowed_edges if u == i])
+                role_text = (
+                    f"\n\n[HIERARCHICAL TREE COORDINATOR TOPOLOGY (MacNet Style)]\n"
+                    f"You (Agent {i}) are operating within a structured multi-tier organizational tree. "
+                    f"Your direct chain-of-command communication channels are strictly: Agents {partners}. "
+                    f"Only exchange messages with these assigned tree neighbors (target_id in {partners}). "
+                    f"Cross-level or bypass messages to other agents will be filtered by the hierarchy."
+                )
+
+                messages = ctx_data.get("messages", [])
+                if messages and messages[0].get("role") == "system":
+                    messages[0]["content"] += role_text
+                else:
+                    messages.insert(0, {"role": "system", "content": role_text.strip()})
+                ctx_data["messages"] = messages
+                with open(agent_ctx_file, "w", encoding="utf-8") as f:
+                    json.dump(ctx_data, f, indent=2)
+            except Exception:
+                pass
+        return {"applied": True, "num_agents": num_agents}
 
     def apply_post_round(self, case_dir: Path, current_round: int, num_agents: int) -> Dict[str, Any]:
         round_dir = case_dir / "rounds" / f"round-{current_round:06d}"

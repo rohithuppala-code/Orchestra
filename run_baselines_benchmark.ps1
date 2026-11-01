@@ -12,6 +12,7 @@ param (
     [string[]]$Baselines = @("all"),
     [string[]]$Perturbations = @("none", "agent_dropout"),
     [string]$Prefix = "workspace_baselines",
+    [string]$OrchestraPrefix = "final_workspace",
     [string]$OutputDir = "paper_results/baselines",
     [int]$MaxRounds = 3
 )
@@ -54,6 +55,15 @@ foreach ($n in $AgentCounts) {
     if (Test-Path $csvFile) {
         $allCsvPaths += $csvFile
         Write-Host "  [OK] Saved scale results to: $csvFile" -ForegroundColor Green
+    }
+}
+
+# Automatically discover and include ORCHESTRA results from final_workspace_n* if present
+foreach ($n in $AgentCounts) {
+    $orchCsv = Join-Path "${OrchestraPrefix}_n${n}" "batch_comparison_results.csv"
+    if (Test-Path $orchCsv) {
+        $allCsvPaths += $orchCsv
+        Write-Host "  [OK] Found ORCHESTRA scale results to include in Master Synthesis: $orchCsv" -ForegroundColor Green
     }
 }
 

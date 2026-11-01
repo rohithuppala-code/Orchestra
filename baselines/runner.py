@@ -185,10 +185,6 @@ def run_baseline_experiment(
         except Exception as e:
             print(f"  Warning: evaluate() raised: {e}")
 
-    # Special handling for Independent baseline: Majority Vote Ensemble
-    if bname == "independent" and exec_status != "failed":
-        _evaluate_independent_majority_vote(case_path, num_agents)
-
     # Extract comprehensive Organizational Instrumentation
     try:
         profile = extract_case_instrumentation(case_path)
@@ -233,68 +229,6 @@ def run_baseline_experiment(
 
     print(f"  Result: Success={summary.success} (Rate: {summary.success_rate:.0%}) | Rounds={summary.total_rounds} | Tokens={summary.token_consumption:.0f} | Gini={summary.gini_out_degree:.3f}")
     return summary
-
-
-def _evaluate_independent_majority_vote(case_path: Path, num_agents: int) -> None:
-    """In the Independent baseline, compute collective majority vote across agent submissions."""
-    meta_file = case_path / "metadata.json"
-    results_file = case_path / "results.json"
-    if not meta_file.exists():
-        return
-
-    try:
-        with open(meta_file, "r", encoding="utf-8") as f:
-            meta = json.load(f)
-
-        expected = meta["task"]["expected_output"]
-        expected_values = expected.get("per_agent_values", [])
-
-        # Find latest round
-        rounds_dir = case_path / "rounds"
-        round_dirs = sorted(rounds_dir.glob("round-*"))
-        if not round_dirs:
-            return
-        last_round = round_dirs[-1]
-
-        # Collect submitted answers
-        submitted_answers = []
-        for i in range(num_agents):
-            sub_file = last_round / f"agent-{i:03d}" / "submission.json"
-            if sub_file.exists():
-                with open(sub_file, "r", encoding="utf-8") as sf:
-                    sdata = json.load(sf)
-                    ans = sdata.get("answer")
-                    if ans is not None:
-                        submitted_answers.append(ans)
-
-        if not submitted_answers:
-            return
-
-        # Simple majority vote for scalar answers or per-agent matching
-        if submitted_answers and expected_values:
-            correct_count = 0
-            for i, ans in enumerate(submitted_answers):
-                if i < len(expected_values) and ans == expected_values[i]:
-                    correct_count += 1
-            success_rate = correct_count / max(1, len(expected_values))
-
-            eval_data = {
-                "success": success_rate >= 0.99,
-                "success_rate": success_rate,
-                "partial_correctness": success_rate,
-                "method": "independent_majority_ensemble",
-            }
-            if results_file.exists():
-                with open(results_file, "r", encoding="utf-8") as rf:
-                    existing = json.load(rf)
-                existing.update(eval_data)
-                eval_data = existing
-
-            with open(results_file, "w", encoding="utf-8") as rf:
-                json.dump(eval_data, rf, indent=2)
-
-    except Exception as e:
-        print(f"  Warning evaluating independent majority vote: {e}")
 
 
 def main() -> None:

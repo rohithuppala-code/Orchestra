@@ -85,6 +85,7 @@ class OrganizationalProfile:
     partial_correctness: float = 0.0
     token_consumption: float = 0.0
     communication_density: float = 0.0
+    perturbation: Optional[str] = None
 
 
 def calculate_gini(array: np.ndarray | List[float]) -> float:
@@ -428,6 +429,27 @@ def extract_case_instrumentation(case_dir: str | Path) -> OrganizationalProfile:
     is_conn = nx.is_connected(undir_cum) if len(undir_cum.nodes()) > 0 else False
     diameter = nx.diameter(undir_cum) if is_conn and len(undir_cum.nodes()) > 1 else None
     
+    # Detect perturbation from summary files or case naming
+    pert_type: Optional[str] = None
+    orch_summary_file = case_path / "orchestra_summary.json"
+    base_summary_file = case_path / "baseline_summary.json"
+    if orch_summary_file.exists():
+        try:
+            with open(orch_summary_file, "r", encoding="utf-8") as f:
+                pert_type = json.load(f).get("perturbation_applied")
+        except Exception:
+            pass
+    elif base_summary_file.exists():
+        try:
+            with open(base_summary_file, "r", encoding="utf-8") as f:
+                pert_type = json.load(f).get("perturbation")
+        except Exception:
+            pass
+    if not pert_type and "agent_dropout" in case_path.name.lower():
+        pert_type = "agent_dropout"
+    if not pert_type:
+        pert_type = "none"
+
     profile = OrganizationalProfile(
         case_id=case_id,
         task_id=task_id,
@@ -443,6 +465,7 @@ def extract_case_instrumentation(case_dir: str | Path) -> OrganizationalProfile:
         final_network_entropy=net_entropy,
         network_diameter=diameter,
         is_connected=is_conn,
+        perturbation=pert_type,
     )
     
     results_file = case_path / "results.json"
@@ -452,10 +475,10 @@ def extract_case_instrumentation(case_dir: str | Path) -> OrganizationalProfile:
                 res = json.load(rf)
             profile.success = res.get("success", False)
             metrics = res.get("metrics", {})
-            profile.success_rate = metrics.get("S_success_rate", 0.0)
-            profile.partial_correctness = metrics.get("P_partial_correctness", 0.0)
-            profile.token_consumption = metrics.get("C_token_consumption", 0.0)
-            profile.communication_density = metrics.get("D_communication_density", 0.0)
+            profile.success_rate = float(metrics.get("S_success_rate", metrics.get("success_rate", res.get("success_rate", 0.0))))
+            profile.partial_correctness = float(metrics.get("P_partial_correctness", metrics.get("partial_correctness", res.get("partial_correctness", 0.0))))
+            profile.token_consumption = float(metrics.get("C_token_consumption", metrics.get("token_consumption", res.get("token_consumption", 0.0))))
+            profile.communication_density = float(metrics.get("D_communication_density", metrics.get("communication_density", res.get("communication_density", 0.0))))
         except Exception:
             pass
             

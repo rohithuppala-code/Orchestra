@@ -51,15 +51,20 @@ class ExperimentConfig:
     
     def resolve_task_file(self, benchmark_dir: Optional[Path] = None) -> Path:
         """Resolve and validate the benchmark task file path."""
+        root_dir = Path(__file__).resolve().parent.parent
         if self.task_file:
             path = Path(self.task_file)
             if not path.is_absolute() and not path.exists():
                 # Check relative to benchmark_dir or workspace root
                 candidates = [
                     Path.cwd() / path,
+                    root_dir / path,
                     Path.cwd() / "silo-bench" / path,
+                    root_dir / "silo-bench" / path,
                     Path.cwd() / "benchmarks" / path.name,
+                    root_dir / "benchmarks" / path.name,
                     Path.cwd() / "silo-bench" / "benchmarks" / path.name,
+                    root_dir / "silo-bench" / "benchmarks" / path.name,
                 ]
                 if benchmark_dir:
                     candidates.insert(0, benchmark_dir / path.name)
@@ -75,7 +80,9 @@ class ExperimentConfig:
             filename = f"{self.task_id}_n{self.agent_count}.json"
             candidates = [
                 Path.cwd() / "benchmarks" / filename,
+                root_dir / "benchmarks" / filename,
                 Path.cwd() / "silo-bench" / "benchmarks" / filename,
+                root_dir / "silo-bench" / "benchmarks" / filename,
             ]
             if benchmark_dir:
                 candidates.insert(0, benchmark_dir / filename)

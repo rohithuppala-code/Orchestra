@@ -81,21 +81,37 @@ def load_and_standardize_results(csv_input: list[Path] | Path) -> pd.DataFrame:
 
     df = pd.concat(dfs, ignore_index=True)
 
-    # Standardize baseline names
-    if "baseline" in df.columns:
-        df["baseline"] = df["baseline"].astype(str).str.lower().str.strip()
-    elif "protocol" in df.columns:
-        mapping = {
-            "msg": "orchestra",
-            "broadcast": "broadcast",
-            "sfs": "independent",
-        }
-        df["baseline"] = df["protocol"].astype(str).replace(mapping)
+    # Standardize baseline column
+    if "baseline" not in df.columns:
+        df["baseline"] = np.nan
 
-    # Fill default perturbation
+    # For any row where baseline is null/nan/empty or literal "nan", infer from protocol
+    mask_missing = (
+        df["baseline"].isna()
+        | df["baseline"].astype(str).str.lower().isin(["nan", "none", "", "null"])
+    )
+    if mask_missing.any():
+        if "protocol" in df.columns:
+            proto_s = df.loc[mask_missing, "protocol"].astype(str).str.lower().str.strip()
+            df.loc[mask_missing & (proto_s == "msg"), "baseline"] = "orchestra"
+            df.loc[mask_missing & (proto_s == "broadcast"), "baseline"] = "broadcast"
+            df.loc[mask_missing & (proto_s == "sfs"), "baseline"] = "orchestra_sfs"
+        df.loc[mask_missing & df["baseline"].isna(), "baseline"] = "orchestra"
+
+    df["baseline"] = df["baseline"].fillna("orchestra").astype(str).str.lower().str.strip()
+    df.loc[df["baseline"].isin(["nan", "none", "", "null"]), "baseline"] = "orchestra"
+
+    # Standardize perturbation column
     if "perturbation" not in df.columns:
-        df["perturbation"] = "none"
-    df["perturbation"] = df["perturbation"].fillna("none")
+        df["perturbation"] = np.nan
+    if "perturbation_applied" in df.columns:
+        df["perturbation"] = df["perturbation"].fillna(df["perturbation_applied"])
+    if "case_id" in df.columns:
+        is_drop = df["case_id"].astype(str).str.contains("agent_dropout|dropout", case=False, na=False)
+        df.loc[is_drop, "perturbation"] = "agent_dropout"
+
+    df["perturbation"] = df["perturbation"].fillna("none").astype(str).str.lower().str.strip()
+    df.loc[df["perturbation"].isin(["null", "", "nan"]), "perturbation"] = "none"
 
     return df
 

@@ -34,11 +34,41 @@ def build_comparison_dataframe(case_dirs: List[str | Path]) -> pd.DataFrame:
     rows = []
     for cdir in case_dirs:
         try:
-            p = load_case_profile(cdir)
+            cpath = Path(cdir)
+            p = load_case_profile(cpath)
+            
+            # Load additional run metadata if available
+            summary_file = cpath / "orchestra_summary.json"
+            model_name = None
+            seed_val = None
+            time_sec = None
+            pert_type = p.get("perturbation")
+            
+            if summary_file.exists():
+                try:
+                    with open(summary_file, "r", encoding="utf-8") as sf:
+                        sdata = json.load(sf)
+                    model_name = sdata.get("model")
+                    seed_val = sdata.get("seed")
+                    time_sec = sdata.get("total_time_seconds")
+                    if not pert_type or pert_type == "none":
+                        pert_type = sdata.get("perturbation_applied")
+                except Exception:
+                    pass
+                    
+            if not pert_type and "agent_dropout" in cpath.name.lower():
+                pert_type = "agent_dropout"
+            if not pert_type:
+                pert_type = "none"
+
+            protocol_val = p.get("protocol")
+            baseline_val = "orchestra" if protocol_val == "msg" else (f"orchestra_{protocol_val}" if protocol_val else "orchestra")
+
             rows.append({
                 "case_id": p.get("case_id"),
+                "baseline": baseline_val,
                 "task_id": p.get("task_id"),
-                "protocol": p.get("protocol"),
+                "protocol": protocol_val,
                 "num_agents": p.get("num_agents"),
                 "total_rounds": p.get("total_rounds"),
                 "success": p.get("success"),
@@ -52,6 +82,10 @@ def build_comparison_dataframe(case_dirs: List[str | Path]) -> pd.DataFrame:
                 "final_network_entropy": p.get("final_network_entropy", 0.0),
                 "network_diameter": p.get("network_diameter"),
                 "is_connected": p.get("is_connected", False),
+                "perturbation": pert_type,
+                "model": model_name,
+                "seed": seed_val,
+                "total_time_seconds": time_sec,
             })
         except Exception as e:
             print(f"Warning: could not load profile from {cdir}: {e}")

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from baselines.compare import generate_paper_comparison_table
+from baselines.compare import generate_paper_comparison_table, load_and_standardize_results
 from baselines.topologies import (
     SUPPORTED_BASELINES,
     CentralCoordinatorTopology,
@@ -100,6 +100,59 @@ def test_hierarchical_coordinator_tree_edges():
         assert not (msg_dir / "m3.json").exists()
 
 
+def test_baseline_initialization_conditioning():
+    """Verify literature baselines inject domain-appropriate guidance in round-000000."""
+    # 1. Independent
+    with tempfile.TemporaryDirectory() as tmpdir:
+        case_dir = Path(tmpdir)
+        round0 = case_dir / "rounds" / "round-000000"
+        for i in range(2):
+            agent_dir = round0 / f"agent-{i:03d}"
+            agent_dir.mkdir(parents=True)
+            ctx = {"messages": [{"role": "system", "content": "Base prompt."}]}
+            (agent_dir / "context.json").write_text(json.dumps(ctx))
+
+        topo_ind = create_baseline_topology("independent")
+        res_ind = topo_ind.apply_initialization(case_dir, 2)
+        assert res_ind.get("applied") is True
+        c0 = json.loads((round0 / "agent-000" / "context.json").read_text())
+        assert "INDEPENDENT" in c0["messages"][0]["content"]
+
+    # 2. Central Coordinator
+    with tempfile.TemporaryDirectory() as tmpdir:
+        case_dir = Path(tmpdir)
+        round0 = case_dir / "rounds" / "round-000000"
+        for i in range(5):
+            agent_dir = round0 / f"agent-{i:03d}"
+            agent_dir.mkdir(parents=True)
+            ctx = {"messages": [{"role": "system", "content": "Base prompt."}]}
+            (agent_dir / "context.json").write_text(json.dumps(ctx))
+
+        topo_hub = create_baseline_topology("central_coordinator", hub_id=0)
+        res_hub = topo_hub.apply_initialization(case_dir, 5)
+        assert res_hub.get("applied") is True
+        c0 = json.loads((round0 / "agent-000" / "context.json").read_text())
+        c1 = json.loads((round0 / "agent-001" / "context.json").read_text())
+        assert "Central Hub Coordinator" in c0["messages"][0]["content"]
+        assert "Central Coordinator" in c1["messages"][0]["content"]
+
+    # 3. Hierarchical Coordinator
+    with tempfile.TemporaryDirectory() as tmpdir:
+        case_dir = Path(tmpdir)
+        round0 = case_dir / "rounds" / "round-000000"
+        for i in range(5):
+            agent_dir = round0 / f"agent-{i:03d}"
+            agent_dir.mkdir(parents=True)
+            ctx = {"messages": [{"role": "system", "content": "Base prompt."}]}
+            (agent_dir / "context.json").write_text(json.dumps(ctx))
+
+        topo_tree = create_baseline_topology("hierarchical_coordinator")
+        res_tree = topo_tree.apply_initialization(case_dir, 5)
+        assert res_tree.get("applied") is True
+        c3 = json.loads((round0 / "agent-003" / "context.json").read_text())
+        assert "HIERARCHICAL TREE" in c3["messages"][0]["content"].upper()
+
+
 def test_paper_comparison_table_generation():
     """Verify comparison table generation from dataframe."""
     df = pd.DataFrame([
@@ -114,3 +167,31 @@ def test_paper_comparison_table_generation():
         assert not table.empty
         assert (out_dir / "table1_master_baseline_comparison.csv").exists()
         assert (out_dir / "table1_master_baseline_comparison.md").exists()
+
+
+def test_standardize_results_with_mixed_csvs():
+    """Verify load_and_standardize_results correctly identifies ORCHESTRA rows from protocol."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_path = Path(tmpdir)
+        # CSV 1: Baseline CSV (has 'baseline' column)
+        df_base = pd.DataFrame([
+            {"baseline": "central_coordinator", "task_id": "I-01", "num_agents": 2, "success_rate": 0.8, "token_consumption": 2000, "total_rounds": 3, "perturbation": "none"}
+        ])
+        csv1 = tmp_path / "baseline_results.csv"
+        df_base.to_csv(csv1, index=False)
+
+        # CSV 2: ORCHESTRA batch CSV (has 'protocol'='msg', no 'baseline')
+        df_orch = pd.DataFrame([
+            {"task_id": "I-01", "protocol": "msg", "num_agents": 2, "success_rate": 1.0, "token_consumption": 1500, "total_rounds": 2, "case_id": "I-01_n2_msg_rep1_agent_dropout"}
+        ])
+        csv2 = tmp_path / "orch_results.csv"
+        df_orch.to_csv(csv2, index=False)
+
+        merged = load_and_standardize_results([csv1, csv2])
+        baselines = merged["baseline"].tolist()
+        perts = merged["perturbation"].tolist()
+
+        assert "central_coordinator" in baselines
+        assert "orchestra" in baselines
+        assert "nan" not in baselines
+        assert perts[1] == "agent_dropout"
