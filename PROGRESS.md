@@ -1,7 +1,7 @@
 # ORCHESTRA — IMPLEMENTATION PROGRESS & STATUS LOG
 
-**Last updated:** 2026-10-15T13:35+05:30  
-**Current Phase:** Phase 1–4 Complete ✅ (Architecture Built, Configurable, and Automated Test Suite Passing)  
+**Last updated:** 2026-11-01T23:00+05:30  
+**Current Phase:** Phase 1–5 Complete ✅ (Architecture Built, 5 Literature Baselines Implemented, Pre-Flight Verification Audited, 29/29 Automated Tests Passing, Ready for 1,440 GPU Benchmark Runs)  
 **Strategy Alignment:** **Architecture First, Experiments Later.** Local Ollama models are used strictly for software integration and engineering pipeline validation. Formal scientific experiments targeting Q1 publication will be planned and executed only after the architecture and experimental protocol are fully finalized.
 
 ---
@@ -179,9 +179,14 @@ Executed `pytest tests -v` on 2026-10-15:
 | `tests/test_hitl.py` | Created | Automated tests for monopolization, isolation, and stagnation boundaries |
 | `tests/test_analysis.py` | Created | Automated tests for DataFrame aggregation, table formatting, and figure generation |
 | `tests/test_runner_integration.py` | Created | Integration tests for runner orchestration, mock engine execution, and batch matrix execution |
+| `baselines/topologies.py` | Created & Hardened | Implementation of 5 literature baselines + prompt initialization & link filtering |
+| `baselines/runner.py` | Created & Hardened | Dedicated baseline experiment runner with canonical SILO-BENCH evaluation |
+| `baselines/batch_runner.py` | Created | Multi-condition batch matrix runner across 5 baselines, tasks, scales, and perturbations |
+| `baselines/compare.py` | Created & Hardened | Master paper synthesis generating Tables 1–4 and Figures 1–3 with robust CSV standardizer |
+| `run_master_benchmark.ps1` | Created | Automated master 3-scale benchmark runner (540 runs) with real-time HITL |
+| `run_baselines_benchmark.ps1` | Created & Hardened | Automated master 3-scale baseline runner (900 runs) with cross-scale paper synthesis |
+| `tests/test_baselines.py` | Created | Automated tests verifying all 6 baselines, prompt conditioning, and synthesis standardizer |
 | `PROGRESS.md` | Updated | Comprehensive status log reflecting verified facts and test results |
-
----
 
 ---
 
