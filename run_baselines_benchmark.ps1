@@ -15,7 +15,7 @@ param (
     [string]$Prefix = "workspace_baselines",
     [string]$OrchestraPrefix = "final_workspace",
     [string]$OutputDir = "paper_results/baselines",
-    [int]$MaxRounds = 3
+    [int]$MaxRounds = 15
 )
 
 Write-Host "========================================================================" -ForegroundColor Cyan

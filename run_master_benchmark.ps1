@@ -10,7 +10,7 @@ param (
     [int[]]$AgentCounts = @(2, 5, 10),
     [string[]]$Protocols = @("msg", "broadcast"),
     [string]$Prefix = "final_workspace",
-    [int]$MaxRounds = 3
+    [int]$MaxRounds = 15
 )
 
 Write-Host "========================================================================" -ForegroundColor Cyan
