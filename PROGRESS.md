@@ -1,8 +1,9 @@
 # ORCHESTRA — IMPLEMENTATION PROGRESS & STATUS LOG
 
-**Last updated:** 2026-11-01T23:00+05:30  
-**Current Phase:** Phase 1–5 Complete ✅ (Architecture Built, 5 Literature Baselines Implemented, Pre-Flight Verification Audited, 29/29 Automated Tests Passing, Ready for 1,440 GPU Benchmark Runs)  
-**Strategy Alignment:** **Architecture First, Experiments Later.** Local Ollama models are used strictly for software integration and engineering pipeline validation. Formal scientific experiments targeting Q1 publication will be planned and executed only after the architecture and experimental protocol are fully finalized.
+**Last updated:** 2026-11-12T13:15+05:30  
+**Active Branch:** `urop_exec` *(branched cleanly from `main`, which preserves the original 1,440-run archive untouched)*  
+**Current Phase:** Phase 1–6 Complete ✅ (Architecture Built, Redundancies Eliminated, Stratified 450-Run Q1 Matrix Configured, 30/30 Automated Tests Passing)  
+**Strategy Alignment:** **Architecture First, Experiments Later.** Local Ollama models were used strictly for software integration and pilot validation. Formal scientific experiments targeting Q1 publication are configured on `urop_exec` for streamlined 450-run execution.
 
 ---
 
@@ -204,10 +205,24 @@ Executed `pytest tests -v` on 2026-10-15:
 
 ---
 
-## 8. Final Status & Execution Readiness
+## 8. Streamlined 450-Run Q1 Matrix (`urop_exec` Branch — Completed ✅)
 
-The codebase is fully audited, verified, and hardened for the planned 1,440 experimental runs (540 ORCHESTRA runs + 900 multi-baseline runs across scales $N \in \{2, 5, 10\}$):
-1. **Master Runner:** `.\run_master_benchmark.ps1 -Model <model_name>` (540 runs)
-2. **Baselines Runner:** `.\run_baselines_benchmark.ps1 -Model <model_name>` (900 runs)
-3. **Paper Artifacts:** Automated generation of Tables 1–4 and Figures 1–3 in `paper_results/baselines/`.
+To eliminate duplicate runs and optimize execution time/budget for Q1 publication (~12.5–17.5 hours with Thinking Mode ON, ~11.7M–13M tokens) without sacrificing statistical coverage or topological diversity, `urop_exec` configures a zero-redundancy **450-run matrix** while keeping `main` 100% undisturbed:
+
+1. **Stratified 15-Task Benchmark Subset (`SELECTED_15_TASKS` in `orchestra/config.py`):**
+   - **Level I (5):** `I-01` (Global Max), `I-04` (Any Match), `I-07` (Average Value), `I-09` (Top-K Select), `I-10` (Standard Deviation)
+   - **Level II (5):** `II-11` (Prefix Sum), `II-14` (1D Life Game), `II-15` (Pattern Search), `II-17` (Diff Array), `II-20` (Pipeline Hash)
+   - **Level III (5):** `III-21` (Distributed Sort), `III-23` (Graph Components), `III-25` (K-Means Iteration), `III-28` (PageRank Step), `III-30` (Matrix Multiply)
+2. **Redundancy Elimination (`baselines/topologies.py`, `run_master_benchmark.ps1`, `run_baselines_benchmark.ps1`):**
+   - **Removed duplicate `broadcast`:** `broadcast` runs once inside `run_master_benchmark.ps1` and is automatically mapped to `Flat Broadcast Debate` in `baselines/compare.py`.
+   - **Removed `fixed_roles`:** Structurally redundant with `central_coordinator` (both enforce an identical Star Hub graph around Agent 0).
+   - **Removed `sfs`:** Not evaluated in cross-baseline Tables 1–4 (`baselines/compare.py`).
+3. **Final Run Math (450 Runs Total across $N \in \{2, 5, 10\}$):**
+   - **Baselines (`run_baselines_benchmark.ps1`):** `3 baselines` (`independent`, `central_coordinator`, `hierarchical_coordinator`) × `15 tasks` × `2 cases` (`none`, `agent_dropout`) = **90/scale** × `3 scales` = **270 runs**.
+   - **ORCHESTRA (`run_master_benchmark.ps1`):** `15 tasks` × `2 protocols` (`msg`, `broadcast`) × `2 cases` (`none`, `agent_dropout`) = **60/scale** × `3 scales` = **180 runs**.
+   - **Combined Paper Synthesis (`paper_results/baselines/`):** **450 runs** across **5 distinct coordination paradigms** automatically generating Tables 1–4 and Figures 1–3.
+4. **Master Execution Commands:**
+   1. `.\run_master_benchmark.ps1 -Model <model_name>` (180 runs)
+   2. `.\run_baselines_benchmark.ps1 -Model <model_name>` (270 runs + 450-run paper synthesis)
+
 

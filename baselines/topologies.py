@@ -442,13 +442,13 @@ SUPPORTED_BASELINES: Dict[str, type[BaseTopologyEnforcer]] = {
     "orchestra": OrchestraTopology,
 }
 
-# The 5 external competing baselines from literature (excluding ORCHESTRA)
+# Active non-redundant competing baselines executed by baselines.batch_runner
+# Note: 'broadcast' runs inside ORCHESTRA (protocol='broadcast') to avoid duplicate runs,
+# and 'fixed_roles' shares CentralCoordinator's exact Star graph around Agent 0.
 EXTERNAL_BASELINES: list[str] = [
     "independent",
-    "broadcast",
     "central_coordinator",
     "hierarchical_coordinator",
-    "fixed_roles",
 ]
 
 

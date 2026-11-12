@@ -10,12 +10,14 @@ import pandas as pd
 
 from baselines.compare import generate_paper_comparison_table, load_and_standardize_results
 from baselines.topologies import (
+    EXTERNAL_BASELINES,
     SUPPORTED_BASELINES,
     CentralCoordinatorTopology,
     HierarchicalCoordinatorTopology,
     IndependentTopology,
     create_baseline_topology,
 )
+from orchestra.config import SELECTED_15_TASKS, expand_task_ids
 
 
 def test_supported_baselines_registry():
@@ -195,3 +197,18 @@ def test_standardize_results_with_mixed_csvs():
         assert "orchestra" in baselines
         assert "nan" not in baselines
         assert perts[1] == "agent_dropout"
+
+
+def test_streamlined_450_matrix_configuration():
+    """Verify urop_exec 450-run matrix uses 3 active external baselines and 15 stratified tasks."""
+    assert EXTERNAL_BASELINES == [
+        "independent",
+        "central_coordinator",
+        "hierarchical_coordinator",
+    ]
+    assert len(SELECTED_15_TASKS) == 15
+    assert sum(1 for t in SELECTED_15_TASKS if t.startswith("I-")) == 5
+    assert sum(1 for t in SELECTED_15_TASKS if t.startswith("II-")) == 5
+    assert sum(1 for t in SELECTED_15_TASKS if t.startswith("III-")) == 5
+    assert expand_task_ids(["selected"]) == SELECTED_15_TASKS
+

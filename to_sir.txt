@@ -92,29 +92,26 @@ Example: Task I-01 (Finding the Global Maximum across 2 agents)
   The engine verifies submissions against ground truth -> 100% Success.
 
 --------------------------------------------------------------------------------
-5. THE DEFINITIVE SCIENTIFIC MATRIX: 180 TOTAL EXPERIMENTAL RUNS
+5. THE DEFINITIVE SCIENTIFIC MATRIX: 450 TOTAL EXPERIMENTAL RUNS (urop_exec)
 --------------------------------------------------------------------------------
-To make our empirical results publication-grade for a top-tier Q1 journal, our
-evaluation tests all 30 tasks across all 3 communication protocols under both
-normal and disrupted environments.
+To make our empirical results publication-grade for a top-tier Q1 journal while
+eliminating duplicate runs, our evaluation uses a stratified 15-task benchmark
+(5 evenly spread tasks spanning easy, medium, and hard per complexity level):
 
-This creates 6 precise conditions per task:
+- Level I (5 Tasks):   I-01 (Max), I-04 (Match), I-07 (Average), I-09 (Top-K), I-10 (Std Dev)
+- Level II (5 Tasks):  II-11 (Prefix Sum), II-14 (1D Life), II-15 (Pattern Search), II-17 (Diff Array), II-20 (Pipeline Hash)
+- Level III (5 Tasks): III-21 (Sort), III-23 (Graph Components), III-25 (K-Means), III-28 (PageRank), III-30 (Matrix Multiply)
 
-   [30 Tasks] x [3 Protocols: msg, broadcast, sfs] x [2 Scenarios: Normal vs Dropout]
-   = 180 Total Controlled Experimental Runs.
+Each task is evaluated across 3 population scales (N=2, 5, 10) under both
+Healthy ("none") and Fail-Stop Agent Dropout ("agent_dropout" at Round 2):
 
-The 6 Conditions Tested per Task:
-- Condition 1: P2P Direct Messaging ("msg") in Normal Environment
-- Condition 2: P2P Direct Messaging ("msg") under Agent Dropout Crash (Round 2)
-- Condition 3: Megaphone Broadcasting ("broadcast") in Normal Environment
-- Condition 4: Megaphone Broadcasting ("broadcast") under Agent Dropout Crash (Round 2)
-- Condition 5: Shared File Board ("sfs") in Normal Environment
-- Condition 6: Shared File Board ("sfs") under Agent Dropout Crash (Round 2)
+   ORCHESTRA (msg + broadcast) = 15 Tasks x 2 Protocols x 2 Scenarios = 60 runs/scale x 3 scales = 180 runs
+   Baselines (3 non-redundant) =  3 Baselines x 15 Tasks x 2 Scenarios = 90 runs/scale x 3 scales = 270 runs
+   GRAND TOTAL = 180 + 270 = 450 Total Controlled Experimental Runs.
 
-This 180-run matrix provides a complete, gap-free empirical dataset:
-- Directly compares "Direct Messaging" vs "Broadcasting" vs "Shared Memory".
-- Rigorously tests fault tolerance and autonomous recovery across all 30 problem types.
-- Completely fills all tables and figures needed for the Q1 manuscript in one single pass.
+*(Note: Flat Broadcast Debate runs once inside ORCHESTRA's "broadcast" protocol to avoid
+duplicate execution; SFS is excluded as unused in baseline comparison; and fixed_roles is
+excluded as structurally redundant with Central Coordinator's Star Hub graph.)*
 
 --------------------------------------------------------------------------------
 6. NOVEL EVALUATION METRICS (BEYOND ACCURACY)
@@ -207,20 +204,20 @@ qwen 3.5 : 0.8b
 qwen 2.5 : 7bill
 
 ================================================================================
-8. MULTI-AGENT BASELINE METHODOLOGIES & COMPARATIVE SUITE
+8. MULTI-AGENT BASELINE METHODOLOGIES & COMPARATIVE SUITE (5 DISTINCT PARADIGMS)
 ================================================================================
-To benchmark ORCHESTRA against established literature for our paper submission,
-we have implemented 5 foundational and state-of-the-art baselines under a
-completely isolated, modular package (`baselines/`):
+To benchmark ORCHESTRA against established literature for our Q1 submission without
+redundant runs, we compare 5 distinct organizational topologies across `baselines/` and `orchestra/`:
 
-1. Independent Agents (No Communication / Majority Vote Ensemble)
+1. Independent Agents (No Communication)
    - Citation: Wang et al. (ICLR 2023)
    - Mechanism: Inter-agent messaging is blocked; agents solve independently from
-     their private data shards. Collective answer is synthesized via majority vote.
+     their private data shards.
 
 2. Fully Connected Broadcast (Flat Multi-Agent Debate)
    - Citation: Qian et al. (ChatDev, ACL 2024); Du et al. (ICML 2023)
-   - Mechanism: Unconstrained all-to-all broadcast across every round.
+   - Mechanism: Unconstrained all-to-all broadcast across every round
+     (executed cleanly once via ORCHESTRA's `broadcast` protocol).
 
 3. Central Coordinator (Star Hub-and-Spoke Architecture)
    - Citation: Wu et al. (AutoGen, ICLR 2024)
@@ -232,38 +229,39 @@ completely isolated, modular package (`baselines/`):
    - Mechanism: Strict multi-tier tree hierarchy (Executive -> Division Leads -> Workers).
      Skip-level and cross-branch communications are restricted.
 
-5. Fixed Predefined Roles (Static Prompt Specialization)
-   - Citation: Hong et al. (MetaGPT, ICLR 2024 Oral)
-   - Mechanism: Explicit role prompts injected upfront (Agent 0 = Chief Architect;
-     Agents 1..N = Subordinate Specialists).
-
-★ ORCHESTRA (Our Proposed Framework)
-   - Mechanism: Emergent dynamic self-organization with zero hardcoded roles
-     and spontaneous division of labor.
+5. ★ ORCHESTRA (Our Proposed Framework)
+   - Mechanism: Emergent dynamic self-organization with zero hardcoded roles,
+     unconstrained P2P messaging (`msg`), and spontaneous division of labor.
 
 --------------------------------------------------------------------------------
 EMPIRICAL COMPARISON & PAPER SYNTHESIS AUTOMATION
 --------------------------------------------------------------------------------
 - Controlled Apples-to-Apples Evaluation:
-  All 5 baselines are evaluated against ORCHESTRA on the identical benchmark tasks
-  (SILO-BENCH), identical agent population scales (N=2, 5, 10), and identical
-  LLM backends under both healthy conditions and Agent Dropout perturbations.
+  All 4 literature baselines are evaluated against ORCHESTRA on the identical 15
+  stratified benchmark tasks (SILO-BENCH), identical agent population scales (N=2, 5, 10),
+  and identical LLM backend under both healthy conditions and Agent Dropout perturbations.
 
 - Standardized Evaluation Metrics Captured:
   1. Task Solution Success Rate (%)
-  2. Total Token Consumption (Computational Cost)
-  3. Latency / Convergence Speed (Rounds to Consensus)
-  4. Gini Out-Degree Specialization (Structural Hierarchy)
-  5. Perturbation Resilience Ratio (Fault-tolerance under Agent Dropout)
+  2. Partial Correctness Score (P)
+  3. Total Token Consumption (Computational Cost)
+  4. Latency / Convergence Speed (Rounds to Consensus)
+  5. Gini Out-Degree Specialization (Structural Hierarchy)
+  6. Perturbation Resilience Ratio (Fault-tolerance under Agent Dropout)
 
 - One-Click Execution & Paper Tables/Figures Generation:
-  Running `.\run_baselines_benchmark.ps1 -Model "<model>"` automatically runs the
-  baselines and generates:
+  Running `.\run_master_benchmark.ps1 -Model "<model>"` followed by
+  `.\run_baselines_benchmark.ps1 -Model "<model>"` executes all 450 runs and generates:
   - Table 1 (CSV + Markdown): `paper_results/baselines/table1_master_baseline_comparison.*`
+  - Table 2 (CSV + Markdown): `paper_results/baselines/table2_metrics_by_agent_scale.*`
+  - Table 3 (CSV + Markdown): `paper_results/baselines/table3_task_complexity_breakdown.*`
+  - Table 4 (CSV + Markdown): `paper_results/baselines/table4_perturbation_resilience_breakdown.*`
   - Figure 1: Scale-wise Accuracy Bar Chart (N=2, 5, 10)
   - Figure 2: Fault Tolerance & Dropout Resilience Bar Chart
   - Figure 3: Solution Accuracy vs. Token Cost Pareto Frontier
+  - Master Raw CSV (450 Runs): `paper_results/baselines/master_baseline_results.csv`
 ================================================================================
 
-Baselines = 5 baselines* 30tasks * 2 cases (with and without agent dropped) = 300 per agent system * 3 agent system = 900 runs  
-Orchestra = 30 tasks *3 communication protocols * 2 cases (with and without agent dropped) = 180 per agent system * 3 systems = 540 runs
+Baselines = 3 baselines * 15 tasks * 2 cases (with and without agent dropped) = 90 per agent system * 3 agent systems = 270 runs
+Orchestra = 15 tasks * 2 communication protocols (msg, broadcast) * 2 cases (with and without agent dropped) = 60 per agent system * 3 systems = 180 runs
+Grand Total = 270 + 180 = 450 runs (5 distinct paradigms across N=2, 5, 10)

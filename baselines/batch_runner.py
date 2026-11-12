@@ -21,21 +21,14 @@ import pandas as pd
 
 from baselines.runner import run_baseline_experiment
 from baselines.topologies import EXTERNAL_BASELINES, SUPPORTED_BASELINES
-
-ALL_30_TASKS = [
-    f"I-{i:02d}" for i in range(1, 11)
-] + [
-    f"II-{i:02d}" for i in range(11, 21)
-] + [
-    f"III-{i:02d}" for i in range(21, 31)
-]
+from orchestra.config import SELECTED_15_TASKS, expand_task_ids
 
 
 @dataclass
 class BaselineMatrixConfig:
     """Configuration for a multi-baseline experimental batch run."""
     baselines: List[str] = field(default_factory=lambda: list(EXTERNAL_BASELINES))
-    task_ids: List[str] = field(default_factory=lambda: list(ALL_30_TASKS))
+    task_ids: List[str] = field(default_factory=lambda: list(SELECTED_15_TASKS))
     agent_counts: List[int] = field(default_factory=lambda: [2, 5, 10])
     perturbations: List[Optional[str]] = field(default_factory=lambda: [None, "agent_dropout"])
     model: Optional[str] = None
@@ -120,7 +113,7 @@ def main() -> None:
     """CLI for running multi-baseline matrices."""
     parser = argparse.ArgumentParser(description="ORCHESTRA Multi-Baseline Batch Matrix Runner")
     parser.add_argument("--baselines", nargs="+", default=["all"], help="Baselines to run ('all', 'external', or list)")
-    parser.add_argument("--task-ids", nargs="+", default=["all"], help="Task IDs (e.g. I-01, II-11, III-21 or 'all')")
+    parser.add_argument("--task-ids", nargs="+", default=["selected"], help="Task IDs ('selected' 15 tasks, 'all' 30 tasks, or explicit IDs)")
     parser.add_argument("--agent-counts", nargs="+", type=int, default=[2, 5, 10], help="Agent population sizes")
     parser.add_argument("--perturbations", nargs="+", default=["none", "agent_dropout"], choices=["none", "agent_dropout"])
     parser.add_argument("--model", default=None, help="Model identifier")
@@ -142,9 +135,7 @@ def main() -> None:
         baselines = b_args
 
     # Expand task IDs
-    task_ids = args.task_ids
-    if any(t.lower() == "all" for t in task_ids):
-        task_ids = list(ALL_30_TASKS)
+    task_ids = expand_task_ids(args.task_ids)
 
     perts = [None if p == "none" else p for p in args.perturbations]
 

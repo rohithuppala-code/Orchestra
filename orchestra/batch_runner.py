@@ -20,7 +20,7 @@ from orchestra.analysis import (
     generate_markdown_summary_table,
     plot_longitudinal_evolution,
 )
-from orchestra.config import ExperimentConfig
+from orchestra.config import ExperimentConfig, expand_task_ids
 from orchestra.runner import ExperimentSummary, run_orchestra_experiment
 
 
@@ -151,15 +151,7 @@ def main() -> None:
     
     perts = [None if p == "none" else p for p in args.perturbations]
     
-    task_ids = args.task_ids
-    if any(t.lower() == "all" for t in task_ids):
-        task_ids = [
-            f"I-{i:02d}" for i in range(1, 11)
-        ] + [
-            f"II-{i:02d}" for i in range(11, 21)
-        ] + [
-            f"III-{i:02d}" for i in range(21, 31)
-        ]
+    task_ids = expand_task_ids(args.task_ids)
     
     matrix = MatrixConfig(
         task_ids=task_ids,
