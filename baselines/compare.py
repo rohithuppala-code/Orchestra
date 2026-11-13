@@ -101,6 +101,7 @@ def load_and_standardize_results(csv_input: list[Path] | Path) -> pd.DataFrame:
         df.loc[mask_missing & df["baseline"].isna(), "baseline"] = "orchestra"
 
     df["baseline"] = df["baseline"].fillna("orchestra").astype(str).str.lower().str.strip()
+    df.loc[df["baseline"] == "orchestra_broadcast", "baseline"] = "broadcast"
     df.loc[df["baseline"].isin(["nan", "none", "", "null"]), "baseline"] = "orchestra"
 
     # Standardize perturbation column
