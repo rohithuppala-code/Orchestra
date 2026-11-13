@@ -59,12 +59,19 @@ foreach ($n in $AgentCounts) {
     }
 }
 
-# Automatically discover and include ORCHESTRA & Broadcast results from final_workspace_n* if present
-foreach ($n in $AgentCounts) {
-    $orchCsv = Join-Path "${OrchestraPrefix}_n${n}" "batch_comparison_results.csv"
-    if (Test-Path $orchCsv) {
-        $allCsvPaths += $orchCsv
-        Write-Host "  [OK] Found ORCHESTRA/Broadcast scale results for Master Synthesis: $orchCsv" -ForegroundColor Green
+# Automatically discover and include all existing scale results for Master Synthesis
+Get-ChildItem -Directory -Filter "${Prefix}_n*" | ForEach-Object {
+    $c = Join-Path $_.FullName "baseline_comparison_results.csv"
+    if (Test-Path $c -and ($allCsvPaths -notcontains $c)) {
+        $allCsvPaths += $c
+        Write-Host "  [OK] Found baseline scale results: $c" -ForegroundColor Green
+    }
+}
+Get-ChildItem -Directory -Filter "${OrchestraPrefix}_n*" | ForEach-Object {
+    $c = Join-Path $_.FullName "batch_comparison_results.csv"
+    if (Test-Path $c -and ($allCsvPaths -notcontains $c)) {
+        $allCsvPaths += $c
+        Write-Host "  [OK] Found ORCHESTRA/Broadcast scale results for Master Synthesis: $c" -ForegroundColor Green
     }
 }
 
