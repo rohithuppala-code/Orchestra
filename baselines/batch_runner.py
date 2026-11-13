@@ -64,6 +64,17 @@ def run_baseline_batch(matrix: BaselineMatrixConfig) -> pd.DataFrame:
     print("=" * 75)
 
     rows: List[Dict[str, Any]] = []
+    ws_path = Path(matrix.workspace)
+    ws_path.mkdir(parents=True, exist_ok=True)
+    csv_file = ws_path / "baseline_comparison_results.csv"
+    if csv_file.exists():
+        try:
+            df_existing = pd.read_csv(csv_file)
+            rows = df_existing.to_dict("records")
+            print(f"  [RESUME] Loaded {len(rows)} previously completed runs from {csv_file.name}")
+        except Exception:
+            rows = []
+
     run_idx = 0
     start_time = time.time()
 
@@ -74,6 +85,26 @@ def run_baseline_batch(matrix: BaselineMatrixConfig) -> pd.DataFrame:
                     for rep in range(1, matrix.repetitions + 1):
                         run_idx += 1
                         seed = matrix.base_seed + rep if matrix.base_seed else 42
+
+                        # Check if already completed in rows
+                        already_run = False
+                        for r in rows:
+                            r_pert = r.get("perturbation")
+                            r_pert_val = None if (pd.isna(r_pert) or r_pert == "" or str(r_pert).lower() == "none") else str(r_pert).lower()
+                            exp_pert_val = None if (pert is None or pert == "" or str(pert).lower() == "none") else str(pert).lower()
+                            if (
+                                str(r.get("baseline")).lower() == bname.lower()
+                                and str(r.get("task_id")) == str(task_id)
+                                and int(r.get("num_agents", 0)) == int(n)
+                                and r_pert_val == exp_pert_val
+                            ):
+                                already_run = True
+                                break
+
+                        if already_run:
+                            print(f"\n[{run_idx}/{total_runs}] [CACHED] {bname.upper()} on {task_id} (N={n}, pert={pert}) already completed in {csv_file.name}. Skipping.")
+                            continue
+
                         print(f"\n[{run_idx}/{total_runs}] Running {bname.upper()} on {task_id} (N={n}, pert={pert})...")
 
                         try:
