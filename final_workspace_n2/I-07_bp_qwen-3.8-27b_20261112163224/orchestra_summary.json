@@ -1,0 +1,35 @@
+{
+  "experiment_id": "I-07_n2_broadcast_rep1",
+  "case_dir": "final_workspace_n2\\I-07_bp_qwen-3.8-27b_20261112163224",
+  "task_id": "I-07",
+  "num_agents": 2,
+  "protocol": "broadcast",
+  "model": "qwen-3.8-27b",
+  "total_time_seconds": 662.5080676078796,
+  "total_rounds": 13,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.0,
+  "token_consumption": 3013.9230769231,
+  "communication_density": 1.0,
+  "gini_out_degree": 0.5,
+  "gini_in_degree": 0.5,
+  "mean_structural_drift": 0.3333333333333333,
+  "agent_roles": {
+    "0": "Aggregator_Collector",
+    "1": "Broadcaster_Disseminator"
+  },
+  "perturbation_applied": null,
+  "hitl_violations_count": 22,
+  "hitl_summary": {
+    "total_violations": 22,
+    "mode": "audit_only",
+    "violations_by_type": {
+      "isolation": 16,
+      "stagnation": 6
+    }
+  },
+  "error_message": null,
+  "seed": 43
+}

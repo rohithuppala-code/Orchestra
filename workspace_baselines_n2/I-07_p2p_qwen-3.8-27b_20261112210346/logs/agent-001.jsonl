@@ -1,0 +1,5 @@
+{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-11-12T21:03:46.448846+00:00"}
+{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-11-12T21:03:52.090697+00:00"}
+{"round":1,"event":"llm_response","agent_id":1,"input_tokens":1387,"output_tokens":70,"response":"I'll start by computing local statistics for my data.<tool_call>\n  <tool>send_message</parameter>\n  <parameter=target_id>0</parameter>\n  <parameter=content>Agent 1: I hold 25 numbers. Computing local_sum... will send my partial stats for global average.</parameter>\n  </tool></tool_call>","timestamp":"2026-11-12T21:03:57.660874+00:00"}
+{"round":1,"event":"tool_call","agent_id":1,"tool":"send_message","parameters":{},"timestamp":"2026-11-12T21:03:57.663428+00:00"}
+{"round":1,"event":"tool_result","agent_id":1,"tool":"send_message","result":{"success":false,"message":"Invalid target_id: -1"},"timestamp":"2026-11-12T21:03:57.664678+00:00"}

@@ -1,0 +1,2 @@
+{"round_num": 9, "violation_type": "isolation", "agent_id": 0, "description": "Agent 0 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 9, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}

@@ -1,0 +1,35 @@
+{
+  "experiment_id": "III-30_n2_msg_rep1_agent_dropout",
+  "case_dir": "final_workspace_n2\\III-30_p2p_qwen-3.8-27b_20261112203014",
+  "task_id": "III-30",
+  "num_agents": 2,
+  "protocol": "msg",
+  "model": "qwen-3.8-27b",
+  "total_time_seconds": 126.19035768508911,
+  "total_rounds": 6,
+  "status": "failed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.0,
+  "token_consumption": 0.0,
+  "communication_density": 0.0,
+  "gini_out_degree": 0.16666666666666666,
+  "gini_in_degree": 0.16666666666666666,
+  "mean_structural_drift": 0.6666666666666666,
+  "agent_roles": {
+    "0": "Broadcaster_Disseminator",
+    "1": "Aggregator_Collector"
+  },
+  "perturbation_applied": "agent_dropout",
+  "hitl_violations_count": 5,
+  "hitl_summary": {
+    "total_violations": 5,
+    "mode": "audit_only",
+    "violations_by_type": {
+      "isolation": 4,
+      "stagnation": 1
+    }
+  },
+  "error_message": "TypeError: unhashable type: 'list'",
+  "seed": 43
+}
