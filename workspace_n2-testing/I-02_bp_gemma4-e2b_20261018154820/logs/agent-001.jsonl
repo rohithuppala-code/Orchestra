@@ -1,0 +1,5 @@
+{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-10-18T15:48:20.953374+00:00"}
+{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-10-18T15:49:03.479066+00:00"}
+{"round":1,"event":"llm_response","agent_id":1,"input_tokens":990,"output_tokens":36,"response":"<tool_call>\n  <tool>broadcast_message</tool>\n  <parameters>\n    <content>My local count for \"apple\" is 10.</content>\n  </parameters>\n</tool_call>","timestamp":"2026-10-18T15:50:14.117227+00:00"}
+{"round":1,"event":"tool_call","agent_id":1,"tool":"broadcast_message","parameters":{"content":"My local count for \"apple\" is 10."},"timestamp":"2026-10-18T15:50:14.119137+00:00"}
+{"round":1,"event":"tool_result","agent_id":1,"tool":"broadcast_message","result":{"success":true,"message":"Message broadcast to all agents"},"timestamp":"2026-10-18T15:50:14.125159+00:00"}

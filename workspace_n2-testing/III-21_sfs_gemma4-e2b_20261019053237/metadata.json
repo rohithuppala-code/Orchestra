@@ -1,0 +1,81 @@
+{
+  "case_id":"III-21_sfs_gemma4-e2b_20261019053237",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\III-21_n2.json",
+  "task":{
+    "case_id":"III-21",
+    "case_name":"Distributed Sort",
+    "paradigm":"Paradigm III",
+    "num_agents":2,
+    "task_description":"**Task: Distributed Sorting**\n\nSort the global dataset so that Agent 0 holds smallest values, Agent {max_id} holds largest.\n\n**Data Distribution:**\nRANDOM - your data may belong to other agents' final ranges.\n\n**Your Data (RANDOM):**\nAgent {agent_id} holds: {input_shard}\n\n**Algorithm:**\n1. Determine value ranges for each agent\n2. SHUFFLE data between agents\n3. Each agent sorts their final range\n\n**Output:**\nEach agent submits their sorted portion (concatenated result should be fully sorted).\n\n**Communication Protocol:**\nTopology: All-to-All / Hash-based shuffle. Global data exchange required.\nEach agent submits their own segment using submit_result(your_sorted_range).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        [
+          89,
+          157,
+          181,
+          250,
+          252,
+          275,
+          277,
+          286,
+          331,
+          389,
+          446,
+          447,
+          462,
+          471,
+          476,
+          477,
+          496,
+          535,
+          552,
+          584
+        ],
+        [
+          607,
+          625,
+          631,
+          667,
+          685,
+          725,
+          749,
+          752,
+          769,
+          794,
+          828,
+          846,
+          849,
+          851,
+          873,
+          903,
+          913,
+          942,
+          958,
+          989
+        ]
+      ],
+      "is_segmented":true,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output[i] for i in range(num_agents))",
+      "verification_logic_hint":"concat(agent_outputs) == sorted(global_input)",
+      "format_description":"ALL agents must submit their results using submit_result(answer). Each agent submits their own portion of the result."
+    }
+  },
+  "config":{
+    "agent_count":2,
+    "protocol":"sfs",
+    "model":"gemma4:e2b",
+    "api_base":"http://localhost:11434/v1",
+    "api_key":"ollama",
+    "max_rounds":3
+  },
+  "execution":{
+    "started_at":"2026-10-19T05:32:37.545329+00:00",
+    "finished_at":"2026-10-19T05:38:27.270168+00:00",
+    "status":"completed",
+    "current_round":3,
+    "total_input_tokens":4685,
+    "total_output_tokens":113,
+    "all_submitted":false
+  }
+}

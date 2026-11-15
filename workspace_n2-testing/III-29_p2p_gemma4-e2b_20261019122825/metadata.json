@@ -1,0 +1,47 @@
+{
+  "case_id":"III-29_p2p_gemma4-e2b_20261019122825",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\III-29_n2.json",
+  "task":{
+    "case_id":"III-29",
+    "case_name":"Load Balance",
+    "paradigm":"Paradigm III",
+    "num_agents":2,
+    "task_description":"**Task: Load Balancing (Deterministic Greedy LPT)**\n\nRedistribute tasks using a deterministic algorithm (LPT - Longest Processing Time first).\n\n**Data Distribution:**\nSeverely UNBALANCED. Total tasks: 40, total duration: 516.\n\n**Your Data (UNBALANCED):**\nAgent {agent_id} holds: {input_shard}\n\n**Algorithm (MUST follow exactly):**\n1. Collect ALL tasks globally\n2. Sort by duration descending\n3. Greedily assign to agent with minimum load (tie-break: smallest agent id)\n4. Compute: variance, max_load, min_load\n\n**Output:**\nStatistics dict: {\"variance\": X, \"max_load\": Y, \"min_load\": Z}\n\n**Communication Protocol:**\nTopology: All-to-All share tasks, then compute and broadcast.\nAll agents must submit the same final answer using submit_result(stats_dict).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        {
+          "variance":0.0,
+          "max_load":258,
+          "min_load":258
+        },
+        {
+          "variance":0.0,
+          "max_load":258,
+          "min_load":258
+        }
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output for i in range(num_agents))",
+      "verification_logic_hint":"all(agent_outputs) == expected_stats_from_greedy_lpt",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":2,
+    "protocol":"msg",
+    "model":"gemma4:e2b",
+    "api_base":"http://localhost:11434/v1",
+    "api_key":"ollama",
+    "max_rounds":3
+  },
+  "execution":{
+    "started_at":"2026-10-19T12:28:25.550556+00:00",
+    "finished_at":"2026-10-19T12:36:52.126984+00:00",
+    "status":"completed",
+    "current_round":3,
+    "total_input_tokens":6822,
+    "total_output_tokens":189,
+    "all_submitted":false
+  }
+}

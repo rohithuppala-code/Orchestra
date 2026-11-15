@@ -1,0 +1,32 @@
+{
+  "experiment_id": "II-11_n2_msg_rep1_agent_dropout",
+  "case_dir": "workspace\\II-11_p2p_gemma4-e2b_20261018211649",
+  "task_id": "II-11",
+  "num_agents": 2,
+  "protocol": "msg",
+  "model": "gemma4:e2b",
+  "total_time_seconds": 280.83221650123596,
+  "total_rounds": 2,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.2666666667,
+  "token_consumption": 1483.0,
+  "communication_density": 0.5,
+  "gini_out_degree": 0.5,
+  "gini_in_degree": 0.5,
+  "mean_structural_drift": 1.0,
+  "agent_roles": {
+    "0": "Broadcaster_Disseminator",
+    "1": "Aggregator_Collector"
+  },
+  "perturbation_applied": "agent_dropout",
+  "hitl_violations_count": 0,
+  "hitl_summary": {
+    "total_violations": 0,
+    "mode": "audit_only",
+    "violations_by_type": {}
+  },
+  "error_message": null,
+  "seed": 43
+}

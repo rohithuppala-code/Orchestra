@@ -1,0 +1,51 @@
+{
+  "case_id":"II-20_bp_gemma4-e2b_20261019043807",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\II-20_n2.json",
+  "task":{
+    "case_id":"II-20",
+    "case_name":"Pipeline Hash",
+    "paradigm":"Paradigm II",
+    "num_agents":2,
+    "task_description":"**Task: Pipeline Hash (Blockchain Simulation)**\n\nCompute a hash chain where each block's hash depends on the previous block's hash.\n\n**Agent Ordering:**\nAgents hold CONSECUTIVE blocks: 0 \u2192 1 \u2192 2 \u2192 ... \u2192 {max_id}\n\n**Your Data (Position {agent_id}):**\nBlocks: {input_shard}\n\n**Algorithm:**\nhash[i] = (sum(ASCII_values(block[i])) XOR hash[i-1]) % 10000\nhash[0] = 0 (genesis)\n- Agent i needs the FINAL HASH from Agent i-1 to start computing\n\n**Output:**\nEach agent submits their portion of hash values.\n\n**Communication Protocol:**\nTopology: Chain (0 \u2192 1 \u2192 2 \u2192 ... \u2192 {max_id}). Strict sequential dependency.\nEach agent submits their own segment using submit_result(your_computed_hashes).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        [
+          1107,
+          7,
+          1106,
+          4,
+          1107
+        ],
+        [
+          11,
+          1106,
+          8,
+          1107,
+          15
+        ]
+      ],
+      "is_segmented":true,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output[i] for i in range(num_agents))",
+      "verification_logic_hint":"concat(agent_outputs) == valid_blockchain",
+      "format_description":"ALL agents must submit their results using submit_result(answer). Each agent submits their own portion of the result."
+    }
+  },
+  "config":{
+    "agent_count":2,
+    "protocol":"broadcast",
+    "model":"gemma4:e2b",
+    "api_base":"http://localhost:11434/v1",
+    "api_key":"ollama",
+    "max_rounds":3
+  },
+  "execution":{
+    "started_at":"2026-10-19T04:38:07.430809+00:00",
+    "finished_at":"2026-10-19T04:47:45.906124+00:00",
+    "status":"completed",
+    "current_round":3,
+    "total_input_tokens":4081,
+    "total_output_tokens":108,
+    "all_submitted":false
+  }
+}

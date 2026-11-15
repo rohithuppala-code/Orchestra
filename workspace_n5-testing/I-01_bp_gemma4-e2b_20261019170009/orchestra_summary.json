@@ -1,0 +1,37 @@
+{
+  "experiment_id": "I-01_n5_broadcast_rep1_agent_dropout",
+  "case_dir": "workspace_n5\\I-01_bp_gemma4-e2b_20261019170009",
+  "task_id": "I-01",
+  "num_agents": 5,
+  "protocol": "broadcast",
+  "model": "gemma4:e2b",
+  "total_time_seconds": 586.5537853240967,
+  "total_rounds": 3,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.0,
+  "token_consumption": 4422.3333333333,
+  "communication_density": 0.2,
+  "gini_out_degree": 0.2,
+  "gini_in_degree": 0.05,
+  "mean_structural_drift": 1.0,
+  "agent_roles": {
+    "0": "Peer_Collaborator",
+    "1": "Aggregator_Collector",
+    "2": "Peer_Collaborator",
+    "3": "Peer_Collaborator",
+    "4": "Peer_Collaborator"
+  },
+  "perturbation_applied": "agent_dropout",
+  "hitl_violations_count": 1,
+  "hitl_summary": {
+    "total_violations": 1,
+    "mode": "audit_only",
+    "violations_by_type": {
+      "monopolization": 1
+    }
+  },
+  "error_message": null,
+  "seed": 43
+}
