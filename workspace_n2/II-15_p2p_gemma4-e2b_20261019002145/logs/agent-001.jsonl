@@ -1,6 +1,0 @@
-{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-10-19T00:21:45.186230+00:00"}
-{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-10-19T00:24:44.648995+00:00"}
-{"round":1,"event":"llm_response","agent_id":1,"input_tokens":931,"output_tokens":26,"response":"<tool_call>\n  <tool>submit_result</tool>\n  <parameters>\n    <answer>0</answer>\n  </parameters>\n</tool_call>","timestamp":"2026-10-19T00:27:21.248338+00:00"}
-{"round":1,"event":"tool_call","agent_id":1,"tool":"submit_result","parameters":{"answer":0},"timestamp":"2026-10-19T00:27:21.250375+00:00"}
-{"round":1,"event":"tool_result","agent_id":1,"tool":"submit_result","result":{"status":"submitted"},"timestamp":"2026-10-19T00:27:21.255242+00:00"}
-{"round":1,"event":"submitted","agent_id":1,"answer":0,"timestamp":"2026-10-19T00:27:21.256923+00:00"}

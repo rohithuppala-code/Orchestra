@@ -1,5 +1,0 @@
-{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-10-18T17:41:58.068288+00:00"}
-{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-10-18T17:42:59.566652+00:00"}
-{"round":1,"event":"llm_response","agent_id":1,"input_tokens":1113,"output_tokens":27,"response":"<tool_call>\n  <tool>read_file</tool>\n  <parameters>\n    <path>agent_0_data</path>\n  </parameters>\n</tool_call>","timestamp":"2026-10-18T17:43:59.987816+00:00"}
-{"round":1,"event":"tool_call","agent_id":1,"tool":"read_file","parameters":{"path":"agent_0_data"},"timestamp":"2026-10-18T17:43:59.990084+00:00"}
-{"round":1,"event":"tool_result","agent_id":1,"tool":"read_file","result":{"success":false,"content":null,"metadata":{},"error":"Key not found: agent_0_data"},"timestamp":"2026-10-18T17:43:59.992605+00:00"}

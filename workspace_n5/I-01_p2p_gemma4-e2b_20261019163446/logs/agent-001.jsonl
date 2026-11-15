@@ -1,5 +1,0 @@
-{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-10-19T16:34:46.387865+00:00"}
-{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-10-19T16:35:51.702668+00:00"}
-{"round":1,"event":"llm_response","agent_id":1,"input_tokens":889,"output_tokens":58,"response":"<tool_call>\n  <tool>send_message</tool>\n  <parameters>\n    <target_id>0</target_id>\n    <content>Agent 1 local maximum is 703. Please provide your local maximum so we can find the global maximum.</content>\n  </parameters>\n</tool_call>","timestamp":"2026-10-19T16:36:41.624285+00:00"}
-{"round":1,"event":"tool_call","agent_id":1,"tool":"send_message","parameters":{"target_id":0,"content":"Agent 1 local maximum is 703. Please provide your local maximum so we can find the global maximum."},"timestamp":"2026-10-19T16:36:41.626149+00:00"}
-{"round":1,"event":"tool_result","agent_id":1,"tool":"send_message","result":{"success":true,"message":"Message sent to agent 0"},"timestamp":"2026-10-19T16:36:41.630550+00:00"}

@@ -1,5 +1,0 @@
-{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-10-18T18:47:21.927234+00:00"}
-{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-10-18T18:49:49.568558+00:00"}
-{"round":1,"event":"llm_response","agent_id":1,"input_tokens":1007,"output_tokens":48,"response":"<tool_call>\n  <tool>send_message</tool>\n  <parameters>\n    <target_id>0</target_id>\n    <content>My local sum is 832.9415301444472 and local count is 26.</content>\n  </parameters>\n</tool_call>","timestamp":"2026-10-18T18:51:17.142546+00:00"}
-{"round":1,"event":"tool_call","agent_id":1,"tool":"send_message","parameters":{"target_id":0,"content":"My local sum is 832.9415301444472 and local count is 26."},"timestamp":"2026-10-18T18:51:17.144538+00:00"}
-{"round":1,"event":"tool_result","agent_id":1,"tool":"send_message","result":{"success":true,"message":"Message sent to agent 0"},"timestamp":"2026-10-18T18:51:17.148979+00:00"}

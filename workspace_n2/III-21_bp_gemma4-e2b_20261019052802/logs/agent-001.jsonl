@@ -1,5 +1,0 @@
-{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-10-19T05:28:02.234161+00:00"}
-{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-10-19T05:29:22.112235+00:00"}
-{"round":1,"event":"llm_response","agent_id":1,"input_tokens":981,"output_tokens":58,"response":"<tool_call>\n  <tool>broadcast_message</tool>\n  <parameters>\n    <content>Agent 1 initial data: [471, 181, 769, 913, 496, 89, 462, 447, 958, 535, 667, 794, 607, 828, 625, 277, 846, 903, 849, 749]</content>\n  </parameters>\n</tool_call>","timestamp":"2026-10-19T05:30:53.902133+00:00"}
-{"round":1,"event":"tool_call","agent_id":1,"tool":"broadcast_message","parameters":{"content":"Agent 1 initial data: [471, 181, 769, 913, 496, 89, 462, 447, 958, 535, 667, 794, 607, 828, 625, 277, 846, 903, 849, 749]"},"timestamp":"2026-10-19T05:30:53.904394+00:00"}
-{"round":1,"event":"tool_result","agent_id":1,"tool":"broadcast_message","result":{"success":true,"message":"Message broadcast to all agents"},"timestamp":"2026-10-19T05:30:53.910547+00:00"}

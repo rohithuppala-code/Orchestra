@@ -1,7 +1,0 @@
-{"round":0,"event":"initialized","agent_id":0,"timestamp":"2026-10-19T10:06:49.247222+00:00"}
-{"round":1,"event":"llm_request","agent_id":0,"input_tokens":0,"timestamp":"2026-10-19T10:06:49.302239+00:00"}
-{"round":1,"event":"llm_response","agent_id":0,"input_tokens":1092,"output_tokens":1,"response":"","timestamp":"2026-10-19T10:10:06.924818+00:00"}
-{"round":2,"event":"llm_request","agent_id":0,"input_tokens":0,"timestamp":"2026-10-19T10:13:04.054610+00:00"}
-{"round":2,"event":"llm_response","agent_id":0,"input_tokens":1146,"output_tokens":1,"response":"","timestamp":"2026-10-19T10:16:12.241855+00:00"}
-{"round":3,"event":"llm_request","agent_id":0,"input_tokens":0,"timestamp":"2026-10-19T10:16:12.363226+00:00"}
-{"round":3,"event":"llm_response","agent_id":0,"input_tokens":1201,"output_tokens":1,"response":"","timestamp":"2026-10-19T10:19:07.547321+00:00"}

@@ -1,9 +1,0 @@
-{"round":0,"event":"initialized","agent_id":0,"timestamp":"2026-10-19T10:35:51.918436+00:00"}
-{"round":1,"event":"llm_request","agent_id":0,"input_tokens":0,"timestamp":"2026-10-19T10:35:51.959161+00:00"}
-{"round":1,"event":"llm_response","agent_id":0,"input_tokens":1140,"output_tokens":1,"response":"","timestamp":"2026-10-19T10:38:27.361954+00:00"}
-{"round":2,"event":"llm_request","agent_id":0,"input_tokens":0,"timestamp":"2026-10-19T10:41:01.456042+00:00"}
-{"round":2,"event":"llm_response","agent_id":0,"input_tokens":1195,"output_tokens":1,"response":"","timestamp":"2026-10-19T10:43:29.948394+00:00"}
-{"round":3,"event":"llm_request","agent_id":0,"input_tokens":0,"timestamp":"2026-10-19T10:43:30.046858+00:00"}
-{"round":3,"event":"llm_response","agent_id":0,"input_tokens":1249,"output_tokens":20,"response":"<tool_call>\n  <tool>list_agents</tool>\n  <parameters>\n  </parameters>\n</tool_call>","timestamp":"2026-10-19T10:45:43.125100+00:00"}
-{"round":3,"event":"tool_call","agent_id":0,"tool":"list_agents","parameters":{},"timestamp":"2026-10-19T10:45:43.126992+00:00"}
-{"round":3,"event":"tool_result","agent_id":0,"tool":"list_agents","result":{"agent_ids":[0,1],"total":2},"timestamp":"2026-10-19T10:45:43.128632+00:00"}

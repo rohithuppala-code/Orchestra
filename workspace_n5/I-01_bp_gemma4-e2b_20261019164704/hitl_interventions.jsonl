@@ -1,1 +1,0 @@
-{"round_num": 2, "violation_type": "monopolization", "agent_id": 1, "description": "Agent 1 sent 100.0% of all messages this round (threshold: 85.0%)", "metric_value": 1.0, "threshold": 0.85, "action_taken": "logged"}

@@ -1,5 +1,0 @@
-{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-10-18T15:39:46.576807+00:00"}
-{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-10-18T15:40:24.029692+00:00"}
-{"round":1,"event":"llm_response","agent_id":1,"input_tokens":942,"output_tokens":53,"response":"<tool_call>\n  <tool>send_message</tool>\n  <parameters>\n    <target_id>0</target_id>\n    <content>How many times does the word \"apple\" appear in your data? I currently have 12.</content>\n  </parameters>\n</tool_call>","timestamp":"2026-10-18T15:41:07.778314+00:00"}
-{"round":1,"event":"tool_call","agent_id":1,"tool":"send_message","parameters":{"target_id":0,"content":"How many times does the word \"apple\" appear in your data? I currently have 12."},"timestamp":"2026-10-18T15:41:07.780156+00:00"}
-{"round":1,"event":"tool_result","agent_id":1,"tool":"send_message","result":{"success":true,"message":"Message sent to agent 0"},"timestamp":"2026-10-18T15:41:07.785159+00:00"}
