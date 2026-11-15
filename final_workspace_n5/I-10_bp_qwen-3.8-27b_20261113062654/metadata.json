@@ -1,0 +1,42 @@
+{
+  "case_id":"I-10_bp_qwen-3.8-27b_20261113062654",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\I-10_n5.json",
+  "task":{
+    "case_id":"I-10",
+    "case_name":"Standard Deviation",
+    "paradigm":"Paradigm I",
+    "num_agents":5,
+    "task_description":"**Task: Standard Deviation (Two-Phase)**\n\nCompute the population standard deviation of all numbers across all agents' data.\n\n**Your Data:**\nYou (Agent {agent_id}) hold: {input_shard}\n\n**Algorithm (Two Phases):**\n**Phase 1: Compute Global Mean**\n- Calculate local_sum and local_count\n- Coordinate to compute global_mean = total_sum / total_count\n\n**Phase 2: Compute Variance**\n- Calculate local variance contribution: sum((x - global_mean)\u00b2 for x in local_data)\n- Coordinate to sum all variance contributions\n- Compute std_dev = sqrt(total_variance / total_count)\n\n**Output:**\nA floating-point number (precision: 2 decimal places).\n\n**Communication Protocol:**\nTopology: Star/Tree with two-phase protocol \u2192 broadcast after each phase.\nAll agents must submit the same final answer using submit_result(std_dev).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        29.0,
+        29.0,
+        29.0,
+        29.0,
+        29.0
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(abs(agent_outputs[i] - expected_output) <= 0.01 for i in range(num_agents))",
+      "verification_logic_hint":"all(abs(submitted_std - global_std) < 0.01)",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":5,
+    "protocol":"broadcast",
+    "model":"qwen-3.8-27b",
+    "api_base":"https://bharatcode.ai/api/model/v1",
+    "api_key":"bc_live_5c495210b6fa4f20b64cc831d2dbb9f3_K1LF33bakg8ZKsffMbjK6WA-Le7Em-gqzb2JP8sYsZ8",
+    "max_rounds":15
+  },
+  "execution":{
+    "started_at":"2026-11-13T06:26:54.607864+00:00",
+    "finished_at":"2026-11-13T07:12:40.525699+00:00",
+    "status":"completed",
+    "current_round":15,
+    "total_input_tokens":247885,
+    "total_output_tokens":48995,
+    "all_submitted":false
+  }
+}

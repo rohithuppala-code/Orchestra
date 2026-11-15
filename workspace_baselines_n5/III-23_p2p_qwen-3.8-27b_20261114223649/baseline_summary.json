@@ -1,0 +1,23 @@
+{
+  "case_id": "III-23_p2p_qwen-3.8-27b_20261114223649",
+  "baseline": "central_coordinator",
+  "citation": "Wu et al. (AutoGen / ICLR 2024)",
+  "task_id": "III-23",
+  "num_agents": 5,
+  "protocol": "msg",
+  "model": "qwen-3.8-27b",
+  "total_time_seconds": 278.85157585144043,
+  "total_rounds": 15,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.0,
+  "token_consumption": 7995.7333333333,
+  "communication_density": 0.75,
+  "gini_out_degree": 0.56,
+  "gini_in_degree": 0.18666666666666668,
+  "mean_structural_drift": 0.6428571428571429,
+  "perturbation": "agent_dropout",
+  "seed": 43,
+  "error_message": null
+}

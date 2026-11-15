@@ -1,0 +1,97 @@
+{
+  "case_id":"I-09_p2p_qwen-3.8-27b_20261114002705",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\I-09_n5.json",
+  "task":{
+    "case_id":"I-09",
+    "case_name":"Top-K Select",
+    "paradigm":"Paradigm I",
+    "num_agents":5,
+    "task_description":"**Task: Top-K Selection**\n\nFind the 10 largest values across all agents' data.\n\n**Your Data:**\nYou (Agent {agent_id}) hold: {input_shard}\n\n**Algorithm:**\n1. Find the top 10 values in your local data\n2. Coordinate with other agents to find the global top-10\n3. Each agent only needs to send at most 10 values to a coordinator\n\n**Output:**\nA list of 10 integers, sorted in descending order.\n\n**Communication Protocol:**\nTopology: Star/Tree aggregation \u2192 broadcast.\nAll agents must submit the same final answer using submit_result([val1, val2, ..., val10]).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        [
+          996,
+          992,
+          972,
+          965,
+          960,
+          959,
+          945,
+          939,
+          937,
+          934
+        ],
+        [
+          996,
+          992,
+          972,
+          965,
+          960,
+          959,
+          945,
+          939,
+          937,
+          934
+        ],
+        [
+          996,
+          992,
+          972,
+          965,
+          960,
+          959,
+          945,
+          939,
+          937,
+          934
+        ],
+        [
+          996,
+          992,
+          972,
+          965,
+          960,
+          959,
+          945,
+          939,
+          937,
+          934
+        ],
+        [
+          996,
+          992,
+          972,
+          965,
+          960,
+          959,
+          945,
+          939,
+          937,
+          934
+        ]
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output for i in range(num_agents))",
+      "verification_logic_hint":"all(set(submitted_list) == set(global_top_k))",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":5,
+    "protocol":"msg",
+    "model":"qwen-3.8-27b",
+    "api_base":"https://bharatcode.ai/api/model/v1",
+    "api_key":"bc_live_5c495210b6fa4f20b64cc831d2dbb9f3_K1LF33bakg8ZKsffMbjK6WA-Le7Em-gqzb2JP8sYsZ8",
+    "max_rounds":15
+  },
+  "execution":{
+    "started_at":"2026-11-14T00:27:05.393357+00:00",
+    "finished_at":"2026-11-14T00:28:29.940500+00:00",
+    "status":"completed",
+    "current_round":1,
+    "total_input_tokens":5571,
+    "total_output_tokens":5876,
+    "all_submitted":true
+  }
+}

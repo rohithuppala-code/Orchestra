@@ -1,0 +1,27 @@
+{"round_num": 3, "violation_type": "isolation", "agent_id": 0, "description": "Agent 0 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 3, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 3, "violation_type": "isolation", "agent_id": 2, "description": "Agent 2 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 3, "violation_type": "isolation", "agent_id": 3, "description": "Agent 3 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 3, "violation_type": "isolation", "agent_id": 4, "description": "Agent 4 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 4, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 3 consecutive rounds", "metric_value": 3.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 4, "violation_type": "isolation", "agent_id": 3, "description": "Agent 3 completely isolated for 3 consecutive rounds", "metric_value": 3.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 5, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 4 consecutive rounds", "metric_value": 4.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 5, "violation_type": "isolation", "agent_id": 3, "description": "Agent 3 completely isolated for 4 consecutive rounds", "metric_value": 4.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 6, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 5 consecutive rounds", "metric_value": 5.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 7, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 6 consecutive rounds", "metric_value": 6.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 8, "violation_type": "isolation", "agent_id": 0, "description": "Agent 0 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 8, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 7 consecutive rounds", "metric_value": 7.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 8, "violation_type": "isolation", "agent_id": 2, "description": "Agent 2 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 8, "violation_type": "isolation", "agent_id": 3, "description": "Agent 3 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 8, "violation_type": "isolation", "agent_id": 4, "description": "Agent 4 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 9, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 8 consecutive rounds", "metric_value": 8.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 10, "violation_type": "monopolization", "agent_id": 3, "description": "Agent 3 sent 100.0% of all messages this round (threshold: 85.0%)", "metric_value": 1.0, "threshold": 0.85, "action_taken": "logged"}
+{"round_num": 10, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 9 consecutive rounds", "metric_value": 9.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 11, "violation_type": "monopolization", "agent_id": 0, "description": "Agent 0 sent 100.0% of all messages this round (threshold: 85.0%)", "metric_value": 1.0, "threshold": 0.85, "action_taken": "logged"}
+{"round_num": 11, "violation_type": "isolation", "agent_id": 2, "description": "Agent 2 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 12, "violation_type": "monopolization", "agent_id": 2, "description": "Agent 2 sent 100.0% of all messages this round (threshold: 85.0%)", "metric_value": 1.0, "threshold": 0.85, "action_taken": "logged"}
+{"round_num": 12, "violation_type": "isolation", "agent_id": 3, "description": "Agent 3 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 13, "violation_type": "isolation", "agent_id": 0, "description": "Agent 0 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 13, "violation_type": "isolation", "agent_id": 1, "description": "Agent 1 completely isolated for 2 consecutive rounds", "metric_value": 2.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 13, "violation_type": "isolation", "agent_id": 3, "description": "Agent 3 completely isolated for 3 consecutive rounds", "metric_value": 3.0, "threshold": 2.0, "action_taken": "logged"}
+{"round_num": 14, "violation_type": "monopolization", "agent_id": 2, "description": "Agent 2 sent 100.0% of all messages this round (threshold: 85.0%)", "metric_value": 1.0, "threshold": 0.85, "action_taken": "logged"}

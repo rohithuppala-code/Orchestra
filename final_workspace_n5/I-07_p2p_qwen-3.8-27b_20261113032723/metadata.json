@@ -1,0 +1,42 @@
+{
+  "case_id":"I-07_p2p_qwen-3.8-27b_20261113032723",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\I-07_n5.json",
+  "task":{
+    "case_id":"I-07",
+    "case_name":"Average Value",
+    "paradigm":"Paradigm I",
+    "num_agents":5,
+    "task_description":"**Task: Global Average**\n\nCompute the average (mean) value of all numbers across all agents' data.\n\n**Your Data:**\nYou (Agent {agent_id}) hold: {input_shard}\n\n**Algorithm:**\n1. Compute local_sum and local_count\n2. Coordinate with other agents to compute global_sum and global_count\n3. global_average = global_sum / global_count\n\n**Output:**\nA floating-point number representing the global average (precision: 2 decimal places).\n\n**Communication Protocol:**\nTopology: Star/Tree aggregation \u2192 broadcast.\nAll agents must submit the same final answer using submit_result(global_average).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        53.6,
+        53.6,
+        53.6,
+        53.6,
+        53.6
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(abs(agent_outputs[i] - expected_output) <= 0.01 for i in range(num_agents))",
+      "verification_logic_hint":"all(abs(submitted_avg - global_avg) < 0.01)",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":5,
+    "protocol":"msg",
+    "model":"qwen-3.8-27b",
+    "api_base":"https://bharatcode.ai/api/model/v1",
+    "api_key":"bc_live_9992a63135634137ac89a5a66594c46f_ROAFoWyTExYeX7M64t8qfP-zgIh8dtiYmXGYwWgw25M",
+    "max_rounds":15
+  },
+  "execution":{
+    "started_at":"2026-11-13T03:27:23.789097+00:00",
+    "finished_at":"2026-11-13T03:41:10.294656+00:00",
+    "status":"completed",
+    "current_round":15,
+    "total_input_tokens":195220,
+    "total_output_tokens":52694,
+    "all_submitted":false
+  }
+}
