@@ -30,7 +30,7 @@ Across **150 empirical runs** spanning 15 stratified benchmark tasks from SILO-B
 
 ## 📊 The 4 Canonical Publication Tables ($N = 2$ Values)
 
-The values below represent the synthesized empirical results extracted directly from the unified 150-run dataset in [`paper_results/baselines/master_baseline_results.csv`](file:///c:/Users/sairo/OneDrive/Documents/UROP/paper_results/baselines/master_baseline_results.csv).
+The values below represent the synthesized empirical results extracted directly from the unified 150-run dataset in [`paper_results/baselines/n2/master_baseline_results.csv`](file:///c:/Users/sairo/OneDrive/Documents/UROP/paper_results/baselines/n2/master_baseline_results.csv) (also archived in [`paper_results/baselines_n2/`](file:///c:/Users/sairo/OneDrive/Documents/UROP/paper_results/baselines_n2/)).
 
 ---
 
@@ -163,7 +163,7 @@ The values below represent the synthesized empirical results extracted directly 
 
 ## 📈 Publication Figures Generated for Paper
 
-All figures are compiled and stored at 300 DPI in [`paper_results/baselines/`](file:///c:/Users/sairo/OneDrive/Documents/UROP/paper_results/baselines/):
+All figures are compiled and stored at 300 DPI in [`paper_results/baselines/n2/`](file:///c:/Users/sairo/OneDrive/Documents/UROP/paper_results/baselines/n2/) (and [`paper_results/baselines_n2/`](file:///c:/Users/sairo/OneDrive/Documents/UROP/paper_results/baselines_n2/)):
 
 1. **Figure 1: `figure_baseline_accuracy_comparison.png`**
    * *Description:* Grouped bar chart depicting task success rates across all evaluated paradigms. Highlights ORCHESTRA's lead over Central Coordinator and Independent agents.
@@ -193,3 +193,4 @@ Here is the exact editorial and peer-review evaluation against the standards of 
    * The ongoing $N = 5$ suite (and upcoming $N = 10$) will complete the multi-scale scaling curve, demonstrating where rigid topologies collapse under coordinator bottlenecks, while ORCHESTRA scales gracefully.
 
 **Conclusion:** The $N = 2$ dataset is airtight, fully documented, and ready for inclusion in the final paper draft.
+
