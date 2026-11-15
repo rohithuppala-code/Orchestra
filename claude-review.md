@@ -149,7 +149,16 @@ We compared against the **4 canonical multi-agent coordination paradigms** from 
   * **ORCHESTRA stayed bounded at 2.90×** (6,136 to 17,802 tokens).
   * *Micro-Case (Task II-14):* Broadcast ran for **102 minutes** (38,668 tokens) and failed (0%). ORCHESTRA solved it in **13 minutes** (11,688 tokens) — **7.7× faster and 3.3× fewer tokens**.
 
+
 ---
+
+✅ Novel contributions:
+
+Gini-based hierarchy measurement - Quantifies emergent specialization (not just claimed)
+Jaccard structural drift - Measures round-by-round reorganization
+Multi-scale comparison - Shows where fixed structures collapse (N=2→N=5)
+Token efficiency analysis - Proves adaptive routing saves 2.71× tokens on complex tasks
+✅ You show scaling dynamics (Hierarchical collapses -31.3% from N=2→N=5)
 
 ### ⭐ The Core Novelty: Topological Emergence Without Predefined Roles
 
@@ -570,5 +579,10 @@ Without hardcoded prompts, agents autonomously self-differentiate into 5 structu
 ---
 
 *This document was prepared as an independent analytical review of the ORCHESTRA project's complete empirical evidence. All numbers are drawn directly from the verified experimental data in `paper_results/baselines/`. No numbers were fabricated or approximated.*
+
+
+Clear cause in silo bench which is a benchmark daaset tip models also scre between 10 to 25% accuracy where as for us this is acgievement.
+
+Sir, 20% is normal on SILO-BENCH because it tests distributed algorithms with exact all-or-nothing matching (even GPT-4o deepseek v 3.1 scores in this range). Without any pre-assigned roles, ORCHESTRA ranked #1 on the hardest tasks (22%), used half the tokens of AutoGen, and self-healed when MacNet collapsed to 0%."
 
 

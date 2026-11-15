@@ -3,7 +3,7 @@
 **Last updated:** 2026-11-12T13:15+05:30  
 **Active Branch:** `urop_exec` *(branched cleanly from `main`, which preserves the original 1,440-run archive untouched)*  
 **Current Phase:** Phase 1–7 Complete ✅ (Architecture Built, Redundancies Eliminated, 300 Empirical Runs Executed & Validated across $N=2, 5$, 30/30 Automated Tests Passing, Paper Artifacts Generated)  
-**Strategy Alignment:** Empirical execution completed across 300 runs ($N=2$ and $N=5$, with $N=10$ defined as future scaling expansion). All paper tables, Pareto curves, and emergence analytics are finalized in `paper_results/baselines/` and `claude.md`.
+**Strategy Alignment:** Empirical execution completed across 300 runs ($N=2$ and $N=5$, with $N=10$ defined as future scaling expansion). All paper tables, Pareto curves, and emergence analytics are finalized in `paper_results/baselines/` and `claude-review.md`.
 
 ---
 

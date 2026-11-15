@@ -23,7 +23,7 @@ The experimental execution engine and role-free coordination tasks are grounded 
 - **Run Matrix Breakdown (300 Completed Empirical Runs):**
   1. **ORCHESTRA + Broadcast Suite (`run_master_benchmark.ps1` — 120 completed runs):** 15 stratified tasks × 2 protocols (`msg`, `broadcast`) × 2 perturbation conditions (`none`, `agent_dropout`) × 2 scales ($N=2, 5$) with real-time HITL boundary supervision. *(Note: `sfs` is omitted as unused in baseline comparison.)*
   2. **Non-Redundant Multi-Agent Baselines Suite (`run_baselines_benchmark.ps1` — 180 completed runs):** 15 stratified tasks × 3 distinct baseline topologies (`independent`, `central_coordinator`, `hierarchical_coordinator`) × 2 perturbation conditions × 2 scales ($N=2, 5$). *(`broadcast` is automatically sourced from ORCHESTRA's `broadcast` runs without duplication, and `fixed_roles` is excluded as structurally redundant with `central_coordinator`'s Star graph.)*
-- **Paper Artifact Pipeline:** Fully automated synthesis combining all **300 executed runs** across **5 distinct paradigms** into publication-ready Markdown/CSV tables (Tables 1–4) and 300 DPI figures (Figures 1–3) in `paper_results/baselines/`. See [`claude.md`](file:///c:/Users/sairo/OneDrive/Documents/UROP/claude.md) and [`TABLES-sample.md`](file:///c:/Users/sairo/OneDrive/Documents/UROP/TABLES-sample.md).
+- **Paper Artifact Pipeline:** Fully automated synthesis combining all **300 executed runs** across **5 distinct paradigms** into publication-ready Markdown/CSV tables (Tables 1–4) and 300 DPI figures (Figures 1–3) in `paper_results/baselines/`. See [`claude-review.md`](file:///c:/Users/sairo/OneDrive/Documents/UROP/claude-review.md) and [`TABLES-sample.md`](file:///c:/Users/sairo/OneDrive/Documents/UROP/TABLES-sample.md).
 
 *(Note: The original full 1,440-run / 30-task matrix remains preserved untouched on the `main` branch.)*
 
@@ -120,7 +120,7 @@ Outputs segregated by scale:
 
 ## 📁 Project Coordination Documents
 
-- `claude.md`: Full academic conference reviewer evaluation, empirical validation, Pareto analysis, and topological emergence metrics.
+- `claude-review.md`: Full academic conference reviewer evaluation, empirical validation, Pareto analysis, and topological emergence metrics.
 - `TABLES-sample.md`: Complete blueprint of Tables 1–4, Figures 1–3, and empirical schema.
 - `PROGRESS.md`: Ongoing status log of verified implementation status, test outcomes, and branch milestones.
 - `papers.txt`: Literature grounding & taxonomy of related multi-agent systems and baselines.
