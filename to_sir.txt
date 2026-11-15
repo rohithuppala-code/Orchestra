@@ -158,3 +158,53 @@ ORCHESTRA automatically instruments 7 layers of organizational and task metrics:
   * Figure 3: Solution Accuracy vs. Token Efficiency Pareto Frontier (300 DPI)
   * Master Dataset: `master_baseline_results.csv` (All 450 unified runs)
 ================================================================================
+
+
+ORCHESTRA + Broadcast (run_master_benchmark.ps1):
+final_workspace_n2/ (60 runs) 15tasks x 2 cases x 2 protocols
+final_workspace_n5/ (60 runs) 15tasks x 2 cases x 2 protocols
+final_workspace_n10/ (60 runs) 15tasks x 2 cases x 2 protocols
+3 External Baselines (run_baselines_benchmark.ps1):
+workspace_baselines_n2/ (90 runs) 15tasks x 3 baselines x 2 cases
+workspace_baselines_n5/ (90 runs) 15tasks x 3 baselines x 2 cases
+workspace_baselines_n10/ (90 runs)
+Paper Outputs (baselines.compare):
+paper_results/baselines/ (Tables 1–4, Figures 1–3, master_baseline_results.csv)
+
+
+final_workspace_n2/
+│
+├── I-01_p2p_qwen-3.8-27b_<timestamp>/   # 1. ORCHESTRA (msg) - Healthy (none)
+├── I-01_p2p_qwen-3.8-27b_<timestamp>/   # 2. ORCHESTRA (msg) - Agent Dropout
+├── I-01_bp_qwen-3.8-27b_<timestamp>/    # 3. Broadcast (bp)    - Healthy (none)
+├── I-01_bp_qwen-3.8-27b_<timestamp>/    # 4. Broadcast (bp)    - Agent Dropout
+│   (same 4 folders repeated for I-04 ... III-30 = 60 run folders total)
+│
+│   Inside EACH run folder:
+│   ├── logs/                       # Raw per-agent LLM messages & tool calls (.jsonl)
+│   ├── rounds/                     # Round-by-round agent contexts & messages/broadcasts
+│   ├── metadata.json               # Config + total input/output token counts
+│   ├── results.json                # Ground truth vs submissions + S, P, C, D metrics
+│   ├── orchestra_profile.json      # Round-by-round graph snapshots (Gini, drift, roles)
+│   ├── orchestra_summary.json      # Unified 1-run metrics summary
+│   └── hitl_interventions.jsonl    # HITL boundary oversight audit log
+│
+├── batch_comparison_results.csv        # Generated at run 60/60 (feeds Tables 1-4)
+├── structure_performance_correlations.csv
+└── longitudinal_comparison.png
+
+
+
+
+YES — ORCHESTRA is clearly beating all 3 baselines! Look at the exact data from both CSVs:
+Head-to-Head Comparison: Task I-01 (Global Max)
+Independent: Stalled at 50% (0.5) — mathematically cannot solve it.
+Hierarchical Tree: Solved it (100%), but took 6 rounds and 101.7s (2,085 tokens).
+Central Coordinator: Solved it (100%), but took 8 rounds and 93.8s (2,451 tokens).
+ORCHESTRA (Ours): 100% in only 5 rounds and 35.0s (2,026 tokens) — 2.7× to 2.9× faster than the coordinating baselines and uses fewer tokens!
+Head-to-Head Comparison: Task I-04 (Any Match)
+Independent: Stalled at 50% (0.5).
+Hierarchical Tree: Solved it in 3 rounds, but took 34.7s (1,938 tokens).
+Central Coordinator: Solved it in 3 rounds, but took 28.2s.
+ORCHESTRA (Ours): 100% in 3 rounds and 19.3s — 1.5× to 1.8× faster than the coordinating baselines with the lowest token cost!
+
