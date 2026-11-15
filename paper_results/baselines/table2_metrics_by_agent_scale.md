@@ -1,4 +1,4 @@
-# Table 2: Detailed Evaluation Metrics Across Agent Scales (N=2, 5, 10)
+# Table 2: Detailed Evaluation Metrics Across Agent Scales (N=2, 5)
 
 | Baseline              |   Scale_N |   Runs | Success_Rate   |   Partial_Correctness | Avg_Tokens   |   Avg_Rounds |   Gini_Hierarchy |   Comm_Density |   Avg_Latency_s |
 |:----------------------|----------:|-------:|:---------------|----------------------:|:-------------|-------------:|-----------------:|---------------:|----------------:|

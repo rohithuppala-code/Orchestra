@@ -1,21 +1,21 @@
-# ORCHESTRA: Research Paper Tables & Figures Blueprint (`urop_exec` 450-Run Matrix)
+# ORCHESTRA: Research Paper Tables & Figures Blueprint (`urop_exec` Empirical Matrix)
 
-**Document Purpose:** Complete specification of all tables, figures, and datasets automatically generated for the Q1 journal paper submission after executing the streamlined **450-run experimental matrix** on branch `urop_exec`.
+**Document Purpose:** Complete specification of all tables, figures, and datasets automatically generated for the Q1 journal paper submission from the executed **300-run empirical matrix** ($N=2$ and $N=5$, with $N=10$ defined as future scaling expansion) on branch `urop_exec`.
 
 ---
 
-## 🎯 **Experimental Scope Summary (450 Runs Total)**
+## 🎯 **Experimental Scope Summary (300 Completed Runs)**
 
 * **Selected Stratified Tasks (15 Total — 5 Evenly Spread Across Difficulty & Type per Level):**
   * **Level I (Cross-Silo Aggregation):** `I-01` (Global Max), `I-04` (Any Match), `I-07` (Average Value), `I-09` (Top-K Select), `I-10` (Standard Deviation)
   * **Level II (Spatial Mesh & Neighborhood Routing):** `II-11` (Prefix Sum), `II-14` (1D Life Game), `II-15` (Pattern Search), `II-17` (Diff Array), `II-20` (Pipeline Hash)
   * **Level III (Global Shuffle & Distributed Joins):** `III-21` (Distributed Sort), `III-23` (Graph Components), `III-25` (K-Means Iteration), `III-28` (PageRank Step), `III-30` (Matrix Multiply)
-* **Scales:** $N \in \{2, 5, 10\}$ Agents
+* **Scales:** $N \in \{2, 5\}$ Agents (with $N=10$ planned as future expansion)
 * **Conditions:** Healthy (`none`) vs. Fail-Stop Agent Crash (`agent_dropout` at Round 2)
 * **Run Breakdown (Zero Redundancy):**
-  * **Baselines (`run_baselines_benchmark.ps1`):** `3 baselines` (`independent`, `central_coordinator`, `hierarchical_coordinator`) × `15 tasks` × `2 cases` = **90 runs/scale** × `3 scales` = **270 runs**
-  * **ORCHESTRA (`run_master_benchmark.ps1`):** `15 tasks` × `2 protocols` (`msg` = ORCHESTRA, `broadcast` = Flat Broadcast Debate baseline) × `2 cases` = **60 runs/scale** × `3 scales` = **180 runs**
-  * **Grand Total:** `270 + 180` = **450 runs** (comparing **5 distinct coordination paradigms**)
+  * **Baselines (`run_baselines_benchmark.ps1`):** `3 baselines` (`independent`, `central_coordinator`, `hierarchical_coordinator`) × `15 tasks` × `2 cases` = **90 runs/scale** × `2 scales` = **180 completed runs**
+  * **ORCHESTRA (`run_master_benchmark.ps1`):** `15 tasks` × `2 protocols` (`msg` = ORCHESTRA, `broadcast` = Flat Broadcast Debate baseline) × `2 cases` = **60 runs/scale** × `2 scales` = **120 completed runs**
+  * **Grand Total:** `180 + 120` = **300 completed runs** (comparing **5 distinct coordination paradigms**)
 
 > *Design Rationale:* Duplicate `broadcast` execution is eliminated by sourcing `Flat Broadcast Debate` directly from ORCHESTRA's `protocol="broadcast"` runs; `sfs` is omitted as it is unused in baseline comparisons; and `fixed_roles` is omitted as it enforces the exact same Star Hub communication graph around Agent 0 as `central_coordinator`.
 
@@ -155,28 +155,30 @@
 ## 📊 **SUPPLEMENTARY DATA & SCALE WORKSPACES**
 
 ### **1. Master Baseline Results CSV (`paper_results/baselines/master_baseline_results.csv`)**
-* **Total Rows:** **450** (180 ORCHESTRA/Broadcast + 270 Baselines)
+* **Total Rows:** **300** (120 ORCHESTRA/Broadcast + 180 Baselines)
 * **Columns (18):** `case_id`, `baseline`, `task_id`, `num_agents`, `protocol`, `perturbation`, `total_rounds`, `success`, `success_rate`, `partial_correctness`, `token_consumption`, `communication_density`, `gini_out_degree`, `gini_in_degree`, `mean_structural_drift`, `model`, `seed`, `total_time_seconds`.
 
-### **2. Scale-Segregated ORCHESTRA Workspaces (`final_workspace_n2/`, `final_workspace_n5/`, `final_workspace_n10/`)**
+### **2. Scale-Segregated ORCHESTRA Workspaces (`final_workspace_n2/`, `final_workspace_n5/`)**
 Each scale folder contains **60 runs** (15 stratified tasks × 2 protocols [`msg`, `broadcast`] × 2 perturbations):
 * `batch_comparison_results.csv` (60 runs)
 * `structure_performance_correlations.csv` (Pearson $r$ matrix correlating Gini, drift, density, betweenness with $S, P, C, D$)
 * `longitudinal_comparison.png` (Round-by-round density evolution & Jaccard structural drift)
+*(Note: `final_workspace_n10/` configured for future $N=10$ scaling)*
 
-### **3. Scale-Segregated Baseline Workspaces (`workspace_baselines_n2/`, `workspace_baselines_n5/`, `workspace_baselines_n10/`)**
+### **3. Scale-Segregated Baseline Workspaces (`workspace_baselines_n2/`, `workspace_baselines_n5/`)**
 Each scale folder contains **90 runs** (15 stratified tasks × 3 non-redundant baselines × 2 perturbations) + `baseline_comparison_results.csv`.
+*(Note: `workspace_baselines_n10/` configured for future $N=10$ scaling)*
 
 ---
 
 ## 🎯 **EXECUTION COMMANDS**
 
 ```powershell
-# 1. ORCHESTRA + Broadcast (180 runs across N=2, 5, 10)
+# 1. ORCHESTRA + Broadcast (120 completed runs across N=2, 5)
 .\run_master_benchmark.ps1 -Model "your-model"
 
-# 2. Non-Redundant Baselines + Automatic Paper Synthesis (270 runs -> 450 combined)
+# 2. Non-Redundant Baselines + Automatic Paper Synthesis (180 completed runs -> 300 combined)
 .\run_baselines_benchmark.ps1 -Model "your-model"
 ```
 
-**No manual table formatting or spreadsheet assembly required — all 4 tables, 3 figures, and the 450-row master dataset are automatically generated.**
+**No manual table formatting or spreadsheet assembly required — all 4 tables, 3 figures, and the 300-row master dataset are automatically generated.**

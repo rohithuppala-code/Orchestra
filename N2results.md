@@ -189,8 +189,8 @@ Here is the exact editorial and peer-review evaluation against the standards of 
      * In simple tasks ($N=2$), static trees perform acceptably.
      * BUT as task complexity rises to Level III distributed algorithms, static coordinators suffer catastrophic token bloat (14,955 tokens) and latency bottlenecks (28 minutes).
      * ORCHESTRA provides **dynamic peer-to-peer equilibrium**: it achieves high accuracy, consumes 24%–63% fewer tokens on heavy tasks, and operates 1.5× to 3.8× faster.
-4. **Multi-Scale Scaling Trajectory ($N = 5$ and $N = 10$):**
-   * The ongoing $N = 5$ suite (and upcoming $N = 10$) will complete the multi-scale scaling curve, demonstrating where rigid topologies collapse under coordinator bottlenecks, while ORCHESTRA scales gracefully.
+4. **Multi-Scale Scaling Trajectory ($N = 2$ and $N = 5$ Complete):**
+   * The completed $N = 5$ suite demonstrates exactly where rigid topologies collapse under coordinator bottlenecks (MacNet dropping to 0% on crash and AutoGen ballooning tokens to 26k/run), while ORCHESTRA scales gracefully with high emergence and lower token overhead ($N=10$ defined for future scaling expansion).
 
 **Conclusion:** The $N = 2$ dataset is airtight, fully documented, and ready for inclusion in the final paper draft.
 

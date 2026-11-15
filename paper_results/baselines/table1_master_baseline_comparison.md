@@ -8,4 +8,4 @@
 | Hierarchical Tree     | Static Tree      | Wang et al. (MacNet, 2024/2025)          | 50.0%        | 18.7%        | -             | 34.3%             | 10,532        |          12   |            0.184 | 6.7%              | -27.7%             |
 | ORCHESTRA (Ours)      | Emergent Dynamic | This Work                                | 40.0%        | 26.7%        | -             | 33.3%             | 11,969        |          12.7 |            0.258 | 6.7%              | -26.7%             |
 
-*Note: N=2, 5, 10 evaluated on SILO-BENCH. Resilience Delta denotes accuracy change under agent dropout failure.*
+*Note: N=2, 5 empirically evaluated on SILO-BENCH (N=10 designated for future scaling). Resilience Delta denotes accuracy change under agent dropout failure.*
