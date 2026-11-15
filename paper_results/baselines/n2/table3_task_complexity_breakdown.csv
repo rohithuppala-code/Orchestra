@@ -1,0 +1,16 @@
+Baseline,Complexity_Tier,Runs,Success_Rate,Partial_Correctness,Avg_Tokens,Avg_Rounds,Gini_Hierarchy
+Independent Agents,Level I (Aggregation),5,20.0%,0.200,"2,104",7.00,0.000
+Independent Agents,Level II (Mesh Routing),5,20.0%,0.378,"1,892",9.20,0.000
+Independent Agents,Level III (Global Shuffle),5,0.0%,0.060,"6,756",7.40,0.000
+Flat Broadcast Debate,Level I (Aggregation),5,50.0%,0.500,"3,649",10.20,0.129
+Flat Broadcast Debate,Level II (Mesh Routing),5,70.0%,0.700,"2,992",9.80,0.201
+Flat Broadcast Debate,Level III (Global Shuffle),5,20.0%,0.260,"4,903",12.20,0.133
+Central Coordinator,Level I (Aggregation),5,40.0%,0.600,"3,980",9.80,0.133
+Central Coordinator,Level II (Mesh Routing),5,40.0%,0.628,"11,442",12.80,0.144
+Central Coordinator,Level III (Global Shuffle),5,10.0%,0.160,"8,771",13.20,0.190
+Hierarchical Tree,Level I (Aggregation),5,60.0%,0.800,"3,345",7.80,0.133
+Hierarchical Tree,Level II (Mesh Routing),5,50.0%,0.540,"3,139",11.20,0.087
+Hierarchical Tree,Level III (Global Shuffle),5,40.0%,0.400,"14,955",8.40,0.112
+ORCHESTRA (Ours),Level I (Aggregation),5,60.0%,0.600,"8,917",9.00,0.048
+ORCHESTRA (Ours),Level II (Mesh Routing),5,20.0%,0.200,"3,971",12.20,0.220
+ORCHESTRA (Ours),Level III (Global Shuffle),5,40.0%,0.400,"5,520",12.00,0.280
