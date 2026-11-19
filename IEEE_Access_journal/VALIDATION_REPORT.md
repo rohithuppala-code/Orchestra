@@ -17,13 +17,13 @@
 | **Author Information** | Placeholders for authors, affiliations, and corresponding emails | Lines 20–33 | ✅ **PASS** |
 | **Required Baseline Description** | Exact sentence verbatim in methodology/setup | Line 323–325 | ✅ **PASS** |
 | **Model Specification** | **Qwen 3.8 27B** foundation model | Verified throughout abstract, text, and setup | ✅ **PASS** |
-| **Section Architecture** | 6 Major Sections (I to VI) | Sections I to VII fully structured | ✅ **PASS** |
-| **Literature Tables** | Exactly two comprehensive comparison tables | Table I (Architectures) & Table II (Benchmarks) | ✅ **PASS** |
-| **Empirical Rigor** | 300 runs across $N \in \{2, 5\}$, 15 SILO-BENCH tasks | Tables IV, V, VI, VII, VIII, IX | ✅ **PASS** |
+| **Section Architecture** | 6 Major Canonical Sections (I to VI) | Sections I to VI strictly structured | ✅ **PASS** |
+| **Literature Tables** | Exactly two comprehensive comparison tables | Table I (Architectures) & Table II (Benchmarks) with `\resizebox` | ✅ **PASS** |
+| **Empirical Rigor** | 300 runs across $N \in \{2, 5\}$, 15 SILO-BENCH tasks | Tables IV, V, VI, VII, VIII, IX, X with `\resizebox` (Zero Overflow) | ✅ **PASS** |
 | **Algorithms** | Major mechanisms with pseudocode | Algorithm 1 & Algorithm 2 | ✅ **PASS** |
-| **Figure Placeholders** | 4–6 figure placeholders with draw.io descriptions | 6 Figure Placeholders (Figs. 1–6) | ✅ **PASS** |
+| **Figure Placeholders** | 4–6 figure placeholders with draw.io descriptions | 6 Figure Placeholders (Figs. 1–6 distributed across text) | ✅ **PASS** |
 | **References** | ~50 genuine, high-quality IEEE citations | Exactly 50 verified references [1]–[50] | ✅ **PASS** |
-| **Biographies** | Author biography placeholders at end | 3 Biographies included before `\EOD` | ✅ **PASS** |
+| **Biographies** | Author biography placeholders at end | 3 Biographies formatted with `IEEEbiographynophoto` | ✅ **PASS** |
 
 ---
 
