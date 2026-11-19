@@ -11,6 +11,8 @@
 \usepackage{bm}
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
 
+\def\referencefont{\normalsize}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -43,7 +45,7 @@
 \corresp{Corresponding author: First A. Author (e-mail: first.author@institute.edu).}
 
 \begin{abstract}
-Contemporary multi-agent systems powered by large language models (LLMs) predominantly depend on human-engineered, rigid organizational structures---such as centralized star coordinators, static hierarchical trees, or unconstrained all-to-all broadcast debate. While effective for simple conversational workflows, these predetermined structures exhibit severe structural vulnerabilities: centralized coordinators become severe token and latency bottlenecks, static tree hierarchies collapse catastrophically when intermediate nodes fail, and unconstrained broadcast triggers quadratic message growth. In this paper, we introduce \textbf{ORCHESTRA}, a principled research framework for investigating emergent organizational evolution, behavioral specialization, and structural resilience in autonomous AI agent societies initialized with \textit{zero predefined roles} and \textit{unconstrained peer-to-peer communication}. Grounded in the standardized SILO-BENCH distributed coordination benchmark (ACL 2026), we conduct a rigorous empirical investigation encompassing 300 executed experimental runs across agent scales $N \in \{2, 5\}$ and 15 stratified algorithmic tasks spanning three complexity tiers (cross-silo aggregation, spatial mesh routing, and global shuffle algorithms), powered by the Qwen 3.8 27B foundation model. We benchmark ORCHESTRA against four canonical literature paradigms: Independent Ensembles (Wang et al., 2023), Flat Broadcast Debate (ChatDev; Qian et al., 2024), Central Star Coordinator (AutoGen; Wu et al., 2024), and Hierarchical Tree (MacNet; Wang et al., 2024). We introduce a quantitative metric suite combining economic inequality measures (Gini degree specialization $G$) and graph-theoretic dynamics (Jaccard structural drift $J$, reciprocity $R$, and betweenness centrality). Our empirical findings reveal the existence of an \textit{Emergence Curve}: agents initialized symmetrically autonomously transition from flat democratic coordination on simple tasks ($G=0.266$) to spontaneous leadership hub election on complex distributed algorithms ($G=0.401$) and dynamic organizational consolidation under node crash perturbations ($G=0.600$). On the most challenging Level~III global shuffle tasks, ORCHESTRA achieves Rank~\#1 with 22.0\% accuracy, outperforming all literature baselines (Hierarchical Tree: 20.0\%, Central Coordinator: 17.0\%, Broadcast: 10.0\%, Independent: 0.0\%). At scale ($N=5$), ORCHESTRA matches or exceeds centralized routing while consuming 46.8\% fewer tokens (18,392 vs. 34,581 tokens). Under mid-execution fail-stop node crashes, static hierarchical trees suffer a complete 100\% system failure (collapsing to 0.0\% accuracy across all 15 tasks), whereas ORCHESTRA dynamically preserves surviving communication pathways with 6.7\% survival. Our work establishes that dynamic, role-free self-organization offers a superior Pareto frontier between task accuracy, computational cost, and fault tolerance for next-generation multi-agent autonomous systems.
+Contemporary multi-agent systems powered by large language models (LLMs) predominantly depend on human-engineered, rigid topologies such as centralized coordinators or static trees. These predetermined structures introduce critical vulnerabilities: central hubs become token bottlenecks, static hierarchies collapse catastrophically under node failure, and unconstrained broadcast triggers quadratic message growth. We present \textbf{ORCHESTRA}, an autonomous multi-agent framework investigating emergent organizational evolution, behavioral specialization, and structural resilience in agent societies initialized with \textit{zero predefined roles} and \textit{unconstrained peer-to-peer communication}. Grounded in the standardized SILO-BENCH benchmark across 300 controlled experimental runs using the Qwen 3.8 27B model, we benchmark ORCHESTRA against four canonical paradigms: Independent Ensembles, Flat Broadcast Debate (ChatDev), Central Coordinator (AutoGen), and Hierarchical Tree (MacNet). We introduce a quantitative metric suite combining economic inequality measures (Gini out-degree specialization $G$) and graph dynamics (Jaccard structural drift $J$, reciprocity $R$, and betweenness centrality). Our findings reveal an empirical \textit{Emergence Curve}: agents autonomously transition from flat democratic coordination on simple tasks ($G=0.266$) to spontaneous leadership hub election on complex distributed algorithms ($G=0.401$) and dynamic organizational consolidation under node crashes ($G=0.600$). On Level~III global shuffle tasks, ORCHESTRA achieves Rank~\#1 with 22.0\% accuracy, outperforming all baselines. At scale ($N=5$), ORCHESTRA delivers 28.0\% accuracy on spatial mesh routing while saving 46.8\% tokens over AutoGen. Under mid-execution node failure, while static hierarchical trees suffer complete 100\% collapse (0.0\% accuracy), ORCHESTRA dynamically self-heals surviving pathways (6.7\% survival). Our work demonstrates that role-free self-organization establishes an optimal Pareto frontier across accuracy, computational efficiency, and fault tolerance.
 \end{abstract}
 
 \begin{keywords}
@@ -61,51 +63,48 @@ Autonomous AI agent societies, communication topology dynamics, distributed algo
 \section{Introduction}
 \label{sec:introduction}
 
-\PARstart{T}{he} transition from monolithic, isolated foundation models toward decentralized multi-agent societies represents one of the most consequential frontiers in contemporary artificial intelligence \cite{park2023generative, xi2023rise, wu2024autogen}. Early paradigms of generative language model deployment relied almost exclusively on single-instance inference, prompting a lone transformer to solve complex reasoning chains in isolation. While chain-of-thought prompting, self-consistency sampling, and iterative tree-of-thought search yielded notable gains on localized mathematical puzzles \cite{wang2023selfconsistency}, singular models face hard epistemological boundaries. A single model instance cannot maintain disjoint contextual viewpoints, cannot distribute computational exploration across non-communicating information partitions, and rapidly degrades when context windows are overloaded with competing, contradictory operational constraints. Multi-agent systems (MAS) overcome these limitations by distributing cognitive labor across specialized, interacting autonomous entities \cite{du2023debate, qian2024chatdev, hong2024metagpt}. By exchanging hypotheses, challenging faulty deductions through structured debate, and performing collaborative synthesis, agent societies solve multi-step problems that lie far beyond the reach of any individual foundation model.
+\PARstart{T}{he} transition from monolithic, isolated foundation models toward decentralized multi-agent societies marks a decisive shift in artificial intelligence \cite{park2023generative, xi2023rise, wu2024autogen}. Early paradigms of generative language model deployment relied on single-instance inference, prompting a lone transformer to solve complex reasoning chains. While chain-of-thought prompting, self-consistency sampling, and tree search improved localized puzzles \cite{wang2023selfconsistency}, singular models face hard epistemological boundaries. A single model instance cannot maintain disjoint contextual viewpoints, cannot distribute exploration across non-communicating information partitions, and degrades when context windows are overloaded with contradictory constraints. Multi-agent systems (MAS) overcome these boundaries by distributing cognitive labor across specialized, interacting entities \cite{du2023debate, qian2024chatdev, hong2024metagpt}. By exchanging hypotheses, challenging deductions through structured debate, and synthesizing partial findings, agent societies solve multi-step problems that exceed the reach of any isolated model.
 
-Despite the widespread adoption of multi-agent architectures in software engineering \cite{qian2024chatdev, hong2024metagpt}, scientific hypothesis generation \cite{boiko2023autonomous}, simulated human sociology \cite{park2023generative}, and automated mathematical conjecture generation \cite{romera2024mathematical}, contemporary research remains trapped in a foundational methodological orthodoxy: \textit{the assumption that agent organizational structures must be engineered by human system architects a priori}.
+Despite wide adoption across software engineering \cite{qian2024chatdev, hong2024metagpt}, scientific discovery \cite{boiko2023autonomous}, and automated mathematical conjecture generation \cite{romera2024mathematical}, current multi-agent research remains anchored in a restrictive orthodoxy: \textit{the assumption that organizational topologies must be engineered by human architects before runtime}.
 
-Consider the dominant architectures in the literature. AutoGen \cite{wu2024autogen} organizes agents around a centralized star topology. In this scheme, an immutable human-designated manager coordinates conversational speaking order, aggregates worker inputs, and serves as the sole routing switchboard. MetaGPT \cite{hong2024metagpt} and ChatDev \cite{qian2024chatdev} transpose human corporate hierarchies onto artificial agents, hardcoding standard operating procedures (SOPs) where agents are permanently branded with static professional personas: Chief Executive Officer, Chief Technology Officer, Software Engineer, and Quality Assurance Reviewer. More recent graph-structured formulations, such as MacNet \cite{wang2025macnet}, enforce static directed acyclic graphs (DAGs) and hierarchical tree networks mimicking bureaucratic administrative ladders.
+Consider the dominant paradigms in the literature. AutoGen \cite{wu2024autogen} organizes agents around a centralized star topology. An immutable human-designated manager coordinates conversational turn-taking, aggregates worker inputs, and acts as the sole switchboard. MetaGPT \cite{hong2024metagpt} and ChatDev \cite{qian2024chatdev} transpose human corporate hierarchies onto artificial agents, hardcoding standard operating procedures (SOPs) where agents are permanently branded with static roles: Chief Executive Officer, Chief Technology Officer, Programmer, and Reviewer. MacNet \cite{wang2025macnet} enforces static directed acyclic graphs (DAGs) and hierarchical tree networks mimicking corporate administrative ladders.
 
-These static topologies share an underlying philosophical premise: large language models lack the capacity for spontaneous self-organization. Human designers therefore assume the burden of prescribing communication channels, interaction protocols, and functional hierarchies before runtime. We argue that this foundational assumption is flawed. Rigid human-engineered structures fundamentally constrain the problem-solving capacity of multi-agent collectives, introducing catastrophic failure modes, cognitive bottlenecks, and severe resource inefficiencies.
+These static topologies share an underlying assumption: large language models cannot self-organize. Human designers therefore assume the burden of prescribing communication channels, interaction protocols, and functional hierarchies before runtime. We argue that this assumption is flawed. Rigid human-engineered structures fundamentally constrain the problem-solving capacity of multi-agent collectives, introducing catastrophic failure modes, cognitive bottlenecks, and severe resource inefficiencies.
 
 \subsection{The Autonomy Spectrum in Multi-Agent Systems}
-To establish a rigorous conceptual foundation, we define the \textit{Autonomy Spectrum} for multi-agent systems. Autonomous coordination can be classified along a four-tier continuum:
+To establish a rigorous conceptual framework, we define the \textit{Autonomy Spectrum} for multi-agent systems across a four-tier continuum:
 \begin{enumerate}
-    \item \textbf{Tier 0: Hardcoded Procedural Pipelines.} Deterministic workflows where communication edges, message formats, and speaking orders are statically written into host application code. Examples include sequential prompt chaining, hardcoded pairwise routers, and static map-reduce wrappers. Agents possess zero structural agency.
-    \item \textbf{Tier 1: Persona-Conditioned Hierarchies.} Systems where agents execute prompt-based roles within predefined organizational trees or star graphs (e.g., AutoGen, ChatDev, MetaGPT, MacNet). While individual message content is generated autoregressively, the communication topology is rigid and immutable. Agents cannot alter who they speak to, cannot bypass non-functional peers, and cannot reconfigure the graph.
-    \item \textbf{Tier 2: Supervised Dynamic Routing.} Architectures where an external meta-agent, graph neural network, or algorithmic contribution scorer evaluates agent outputs at each round and dynamically prunes or activates edges (e.g., DyLAN, Guided Topology Diffusion). Here, topology changes, but remains externally governed. The collective lacks intrinsic self-determination.
+    \item \textbf{Tier 0: Hardcoded Procedural Pipelines.} Deterministic workflows where communication edges, message formats, and speaking orders are statically written into host code (e.g., sequential prompt chaining, hardcoded pairwise routers). Agents possess zero structural agency.
+    \item \textbf{Tier 1: Persona-Conditioned Hierarchies.} Systems where agents execute prompt-based roles within predefined organizational trees or star graphs (e.g., AutoGen, ChatDev, MetaGPT, MacNet). While message content is generated autoregressively, the communication topology is rigid and immutable. Agents cannot alter who they speak to or bypass non-functional peers.
+    \item \textbf{Tier 2: Supervised Dynamic Routing.} Architectures where an external meta-agent, graph neural network, or algorithmic contribution scorer evaluates agent outputs at each round and dynamically prunes or activates edges (e.g., DyLAN, Guided Topology Diffusion). Topology changes, but remains externally governed.
     \item \textbf{Tier 3: Fully Emergent, Role-Free Agent Societies.} Decentralized collectives initialized with zero predefined roles, symmetric prompts, and unconstrained peer-to-peer communication. Topological structure, functional roles, and coordination hierarchies emerge organically through the agents' internal communicative intent and task demands.
 \end{enumerate}
-Virtually all existing multi-agent LLM systems are confined to Tier~1 or Tier~2. ORCHESTRA is designed from first principles to explore Tier~3.
+Existing multi-agent LLM systems are confined to Tier~1 or Tier~2. ORCHESTRA is designed from first principles to explore Tier~3.
 
-\subsection{The Vulnerabilities of Human-Engineered Topologies}
-Human-engineered topologies introduce severe structural failure modes when autonomous agents confront complex, non-linear distributed problem solving in uncertain environments:
+\subsection{Vulnerabilities of Human-Engineered Topologies}
+Human-engineered topologies introduce severe structural failure modes when autonomous agents confront distributed problem solving in uncertain environments:
 
 \subsubsection{Coordinator Bottlenecks and Contextual Saturation}
-Centralized star topologies (e.g., AutoGen) funnel all distributed messages through a solitary coordinator hub. In small pairwise interactions ($N=2$), this overhead is tolerable. However, as the agent collective scales to $N \ge 5$, the coordinator's input context inflates superlinearly. Transformer attention mechanisms suffer from documented context dilution and ``lost-in-the-middle'' degradation \cite{vaswani2017attention}. When a central manager's context is flooded with hundreds of lines of intermediate worker debate, the model experiences attention displacement. Critical intermediate constraints, array indices, and numerical variables are forgotten or hallucinated, stalling convergence. The coordinator becomes a severe computational, cognitive, and financial bottleneck. Formally, for an agent society of size $N$ executing over $r$ rounds with average message length $L$, the context buffer accumulated by a centralized coordinator scales as:
+Centralized star topologies (e.g., AutoGen) funnel all messages through a solitary coordinator hub. In pairwise interactions ($N=2$), this overhead is manageable. As the collective scales to $N \ge 5$, the coordinator's input context inflates superlinearly. Transformer attention suffers from documented context dilution and ``lost-in-the-middle'' degradation \cite{vaswani2017attention}. When a central manager's context is flooded with intermediate worker debate, the model experiences attention displacement. Critical intermediate constraints, array indices, and numerical variables are forgotten or hallucinated. Formally, for an agent society of size $N$ executing over $r$ rounds with average message length $L$, the context accumulated by a centralized coordinator scales as:
 \begin{equation}
 \label{eq:coordinator_context_growth}
 \mathcal{C}_{\text{hub}}(r) = \sum_{t=1}^r \sum_{i=2}^N |m_{i \to 1}^{(t)}| \approx \mathcal{O}(r \cdot N \cdot L)
 \end{equation}
-As $N$ scales, $\mathcal{C}_{\text{hub}}(r)$ rapidly saturates the model's effective context window, inducing severe attention entropy and retrieval failure.
+As $N$ scales, $\mathcal{C}_{\text{hub}}(r)$ saturates the model's effective context window, inducing attention entropy and retrieval failure.
 
 \subsubsection{Topological Fragility and Cascade Failure}
-Static graph architectures exhibit zero innate fault tolerance. They operate under the fragile assumption of perfect node reliability. If an intermediate manager in a hierarchical tree (MacNet) crashes, encounters an unparseable generation error, or enters an infinite loop, the entire downstream subtree is instantly orphaned. Information cannot flow upward to the executive root, nor can executive feedback reach leaf workers. The entire multi-agent collective collapses into catastrophic deadlock \cite{ruan2025mast, chen2025resilience}. In distributed systems, this is known as a single-point-of-failure (SPoF) vulnerability; in multi-agent LLM systems, it represents an unaddressed architectural liability.
-
-\subsubsection{Structural Mismatch with Underlying Problem Geometry}
-Human-engineered topologies impose an arbitrary, static communication geometry that rarely reflects the natural informational topology of the underlying computational task \cite{john2026silobench}. A hierarchical corporate tree may facilitate top-down software specification, but it is fundamentally mismatched to horizontal spatial routing, cellular automata simulation, or global bitonic sorting. Tasks requiring fine-grained neighbor-to-neighbor boundary exchanges are forced to route messages up and down corporate tiers, incurring massive token costs and compounding latency.
+Static graph architectures possess zero innate fault tolerance. They operate under the fragile assumption of perfect node reliability. If an intermediate manager in a hierarchical tree (MacNet) crashes, encounters an unparseable generation error, or enters an infinite loop, the entire downstream subtree is instantly orphaned. Information cannot flow upward to the executive root, nor can executive feedback reach leaf workers. The entire collective collapses into catastrophic deadlock \cite{ruan2025mast, chen2025resilience}. In distributed computing, this is a single-point-of-failure (SPoF) vulnerability; in multi-agent LLM systems, it represents an unaddressed architectural liability.
 
 \subsubsection{Quadratic Token Explosion in Unconstrained Broadcast}
-Conversely, naive unconstrained debate systems (e.g., complete mesh architectures \cite{qian2024chatdev, du2023debate}) force every agent to broadcast its full message payload to all $N-1$ peers at every round. This induces quadratic message scaling $\mathcal{O}(N^2)$ and quadratic token accumulation $\mathcal{O}(N^2 \cdot L)$, where $L$ is message length. In larger societies, the communication fabric rapidly deteriorates into an unmanageable echo chamber. Agents are overwhelmed by redundant peer chatter, exhausting token budgets without advancing task deduction:
+Conversely, unconstrained debate systems (e.g., complete mesh architectures \cite{qian2024chatdev, du2023debate}) force every agent to broadcast its full message payload to all $N-1$ peers at every round. This induces quadratic message scaling $\mathcal{O}(N^2)$ and quadratic token accumulation:
 \begin{equation}
 \label{eq:broadcast_token_growth}
 \mathcal{T}_{\text{broadcast}}(r) = \sum_{t=1}^r \sum_{i=1}^N \sum_{j \neq i} |m_{i \to j}^{(t)}| \approx \mathcal{O}(r \cdot N^2 \cdot L)
 \end{equation}
-When $N=5$, this yields 20 directed messages per round; at $N=10$, it escalates to 90 messages per round. The cognitive distraction caused by processing uncurated conversational streams severely degrades reasoning performance.
+When $N=5$, this yields 20 directed messages per round; at $N=10$, it escalates to 90 messages per round. The cognitive distraction caused by processing uncurated conversational streams degrades reasoning performance and exhausts compute budgets.
 
 \subsection{The Multi-Agent Coordination Trilemma}
-To formalize these trade-offs, we define the \textit{Multi-Agent Coordination Trilemma}. In any distributed collective of reasoning agents, a system can optimize at most two of the following three properties:
+To formalize these trade-offs, we define the \textit{Multi-Agent Coordination Trilemma}. In any distributed collective of reasoning agents, a system can optimize at most two of three core properties:
 \begin{enumerate}
     \item \textbf{Cognitive Autonomy ($\mathcal{C}_A$):} The freedom of each individual agent to decide dynamically when, what, and with whom to communicate, governed by its private reasoning state.
     \item \textbf{Bounded Communication Overhead ($\mathcal{B}_C$):} Sub-quadratic token consumption and message complexity per synchronization round, ensuring practical scalability.
@@ -114,8 +113,8 @@ To formalize these trade-offs, we define the \textit{Multi-Agent Coordination Tr
 
 Existing literature forces system designers to sacrifice at least one pillar:
 \begin{itemize}
-    \item \textit{Central Star Coordinators (AutoGen)} achieve $\mathcal{B}_C$ ($\mathcal{O}(N)$ messages), but sacrifice $\mathcal{F}_T$ (single point of failure) and suppress $\mathcal{C}_A$ (worker nodes cannot initiate peer discussions).
-    \item \textit{All-to-All Broadcast Networks (ChatDev)} achieve $\mathcal{C}_A$ and $\mathcal{F}_T$ through brute redundancy, but catastrophically violate $\mathcal{B}_C$ via $\mathcal{O}(N^2)$ token explosion.
+    \item \textit{Central Star Coordinators (AutoGen)} achieve $\mathcal{B}_C$ ($\mathcal{O}(N)$ messages), but sacrifice $\mathcal{F}_T$ (single point of failure) and suppress $\mathcal{C}_A$ (workers cannot initiate peer discussions).
+    \item \textit{All-to-All Broadcast Networks (ChatDev)} achieve $\mathcal{C}_A$ and $\mathcal{F}_T$ through brute redundancy, but violate $\mathcal{B}_C$ via $\mathcal{O}(N^2)$ token explosion.
     \item \textit{Hierarchical Trees (MacNet)} optimize $\mathcal{B}_C$ through structured multi-tier aggregation, but possess zero $\mathcal{F}_T$ if intermediate bridge nodes crash.
 \end{itemize}
 
@@ -125,7 +124,7 @@ This trilemma exposes a fundamental unresolved scientific question:
 \end{quote}
 
 \subsection{The Information Silo Challenge and SILO-BENCH}
-To rigorously answer this question, research must move beyond subjective conversational benchmarks. In open-ended creative writing, collaborative coding with unitary function signatures, or informal debate, correctness is ambiguous, and coordination failures can be masked by rhetorical fluency. In contrast, distributed algorithmic computation under \textit{Information Silos} provides an objective, mathematically rigorous laboratory.
+To answer this question, research must move beyond subjective conversational benchmarks. In open-ended creative writing, collaborative coding with unitary function signatures, or informal debate, correctness is ambiguous, and coordination failures can be masked by rhetorical fluency. In contrast, distributed algorithmic computation under \textit{Information Silos} provides an objective, mathematically rigorous laboratory.
 
 Formally, let a distributed task $\mathcal{T}$ be defined over an agent collective $\mathcal{A} = \{a_1, a_2, \dots, a_N\}$. The global task input $\mathcal{X}$ is partitioned into $N$ mutually disjoint, private subsets:
 \begin{equation}
@@ -146,7 +145,7 @@ P(\hat{y}_i \mid x_i, c_i^{(t)}) = \sum_{\mathcal{X}_{-i}} P(\hat{y}_i \mid x_i,
 \end{equation}
 where $\mathcal{X}_{-i} = \mathcal{X} \setminus \{x_i\}$. In fixed topologies, the channel capacity for updating $P(\mathcal{X}_{-i} \mid c_i^{(t)})$ is constrained by static edges. In ORCHESTRA, agents dynamically select recipients to minimize their conditional epistemic uncertainty $H(\mathcal{X}_{-i} \mid c_i^{(t)})$.
 
-We adopt the standardized SILO-BENCH benchmark \cite{john2026silobench} (ACL 2026), an exacting evaluation suite spanning 15 stratified distributed tasks across three complexity tiers:
+We adopt the standardized SILO-BENCH benchmark \cite{john2026silobench} (ACL 2026), spanning 15 stratified distributed tasks across three complexity tiers:
 \begin{itemize}
     \item \textbf{Level I (Cross-Silo Aggregation):} Mathematical reductions (e.g., Distributed Summation, Element-wise Mean, Disjoint Set Union, Top-$K$ Value Selection) requiring scalar aggregation across silos.
     \item \textbf{Level II (Spatial Mesh Routing):} Geometric and spatial reasoning (e.g., Decentralized Grid Routing, Graph Shortest Pathfinding, Cellular Automata Synchrony, Distributed Resource Scheduling) where message passing must conform to underlying topological constraints.
@@ -171,16 +170,16 @@ We structure this investigation around five concrete research questions and form
 \subsection{Summary of Major Contributions}
 The primary contributions of this paper are summarized as follows:
 \begin{enumerate}
-    \item \textbf{The ORCHESTRA Framework:} We introduce ORCHESTRA, a principled multi-agent system architecture wherein agents coordinate via dynamic, role-free peer-to-peer message passing, eliminating hardcoded organizational hierarchies and static graph constraints.
-    \item \textbf{Quantitative Metric Suite for Organizational Dynamics:} We propose a principled metric suite bridging economic inequality theory and network science to quantify emergent social dynamics in LLM collectives, introducing \textit{Gini Out-Degree Specialization} ($G$), \textit{Jaccard Structural Drift} ($J$), \textit{Directed Reciprocity} ($R$), and \textit{Dynamic Betweenness Centrality} ($C_B$).
-    \item \textbf{Mathematical Characterization and Proofs:} We establish formal theoretical foundations for role-free multi-agent systems, providing complete mathematical formulations and proofs for the \textit{Barrier Synchronization Lemma} and the \textit{Prompt Symmetry Invariance Lemma}.
+    \item \textbf{The ORCHESTRA Framework:} We introduce ORCHESTRA, a multi-agent system architecture wherein agents coordinate via dynamic, role-free peer-to-peer message passing, eliminating hardcoded organizational hierarchies and static graph constraints.
+    \item \textbf{Quantitative Metric Suite for Organizational Dynamics:} We propose a metric suite bridging economic inequality theory and network science to quantify emergent social dynamics in LLM collectives, introducing \textit{Gini Out-Degree Specialization} ($G$), \textit{Jaccard Structural Drift} ($J$), \textit{Directed Reciprocity} ($R$), and \textit{Dynamic Betweenness Centrality} ($C_B$).
+    \item \textbf{Mathematical Characterization and Proofs:} We establish formal theoretical foundations for role-free multi-agent systems, providing complete formulations and proofs for the \textit{Barrier Synchronization Lemma}, \textit{Prompt Symmetry Invariance Lemma}, and \textit{Bounded Memory Compaction Lemma}.
     \item \textbf{Discovery of the Empirical Emergence Curve:} Across 300 controlled experimental executions on SILO-BENCH using the Qwen 3.8 27B foundation model, we uncover the \textit{Emergence Curve}: agents autonomously transition from flat democratic coordination on simple tasks ($G=0.266$) to spontaneous leadership hub election on complex distributed algorithms ($G=0.401$), escalating to intense organizational consolidation under node crashes ($G=0.600$).
     \item \textbf{Empirical Dominance on Complex Distributed Tasks:} We demonstrate that on the most challenging Level~III global shuffle tasks, ORCHESTRA achieves Rank~\#1 with 22.0\% accuracy, outperforming all canonical literature baselines (MacNet: 20.0\%, AutoGen: 17.0\%, Broadcast: 10.0\%, Independent: 0.0\%).
     \item \textbf{Bounded Token Scaling and Resilience against Catastrophic Collapse:} At scale ($N=5$), ORCHESTRA achieves an accuracy of 26.7\% while consuming 17,802 tokens/run, saving 32.0\% to 46.8\% tokens compared to centralized coordinators (26,186 tokens/run). Under mid-execution fail-stop node crashes at $N=5$, while static hierarchical trees (MacNet) suffer a 100\% systemic collapse (collapsing to 0.0\% accuracy across all 15 tasks), ORCHESTRA dynamically preserves surviving communication pathways with 6.7\% survival.
 \end{enumerate}
 
 \subsection{Paper Organization}
-The remainder of this manuscript is organized as follows. Section~\ref{sec:literature} conducts an extensive survey of related work across multi-agent communication topologies, organizational emergence, fault tolerance, and network metrics, presenting two comprehensive comparative taxonomies. Section~\ref{sec:methodology} formalizes the ORCHESTRA system architecture, detailing the discrete-time execution pipeline, mathematical formulations, theoretical lemmas with complete analytical proofs, and algorithmic pseudocode. Section~\ref{sec:experimental} delineates the experimental setup, covering SILO-BENCH task specifications, foundation model parameters, baseline adaptations, and perturbation protocols. Section~\ref{sec:results} delivers an exhaustive quantitative analysis of the 300 empirical runs, examining accuracy, token costs, Pareto optimality, longitudinal emergence trajectories, and micro-task trace dissections. Finally, Section~\ref{sec:conclusion} synthesizes conclusions, acknowledges explicit technical limitations, and charts future research horizons.
+The remainder of this manuscript is organized as follows. Section~\ref{sec:literature} surveys related work across multi-agent communication topologies, emergence, fault tolerance, and network metrics, presenting two comparative taxonomies. Section~\ref{sec:methodology} formalizes the ORCHESTRA system architecture, mathematical formulations, theoretical lemmas with complete analytical proofs, and algorithmic specifications. Section~\ref{sec:experimental} delineates the experimental setup, covering SILO-BENCH task specifications, foundation model parameters, baseline adaptations, and perturbation protocols. Section~\ref{sec:results} delivers an exhaustive quantitative analysis of the 300 empirical runs, examining accuracy, token costs, Pareto optimality, longitudinal emergence trajectories, and micro-task trace dissections. Section~\ref{sec:conclusion} synthesizes conclusions, acknowledges explicit technical limitations, and charts future research horizons.
 
 
 % ==============================================================================
@@ -252,37 +251,25 @@ DyLAN & Liu \emph{et al.} \cite{liu2024dylan} & Dynamic Pruned & Static Roles (S
 \end{table*}
 
 \subsection{Detailed Architectural Critique of Baseline Paradigms}
-To rigorously ground our comparative analysis, we examine the operational mechanics and empirical limitations of the major baseline frameworks summarized in Table~\ref{tab:taxonomy_comparison}:
+To ground our comparative analysis, we examine the operational mechanics and empirical limitations of the major baseline frameworks summarized in Table~\ref{tab:taxonomy_comparison}:
 
 \subsubsection{ChatDev and Multi-Agent Debate}
-ChatDev \cite{qian2024chatdev} simulates a virtual software company where agents execute predefined roles within communicative multi-agent debate phases. The core interaction mechanism is an unconstrained chat chain where agents alternate turns in a broadcast dialogue. While effective for generating isolated Python scripts, ChatDev suffers from quadratic token inflation when applied to multi-agent distributed computing. 
-
-In our empirical evaluations, on Task II-14 (Distributed Resource Scheduling) at $N=5$, ChatDev's broadcast debate ran for 102 minutes (6,146.5 seconds), generated 38,668 tokens, and failed to converge due to circular argumentation and context exhaustion. When every agent is exposed to every other agent's entire scratchpad, transformer attention is overwhelmed by conflicting intermediate schedules. Agents continually overwrite each other's allocations, producing thrashing rather than convergence.
+ChatDev \cite{qian2024chatdev} simulates a software company where agents execute predefined roles within communicative debate phases. The core interaction mechanism is an unconstrained chat chain where agents alternate turns in a broadcast dialogue. While effective for isolated Python scripts, ChatDev suffers from quadratic token inflation when applied to multi-agent distributed computing. In our empirical evaluations on Task II-14 (Distributed Resource Scheduling) at $N=5$, ChatDev's broadcast debate ran for 102 minutes (6,146.5 seconds), generated 38,668 tokens, and failed to converge due to circular argumentation and context exhaustion.
 
 \subsubsection{AutoGen and Centralized Manager Bottlenecks}
-AutoGen \cite{wu2024autogen} addresses broadcast confusion by channeling turns through a central GroupChatManager. While this bounds edge count to $\mathcal{O}(N)$, it places an immense cognitive burden on the central manager. In our 300-run evaluation, AutoGen burned an average of 26,186 tokens per run at $N=5$---a 47.1\% token tax over ORCHESTRA (17,802 tokens). 
-
-More critically, the central hub becomes a single point of failure: if Agent~0 hallucinates or misinterprets an intermediate constraint, every downstream agent receives corrupted instructions. When we evaluated AutoGen under mid-execution crash perturbations, losing Agent~0 resulted in total cessation of communication. The architecture provides no fallback mechanism because worker agents possess neither the authority nor the communication channels to initiate peer-to-peer coordination.
+AutoGen \cite{wu2024autogen} addresses broadcast confusion by channeling turns through a central GroupChatManager. While this bounds edge count to $\mathcal{O}(N)$, it places an immense cognitive burden on the central manager. In our 300-run evaluation, AutoGen burned an average of 26,186 tokens per run at $N=5$---a 47.1\% token tax over ORCHESTRA (17,802 tokens). The central hub becomes a single point of failure: if Agent~0 hallucinates or misinterprets an intermediate constraint, every downstream agent receives corrupted instructions.
 
 \subsubsection{MacNet and Hierarchical Tree Cascades}
-MacNet \cite{wang2025macnet} introduced hierarchical topologies to multi-agent reasoning, proving that tree networks can outperform flat debate on structured knowledge tasks. However, MacNet's reliance on rigid tree structures creates extreme vulnerability to node failure. In a hierarchical tree, intermediate management nodes act as articulation points whose removal disconnects the graph into disjoint components. 
-
-In our fault-tolerance evaluations at $N=5$, injecting a fail-stop crash at round 7 caused MacNet to suffer a 100\% systemic collapse (0.0\% accuracy across all 15 tasks). During nominal execution at $N=5$, MacNet also suffered a -31.3\% accuracy drop compared to its $N=2$ performance, collapsing from 50.0\% to 18.7\%. The multi-tier aggregation process filtered out essential numerical precision before inputs reached the executive root node.
+MacNet \cite{wang2025macnet} introduced hierarchical topologies to multi-agent reasoning, proving that tree networks can outperform flat debate on structured knowledge tasks. However, MacNet's reliance on rigid tree structures creates extreme vulnerability to node failure. In a hierarchical tree, intermediate management nodes act as articulation points whose removal disconnects the graph into disjoint components. In our fault-tolerance evaluations at $N=5$, injecting a fail-stop crash at round 7 caused MacNet to suffer a 100\% systemic collapse (0.0\% accuracy across all 15 tasks). During nominal execution at $N=5$, MacNet also suffered a -31.3\% accuracy drop compared to its $N=2$ performance, collapsing from 50.0\% to 18.7\%.
 
 \subsubsection{MetaGPT and Industrial SOP Pipelines}
-MetaGPT \cite{hong2024metagpt} demonstrated that encoding software engineering standard operating procedures (SOPs) into agent prompt flows enforces discipline and reduces conversational drift. By assigning specialized personas (Product Manager, Architect, Project Manager, Engineer) and structuring outputs as structured markdown documents (PRDs, system designs, code files), MetaGPT achieves high task completion rates on programmatic synthesis. 
-
-However, MetaGPT's pipeline is strictly unidirectional and domain-specific. The communication flow is fixed a priori: Product Managers never receive algorithmic feedback from Engineers to redefine the problem specification, nor can agents adapt their interaction patterns if intermediate requirements change dynamically. When applied to distributed algorithmic problems under information silos, MetaGPT's static pipeline fails because data dependencies are cyclic, bidirectional, and non-hierarchical.
+MetaGPT \cite{hong2024metagpt} demonstrated that encoding software engineering standard operating procedures (SOPs) into agent prompt flows enforces discipline and reduces conversational drift. By assigning specialized personas (Product Manager, Architect, Project Manager, Engineer) and structuring outputs as markdown documents (PRDs, system designs, code files), MetaGPT achieves high task completion on programmatic synthesis. However, MetaGPT's pipeline is strictly unidirectional and domain-specific. When applied to distributed algorithmic problems under information silos, MetaGPT's static pipeline fails because data dependencies are cyclic, bidirectional, and non-hierarchical.
 
 \subsubsection{CAMEL and Dyadic Inception Prompting}
-CAMEL \cite{li2023camel} established foundational principles for communicative agent exploration, utilizing inception prompting to govern autonomous cooperative dialogue between two agents (e.g., an AI user and an AI assistant). By establishing task-specific role assignments and conversational termination conditions, CAMEL demonstrated that autonomous agents can solve complex multi-step instructions without human intervention. 
-
-Nevertheless, CAMEL's architectural design is inherently dyadic ($N=2$). The communicative mechanisms do not generalize to collective societies ($N \ge 5$) where multiple independent entities must simultaneously resolve conflicting constraints across distributed data partitions. Attempting to scale CAMEL to larger collectives requires chaining multiple dyadic sessions, which re-introduces the multi-hop context dilution and latency bottlenecks characteristic of static hierarchical graphs.
+CAMEL \cite{li2023camel} established foundational principles for communicative agent exploration, utilizing inception prompting to govern autonomous cooperative dialogue between two agents. By establishing task-specific role assignments and conversational termination conditions, CAMEL demonstrated that autonomous agents can solve complex multi-step instructions without human intervention. Nevertheless, CAMEL's architectural design is inherently dyadic ($N=2$). Chaining multiple dyadic sessions to scale to larger collectives re-introduces the multi-hop context dilution and latency bottlenecks characteristic of static hierarchical graphs.
 
 \subsubsection{DyLAN and Dynamic Contribution Pruning}
-DyLAN \cite{liu2024dylan} represents an important step toward non-static architectures, introducing dynamic agent selection based on iterative contribution scoring. In DyLAN, an external evaluation metric ranks agents after each reasoning round, pruning agents whose contributions fall below a specified threshold while preserving high-performing contributors. 
-
-While dynamic, DyLAN differs fundamentally from ORCHESTRA in three operative dimensions. First, DyLAN relies on a centralized scoring supervisor to rank and prune agents, preserving an external locus of control. Second, DyLAN operates on agent retention rather than topological edge selection; remaining agents continue to communicate via complete mesh broadcast. Third, DyLAN does not measure or facilitate emergent organizational hierarchies or spontaneous leadership hub election; roles remain fixed, and network inequality is not quantified.
+DyLAN \cite{liu2024dylan} represents an important step toward non-static architectures, introducing dynamic agent selection based on iterative contribution scoring. In DyLAN, an external evaluation metric ranks agents after each reasoning round, pruning agents whose contributions fall below a specified threshold while preserving high-performing contributors. While dynamic, DyLAN differs fundamentally from ORCHESTRA in three operative dimensions. First, DyLAN relies on a centralized scoring supervisor to rank and prune agents, preserving an external locus of control. Second, DyLAN operates on agent retention rather than topological edge selection; remaining agents continue to communicate via complete mesh broadcast. Third, DyLAN does not measure or facilitate emergent organizational hierarchies; roles remain fixed, and network inequality is not quantified.
 
 % ------------------------------------------------------------------------------
 % TABLE II: COMPARISON OF MULTI-AGENT RESILIENCE AND EMERGENCE
@@ -319,7 +306,7 @@ Equally important, existing frameworks treat organizational structure as a stati
 \subsection{Organizational Emergence and Role Specialization}
 The study of emergent social structures in artificial multi-agent systems has deep roots in complex adaptive systems and sociological simulation. Simon's foundational thesis on the architecture of complexity \cite{simon1962architecture} posited that complex systems naturally decompose into nearly-decomposable hierarchical sub-systems to minimize communication overhead. In natural systems, biological swarms \cite{bonabeau1999swarm} exhibit sophisticated division of labor without centralized control, driven by localized chemical signaling and stigmergic interactions. Termite mounds, ant foraging trails, and bird flocking dynamics emerge from simple, symmetric behavioral rules operating under spatial constraints.
 
-In the domain of generative artificial intelligence, Park \emph{et al.} \cite{park2023generative} demonstrated that LLM-based agents embedded in a simulated sandbox environment could spontaneously organize social events, propagate information, and form relationship networks. However, their architecture focused on qualitative sociological realism rather than rigorous, quantifiable distributed problem solving. Mediano \emph{et al.} \cite{mediano2025emergence} developed information-theoretic frameworks to quantify high-order emergence in artificial neural networks, demonstrating that emergent macro-dynamics carry information irreducible to individual micro-agents:
+In generative artificial intelligence, Park \emph{et al.} \cite{park2023generative} demonstrated that LLM-based agents embedded in a simulated sandbox environment could spontaneously organize social events, propagate information, and form relationship networks. Mediano \emph{et al.} \cite{mediano2025emergence} developed information-theoretic frameworks to quantify high-order emergence in artificial neural networks, demonstrating that emergent macro-dynamics carry information irreducible to individual micro-agents:
 \begin{equation}
 \label{eq:mediano_emergence}
 \Psi(\mathcal{A}) = I(\mathcal{S}^{(t)}; \mathcal{S}^{(t-1)}) - \sum_{i=1}^N I(s_i^{(t)}; s_i^{(t-1)}) > 0
@@ -338,11 +325,9 @@ Chen \emph{et al.} \cite{chen2025resilience} evaluated multi-agent resilience un
 However, existing fault tolerance mechanisms rely on external recovery supervisors, static checkpoint reloads, or expensive replication protocols. Prior literature has not addressed whether a multi-agent society can exhibit \textit{structural self-healing}---the intrinsic capacity of surviving agents to detect peer silence, autonomously reconfigure their communication graph, and elect alternate coordination hubs in real time without human intervention or supervisor orchestration.
 
 \subsection{Quantitative Metrics for Complex Network Dynamics}
-To rigorously quantify the evolution of organizational structures, researchers must transcend qualitative narrative descriptions and employ formal mathematical measures. In network science and temporal graph theory \cite{holme2012temporal, watts1998collective, barabasi1999emergence}, structural properties are characterized via degree distributions, clustering coefficients, and centrality indices. Barab{\'a}si and Albert \cite{barabasi1999emergence} demonstrated that scale-free topologies emerge naturally through preferential attachment mechanisms, where highly connected nodes disproportionately attract new edges.
+To quantify the evolution of organizational structures, researchers must transcend qualitative narrative descriptions and employ formal mathematical measures. In network science and temporal graph theory \cite{holme2012temporal, watts1998collective, barabasi1999emergence}, structural properties are characterized via degree distributions, clustering coefficients, and centrality indices. Barab{\'a}si and Albert \cite{barabasi1999emergence} demonstrated that scale-free topologies emerge naturally through preferential attachment mechanisms, where highly connected nodes disproportionately attract new edges.
 
-In economic sociology and inequality measurement, the Gini coefficient \cite{gini1912variabilita} provides a standardized, normalized measure of statistical dispersion, widely utilized to quantify income or wealth concentration across populations. While previously applied to examine degree inequality in static social and citation networks \cite{page1999pagerank}, the Gini coefficient has never been formulated to quantify emergent behavioral specialization in multi-agent LLM systems. In our framework, we formulate \textit{Gini Out-Degree Specialization} ($G$) to track the transition of an agent collective from a uniform, decentralized democracy ($G \to 0$) toward an elected hierarchical structure ($G \to 1$).
-
-To measure temporal graph dynamics across discrete reasoning rounds, the Jaccard distance \cite{jaccard1912distribution} provides an established metric for edge-set churn. Combined with Freeman's betweenness centrality \cite{freeman1977set} and directed graph reciprocity, these measures formulate a comprehensive analytical apparatus that enables exact mathematical characterization of organizational emergence and resilience.
+In economic sociology and inequality measurement, the Gini coefficient \cite{gini1912variabilita} provides a standardized, normalized measure of statistical dispersion, widely utilized to quantify income or wealth concentration across populations. While previously applied to examine degree inequality in static social and citation networks \cite{page1999pagerank}, the Gini coefficient has never been formulated to quantify emergent behavioral specialization in multi-agent LLM systems. In our framework, we formulate \textit{Gini Out-Degree Specialization} ($G$) to track the transition of an agent collective from a uniform, decentralized democracy ($G \to 0$) toward an elected hierarchical structure ($G \to 1$). Combined with Freeman's betweenness centrality \cite{freeman1977set}, Jaccard distance \cite{jaccard1912distribution}, and directed graph reciprocity, these measures formulate a comprehensive analytical apparatus that enables exact mathematical characterization of organizational emergence and resilience.
 
 \subsection{Distributed Algorithmic Reasoning and Information Silos}
 Most multi-agent LLM benchmarks evaluate conversational fluency, commonsense reasoning, or linear software engineering tasks \cite{du2023debate, qian2024chatdev, hong2024metagpt}. While valuable, these tasks do not rigorously evaluate the coordination mechanics of multi-agent societies. In conversational debate, agents can achieve consensus through rhetorical persuasion without executing verifiable mathematical computations. In contrast, classical distributed algorithms---such as MapReduce reductions \cite{dean2008mapreduce}, resilient distributed datasets \cite{zaharia2012resilient}, parallel sorting networks, and distributed graph search \cite{lynch1996distributed}---require exact, multi-stage state synchronization under strict information partitioning.
@@ -381,6 +366,29 @@ At round $t=0$, each agent $a_i$ is initialized with:
     \item An empty contextual message inbox $\mathcal{I}_i^{(0)} = \emptyset$.
 \end{enumerate}
 
+% ------------------------------------------------------------------------------
+% FIGURE 1: DRAW.IO PLACEHOLDER (OVERALL SYSTEM ARCHITECTURE)
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.92\columnwidth}{%
+\centering
+\vspace{0.6em}
+\textbf{\large [Figure 1: Overall System Architecture Diagram]}\\[0.4em]
+\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
+\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
+\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
+\begin{itemize}
+    \item \textbf{Layer 1 (Initialization):} Symmetrically initialized agent collective $\mathcal{A} = \{a_1, \dots, a_N\}$ with identical system prompt $\mathcal{P}_{\text{sys}}$ and private data slices $x_i \subset \mathcal{X}$.
+    \item \textbf{Layer 2 (Communication Bus):} Fully decentralized peer-to-peer message routing bus establishing directed dynamic channels $\mathcal{E}^{(t)}$ without a central coordinator hub.
+    \item \textbf{Layer 3 (Verification Engine):} Global verification predicate $\Phi(\mathbf{\hat{y}}; \mathcal{X}) = 1$ evaluating collective consensus under information silos.
+\end{itemize}}
+\vspace{0.6em}
+}}
+\caption{ORCHESTRA Overall System Architecture. Symmetrically initialized agents coordinate through an unconstrained, decentralized peer-to-peer message routing layer without predefined roles or centralized coordinators.}
+\label{fig:orchestra_architecture}
+\end{figure}
+
 \subsection{Discrete-Time Execution Pipeline}
 Execution proceeds in discrete, synchronized rounds $t = 1, 2, \dots, r_{\max}$. Within each round $t$, every active agent $a_i \in \mathcal{A}_{\text{active}}^{(t)}$ executes a three-phase cognitive cycle: Perception, Deliberation, and Dispatch.
 
@@ -410,12 +418,7 @@ The generation $y_i^{(t)}$ is constrained by protocol syntax to emit two distinc
     \label{eq:state_update}
     s_i^{(t)} = \text{Update}\left( s_i^{(t-1)}, \rho_i^{(t)} \right)
     \end{equation}
-    \item \textbf{Action and Outbox Block ($\alpha_i^{(t)}$):} A structured dispatch manifest enclosed within `<action>` tags, specifying:
-    \begin{itemize}
-        \item Target peer recipients $\mathcal{R}_i^{(t)} \subseteq \mathcal{A} \setminus \{a_i\}$.
-        \item Message payloads $\{ \kappa_{ij}^{(t)} \}_{a_j \in \mathcal{R}_i^{(t)}}$.
-        \item Optional task termination proposal and local final answer candidate $\hat{y}_i^{(t)}$.
-    \end{itemize}
+    \item \textbf{Action and Outbox Block ($\alpha_i^{(t)}$):} A structured dispatch manifest enclosed within `<action>` tags, specifying target peer recipients $\mathcal{R}_i^{(t)} \subseteq \mathcal{A} \setminus \{a_i\}$, message payloads $\{ \kappa_{ij}^{(t)} \}_{a_j \in \mathcal{R}_i^{(t)}}$, and optional local answer proposal $\hat{y}_i^{(t)}$.
 \end{enumerate}
 
 \subsubsection{Dispatch Phase}
@@ -424,32 +427,37 @@ The environment parses $\alpha_i^{(t)}$ for all active agents. Directed communic
 \label{eq:edge_def}
 \mathcal{E}^{(t)} = \{ (a_i, a_j) \mid a_i \in \mathcal{A}_{\text{active}}^{(t)}, a_j \in \mathcal{R}_i^{(t)} \}
 \end{equation}
-The communication graph at round $t$ is thus represented by the dynamic directed graph $\mathcal{G}^{(t)} = (\mathcal{A}_{\text{active}}^{(t)}, \mathcal{E}^{(t)})$, with adjacency matrix $A^{(t)} \in \{0, 1\}^{N \times N}$ where $A_{ij}^{(t)} = 1$ if and only if $(a_i, a_j) \in \mathcal{E}^{(t)}$.
-
-Messages are routed concurrently to the inboxes of specified recipients:
+The communication graph at round $t$ is represented by the dynamic directed graph $\mathcal{G}^{(t)} = (\mathcal{A}_{\text{active}}^{(t)}, \mathcal{E}^{(t)})$, with adjacency matrix $A^{(t)} \in \{0, 1\}^{N \times N}$ where $A_{ij}^{(t)} = 1$ if and only if $(a_i, a_j) \in \mathcal{E}^{(t)}$. Messages are routed concurrently to recipient inboxes:
 \begin{equation}
 \label{eq:msg_route}
 \mathcal{I}_j^{(t+1)} \leftarrow \mathcal{I}_j^{(t+1)} \cup \{ m_{i \to j}^{(t)} \}
 \end{equation}
-If an agent selects $\mathcal{R}_i^{(t)} = \emptyset$, it emits no outbound messages and acts as an informational sink during round $t$. If an agent selects $\mathcal{R}_i^{(t)} = \mathcal{A} \setminus \{a_i\}$, it executes a broadcast operation. Because recipient selection is unconstrained, any arbitrary communication topology---star, tree, bipartite, ring, or mesh---can emerge dynamically.
 
 % ------------------------------------------------------------------------------
-% FIGURE 1: ARCHITECTURAL OVERVIEW
+% FIGURE 2: DRAW.IO PLACEHOLDER (AGENT COGNITIVE CYCLE)
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
 \fbox{\parbox{0.92\columnwidth}{%
 \centering
-\textbf{[Figure 1: Architectural Topology Comparison]}\\[0.5em]
-\includegraphics[width=0.90\columnwidth]{figure_baseline_accuracy_comparison.png}\\[0.5em]
-\parbox{0.88\columnwidth}{\footnotesize \textbf{Figure 1 Schematic Guide:} Architectural comparison contrasting static literature baselines with ORCHESTRA. (a) Independent Ensembles: disconnected nodes with zero edges. (b) Flat Broadcast (ChatDev): complete mesh with dense $\mathcal{O}(N^2)$ bidirectional edges. (c) Central Coordinator (AutoGen): rigid star with Agent~0 mediating all communication. (d) Hierarchical Tree (MacNet): multi-tier DAG with parent-child edges. (e) ORCHESTRA: dynamic peer-to-peer topology where edges $\mathcal{E}^{(t)}$ evolve adaptively based on task complexity and agent intent.}
+\vspace{0.6em}
+\textbf{\large [Figure 2: Agent Cognitive Architecture Cycle]}\\[0.4em]
+\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
+\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
+\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
+\begin{itemize}
+    \item \textbf{Perception:} Receiving messages from buffer $\mathcal{I}_i^{(t)}$, appending to rolling history $c_i^{(t)}$ using XML demarcations.
+    \item \textbf{Deliberation:} Foundation model inference over Qwen 3.8 27B generating private reasoning scratchpad $\rho_i^{(t)}$ (`<thought>`) and dispatch block $\alpha_i^{(t)}$ (`<action>`).
+    \item \textbf{Dispatch:} Resolving recipient set $\mathcal{R}_i^{(t)}$ and routing directed payloads $m_{i \to j}^{(t)}$ to peer inboxes.
+\end{itemize}}
+\vspace{0.6em}
 }}
-\caption{Taxonomy of Multi-Agent Communication Topologies. Unlike static literature structures, ORCHESTRA exhibits dynamic, role-free edge evolution.}
-\label{fig:architectural_overview}
+\caption{Agent Cognitive Micro-Architecture and Structured Execution Cycle. The three-phase Perception-Deliberation-Dispatch cycle ensures modular decoupling of private deductions and public communication.}
+\label{fig:agent_cycle}
 \end{figure}
 
 \subsection{Theoretical Foundations and Mathematical Proofs}
-To rigorously justify why role-free decentralized agent societies can achieve robust coordination without centralized orchestrators, we establish four formal theoretical results.
+To establish formal theoretical grounding for role-free decentralized agent societies, we present four analytical results.
 
 \begin{definition}[Information Reachability and Graph Diameter]
 Let $\mathcal{G}^{(1:T)} = \bigcup_{t=1}^T \mathcal{G}^{(t)}$ denote the dynamic temporal graph formed over execution rounds $t \in \{1, \dots, T\}$. A node $a_j$ is informationally reachable from $a_i$ within $T$ rounds if there exists a time-respecting path $(a_{v_0}, a_{v_1}, \dots, a_{v_k})$ where $a_{v_0} = a_i$, $a_{v_k} = a_j$, and $(a_{v_{r-1}}, a_{v_r}) \in \mathcal{E}^{(t_r)}$ with $1 \le t_1 < t_2 < \dots < t_k \le T$. The temporal diameter $\mathcal{D}_T$ is the minimum $T$ such that all node pairs $(a_i, a_j)$ are mutually informationally reachable.
@@ -590,21 +598,15 @@ This mutual incentive structure drives directed reciprocity to empirically obser
 \end{IEEEproof}
 
 \subsection{Formalization of the Novel Metric Suite}
-To provide rigorous quantitative evaluation of emergent social structures, we define four formal metrics grounded in network science and economic inequality theory:
+To provide quantitative evaluation of emergent social structures, we define four formal metrics grounded in network science and economic inequality theory:
 
 \subsubsection{Gini Out-Degree Specialization ($G$)}
-We quantify the emergence of structural hierarchy and leadership specialization using the Gini coefficient applied to the directed out-degree sequence $\mathbf{d}^{\text{out}} = [d_1^{\text{out}}, d_2^{\text{out}}, \dots, d_N^{\text{out}}]$ of the communication graph $\mathcal{G}^{(t)}$. Derived from the continuous Lorenz curve $L(p)$, the discrete formulation is given by:
+We quantify structural hierarchy and leadership specialization using the Gini coefficient applied to the directed out-degree sequence $\mathbf{d}^{\text{out}} = [d_1^{\text{out}}, \dots, d_N^{\text{out}}]$ of graph $\mathcal{G}^{(t)}$. Derived from the continuous Lorenz curve $L(p)$, the discrete formulation is given by:
 \begin{equation}
 \label{eq:gini_formulation}
 G(\mathcal{G}^{(t)}) = \frac{\sum_{i=1}^N \sum_{j=1}^N \left| d_i^{\text{out}}(t) - d_j^{\text{out}}(t) \right|}{2 N \sum_{i=1}^N d_i^{\text{out}}(t)} = 1 - 2 \int_0^1 L(p) dp
 \end{equation}
-The metric is bounded $G \in [0, 1]$:
-\begin{itemize}
-    \item $G = 0$: Perfect structural equality. All agents emit an identical number of messages (pure democracy).
-    \item $0 < G \le 0.30$: Distributed peer collaboration with minor behavioral variance.
-    \item $0.30 < G \le 0.50$: Moderate organizational hierarchy; spontaneous election of 1--2 coordination hubs.
-    \item $0.50 < G \le 1.0$: Extreme centralization; a single leader agent dominates message transmission while others operate as passive sinks or listeners.
-\end{itemize}
+The metric is bounded $G \in [0, 1]$: $G = 0$ denotes perfect structural equality (democracy), while $G \to 1$ indicates extreme centralization around a solitary hub.
 
 \subsubsection{Jaccard Structural Drift ($J$)}
 To quantify round-by-round topological reconfiguration and structural churn, we formulate the Jaccard distance over consecutive edge sets $\mathcal{E}^{(t-1)}$ and $\mathcal{E}^{(t)}$:
@@ -612,57 +614,48 @@ To quantify round-by-round topological reconfiguration and structural churn, we 
 \label{eq:jaccard_formulation}
 J(t, t-1) = 1 - \frac{\left| \mathcal{E}^{(t)} \cap \mathcal{E}^{(t-1)} \right|}{\left| \mathcal{E}^{(t)} \cup \mathcal{E}^{(t-1)} \right|}
 \end{equation}
-with $J(t, t-1) \in [0, 1]$. When the communication graph is static (as in AutoGen, ChatDev, and MacNet), $\mathcal{E}^{(t)} = \mathcal{E}^{(t-1)}$, yielding $J(t, t-1) \equiv 0.0$. In contrast, in ORCHESTRA, $J(t, t-1)$ measures active structural adaptation: high values during initial discovery ($J \approx 0.5$), stabilization during consensus ($J \to 0.1$), and sharp spikes during agent dropout perturbations ($J \to 0.6$) signifying topological rewiring.
+with $J(t, t-1) \in [0, 1]$. In static baselines (AutoGen, ChatDev, MacNet), $J \equiv 0.0$. In ORCHESTRA, $J$ measures active structural adaptation: high values during initial discovery ($J \approx 0.5$), stabilization during consensus ($J \to 0.1$), and sharp spikes during agent crashes ($J \to 0.6$) signifying topological rewiring.
 
 \subsubsection{Directed Graph Reciprocity ($R$)}
-Reciprocity measures the propensity of communication channels to operate as mutual, two-way collaborative exchanges rather than one-way command transmissions:
+Reciprocity measures the propensity of communication channels to operate as mutual, two-way collaborative exchanges:
 \begin{equation}
 \label{eq:reciprocity_formulation}
 R(\mathcal{G}^{(t)}) = \frac{\sum_{i=1}^N \sum_{j \neq i} A_{ij}^{(t)} A_{ji}^{(t)}}{\sum_{i=1}^N \sum_{j \neq i} A_{ij}^{(t)}}
 \end{equation}
-where $A^{(t)}$ is the binary adjacency matrix. $R = 1.0$ indicates that every message sent from $a_i \to a_j$ is reciprocated by a message from $a_j \to a_i$ within the same round.
 
 \subsubsection{Freeman Betweenness Centrality ($C_B$)}
-To identify critical bridge nodes and single-point-of-failure vulnerabilities, we compute the normalized Freeman betweenness centrality for every agent $v \in \mathcal{A}$:
+To identify bridge nodes and single-point-of-failure vulnerabilities, we compute the normalized Freeman betweenness centrality for every agent $v \in \mathcal{A}$:
 \begin{equation}
 \label{eq:betweenness_formulation}
 C_B(v) = \frac{1}{(N-1)(N-2)} \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
 \end{equation}
-where $\sigma_{st}$ is the total number of shortest directed paths from node $s$ to node $t$, and $\sigma_{st}(v)$ is the number of those paths passing through intermediate node $v$. In centralized star topologies, the hub exhibits $C_B \approx 1.0$ while workers have $C_B = 0.0$. In ORCHESTRA, betweenness centrality is distributed dynamically across peers.
-
-\subsubsection{Dynamic Frobenius Energy Volatility ($\Phi$)}
-To measure the intensity of structural transitions across rounds, we define the Frobenius volatility of the adjacency matrix:
-\begin{equation}
-\label{eq:frobenius_formulation}
-\Phi(t) = \left\| A^{(t)} - A^{(t-1)} \right\|_F = \sqrt{\sum_{i=1}^N \sum_{j=1}^N \left( A_{ij}^{(t)} - A_{ij}^{(t-1)} \right)^2}
-\end{equation}
-$\Phi(t)$ quantifies the absolute Hamming distance of graph edge toggles between consecutive execution rounds.
-
-\subsubsection{Target Selection Entropy ($H_{\text{target}}$)}
-To examine the diversity of an agent's communication partner choices, we compute the Shannon entropy of its recipient distribution across rounds:
-\begin{equation}
-\label{eq:target_entropy}
-H_{\text{target}}(a_i) = - \sum_{j \neq i} p_{ij} \log_2 p_{ij}, \quad \text{where } p_{ij} = \frac{\sum_{t=1}^{r_{\max}} A_{ij}^{(t)}}{\sum_{t=1}^{r_{\max}} \sum_{k \neq i} A_{ik}^{(t)}}
-\end{equation}
-Maximum entropy indicates uniform partner rotation, while zero entropy indicates rigid, frozen recipient targeting.
 
 % ------------------------------------------------------------------------------
-% FIGURE 2: EVOLUTION LIFECYCLE
+% FIGURE 3: DRAW.IO PLACEHOLDER (EVOLUTION AND RECOVERY LIFECYCLE)
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
 \fbox{\parbox{0.92\columnwidth}{%
 \centering
-\textbf{[Figure 2: Organizational Evolution and Recovery Lifecycle]}\\[0.5em]
-\includegraphics[width=0.90\columnwidth]{figure_perturbation_resilience.png}\\[0.5em]
-\parbox{0.88\columnwidth}{\footnotesize \textbf{Figure 2 Schematic Guide:} State transition and resilience lifecycle of ORCHESTRA under node failure. (Phase 1: Initial Discovery) Symmetric agents explore peer capabilities ($G \approx 0.27$, $J \approx 0.52$). (Phase 2: Emergent Leadership) Spontaneous hub election and role specialization ($G \approx 0.40$, $J \to 0.15$). (Phase 3: Adversarial Crash) Fail-stop crash knocks out a critical agent node. (Phase 4: Dynamic Self-Healing) Surviving peers detect silence, spike Jaccard drift ($J \to 0.60$), and rewire edges around the failed vertex to sustain consensus.}
+\vspace{0.6em}
+\textbf{\large [Figure 3: Organizational Evolution & Self-Healing Lifecycle]}\\[0.4em]
+\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
+\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
+\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
+\begin{itemize}
+    \item \textbf{Phase 1 (Discovery, $t=1$):} Symmetric agents explore peer capabilities ($G \approx 0.27$, $J \approx 0.52$).
+    \item \textbf{Phase 2 (Specialization, $t=2\dots 6$):} Spontaneous hub election into Coordinator Hubs, Relay Bridges, and Leaf Workers ($G \approx 0.40$, $J \to 0.15$).
+    \item \textbf{Phase 3 (Crash Injection, $t=7$):} Unannounced fail-stop crash knocks out agent node $a_{\text{fail}}$.
+    \item \textbf{Phase 4 (Dynamic Self-Healing, $t \ge 8$):} Surviving peers detect silence, spike Jaccard drift ($J \to 0.60$), and rewire edges around the failed vertex.
+\end{itemize}}
+\vspace{0.6em}
 }}
-\caption{Organizational Evolution and Self-Healing Lifecycle in ORCHESTRA under mid-execution fail-stop node crashes.}
+\caption{Organizational Evolution and Self-Healing Lifecycle in ORCHESTRA. The four-phase lifecycle demonstrates autonomous transition from initial symmetry to leadership specialization and dynamic fault recovery.}
 \label{fig:lifecycle_diagram}
 \end{figure}
 
 \subsection{Role Classification State Machine}
-Although ORCHESTRA initializes agents with zero predefined roles, agents naturally adopt specialized operational postures during execution. We define a formal behavioral classification mapping an agent's instantaneous network metrics at round $t$ into one of four functional roles:
+Although ORCHESTRA initializes agents with zero predefined roles, agents adopt specialized postures during execution. We define a behavioral classification mapping an agent's instantaneous network metrics into functional roles:
 \begin{equation}
 \label{eq:role_classification}
 \text{Role}(a_i, t) = \begin{cases}
@@ -672,35 +665,10 @@ Although ORCHESTRA initializes agents with zero predefined roles, agents natural
 \textbf{Isolated Observer}, & \text{if } d_i^{\text{out}}(t) = 0 \text{ and } d_i^{\text{in}}(t) = 0
 \end{cases}
 \end{equation}
-The numerical thresholds in Equation~(\ref{eq:role_classification}) are derived from empirical network distributions:
-\begin{itemize}
-    \item \textbf{Coordinator Hub:} An agent whose out-degree exceeds the society mean by at least one standard deviation ($\sigma_d$) while maintaining high betweenness centrality ($C_B \ge 0.35$). This indicates that the agent is actively synthesizing and routing information for multiple peers.
-    \item \textbf{Relay Bridge:} An agent exhibiting balanced in-and-out traffic ($|d^{\text{in}} - d^{\text{out}}| \le 1$) with moderate betweenness ($C_B \ge 0.25$), serving as an intermediate communication conduit between disjoint clusters.
-    \item \textbf{Leaf Worker:} An agent with below-average outbound transmissions ($d^{\text{out}} < \bar{d}^{\text{out}}$) that primarily ingests coordination directives and reports localized task deductions.
-    \item \textbf{Isolated Observer:} An agent that neither sends nor receives messages during round $t$, acting as a detached computational unit.
-\end{itemize}
-Crucially, this state machine operates strictly as an \textit{ex-post diagnostic instrument} for empirical measurement; it is never injected into the agents' prompts.
+This state machine operates strictly as an \textit{ex-post diagnostic instrument} for empirical measurement; it is never injected into the agents' prompts.
 
-\subsection{Algorithmic Specification and Operational Walkthrough}
+\subsection{Algorithmic Specification}
 The execution pipeline of ORCHESTRA is formalized in Algorithm~\ref{alg:orchestra_runtime}, and the dynamic edge reconfiguration and failure bypass mechanism is specified in Algorithm~\ref{alg:dynamic_reconfiguration}.
-
-\subsubsection{Operational Mechanics of Algorithm 1}
-Algorithm~\ref{alg:orchestra_runtime} governs the complete life cycle of the decentralized society:
-\begin{enumerate}
-    \item \textbf{Initialization (Lines 1--2):} Inboxes and contextual histories are initialized to empty sets. All $N$ agents are marked as active in $\mathcal{A}_{\text{active}}$.
-    \item \textbf{Parallel Perception and Deliberation (Lines 5--8):} In each synchronized round $t$, all active agents execute concurrently. The host environment constructs the prompt $\Pi_i^{(t)}$ by combining the universal prompt $\mathcal{P}_{\text{sys}}$, the agent's private data partition $x_i$, and the accumulated contextual history $c_i^{(t)}$ containing incoming messages from round $t-1$. The underlying foundation model $\mathcal{F}_{\theta}$ autoregressively emits the generation $y_i^{(t)}$.
-    \item \textbf{Syntactic Parsing and Edge Synthesis (Lines 9--12):} The environment parses $y_i^{(t)}$ into the cognitive reasoning trace $\rho_i^{(t)}$ and the structured dispatch action $\alpha_i^{(t)}$. Target recipient identifiers $\mathcal{R}_i^{(t)}$ are extracted, dynamically establishing the active directed edge set $\mathcal{E}^{(t)}$.
-    \item \textbf{Message Routing and Metric Computation (Lines 13--16):} Message payloads are appended to the recipient inboxes for processing in round $t+1$. Simultaneously, the environment computes instantaneous network metrics ($G, J, R, C_B$).
-    \item \textbf{Consensus Detection and Termination (Lines 17--19):} If all active agents propose identical verified solutions $\hat{y}_i^{(t)}$ and propose termination, the execution loop breaks early, saving unnecessary token expenditure.
-\end{enumerate}
-
-\subsubsection{Operational Mechanics of Algorithm 2}
-Algorithm~\ref{alg:dynamic_reconfiguration} formalizes the self-healing protocol when an adversarial node failure occurs:
-\begin{enumerate}
-    \item \textbf{Silence Detection (Lines 2--5):} Following the unannounced termination of $a_{\text{fail}}$ at round 7, surviving agents observe an empty incoming buffer from $a_{\text{fail}}$. The environment marks $a_{\text{fail}}$ as unresponsive in the contextual history.
-    \item \textbf{Dynamic Edge Rerouting (Lines 6--12):} Surviving agents that previously routed messages through $a_{\text{fail}}$ identify an alternate coordination hub $a^*$ based on historical incoming degree $d^{\text{in}}(t-1)$. Outbound edges are dynamically updated to substitute $a^*$ in place of $a_{\text{fail}}$.
-    \item \textbf{Structural Adaptation Measurement (Lines 14--15):} The environment recomputes the active edge set $\mathcal{E}^{(t)}$ and calculates the resulting Jaccard structural drift spike $J(t, t-1)$, capturing the quantitative magnitude of the topological self-healing response.
-\end{enumerate}
 
 % ------------------------------------------------------------------------------
 % ALGORITHM 1: ORCHESTRA RUNTIME ENGINE
@@ -777,13 +745,13 @@ Algorithm~\ref{alg:dynamic_reconfiguration} formalizes the self-healing protocol
 In this section, we describe the empirical evaluation testbed, detailing the SILO-BENCH benchmark environment, baseline implementations, foundation model parameters, hardware infrastructure, evaluation metrics, and perturbation injection protocols.
 
 \subsection{SILO-BENCH Benchmark Suite}
-We evaluate all architectures on SILO-BENCH \cite{john2026silobench}, an exacting distributed algorithmic benchmark specifically designed to diagnose multi-agent reasoning under information silos. SILO-BENCH enforces strict input isolation: each agent is provided with an isolated, private partition of the task input and cannot read peer states except through explicit, discrete-round message passing. 
+We evaluate all architectures on SILO-BENCH \cite{john2026silobench}, an exacting distributed algorithmic benchmark specifically designed to diagnose multi-agent reasoning under information silos. SILO-BENCH enforces strict input isolation: each agent receives an isolated, private partition of the task input and cannot read peer states except through explicit, discrete-round message passing. 
 
 The benchmark encompasses 15 stratified algorithmic tasks organized across three difficulty tiers, detailed in Table~\ref{tab:silobench_tasks}:
 \begin{itemize}
-    \item \textbf{Level I: Cross-Silo Aggregation (Tasks I-01 to I-10):} Fundamental distributed reduction operations, including Distributed Sum, Element-wise Mean, Disjoint Set Union, Top-$K$ Value Selection, Median Approximation, and Global String Concatenation. These tasks require agents to exchange scalar or set-based values and compute global aggregations.
-    \item \textbf{Level II: Spatial Mesh Routing (Tasks II-11 to II-20):} Topologically constrained geometric reasoning, including Decentralized Grid Routing, Graph Shortest Pathfinding, 2D Cellular Automata Step Synchronization, Distributed Resource Scheduling, and Localized Laplacians. Agents must coordinate multi-hop pathfinding where data dependencies mirror spatial graphs.
-    \item \textbf{Level III: Global Shuffle Algorithms (Tasks III-21 to III-30):} Highly complex distributed computing workloads, including Parallel Bitonic Merge Sort, Distributed Breadth-First Search (BFS) Tree Construction, Decentralized K-Means Centroid Convergence, Global Prefix-Sum Scans, and Distributed Graph Coloring. These tasks require iterative, multi-phase communication barriers, cyclic hypothesis exchange, and global data reshuffling.
+    \item \textbf{Level I: Cross-Silo Aggregation (Tasks I-01 to I-10):} Fundamental distributed reduction operations, including Distributed Sum, Element-wise Mean, Disjoint Set Union, Top-$K$ Value Selection, Median Approximation, and Global String Concatenation.
+    \item \textbf{Level II: Spatial Mesh Routing (Tasks II-11 to II-20):} Topologically constrained geometric reasoning, including Decentralized Grid Routing, Graph Shortest Pathfinding, 2D Cellular Automata Step Synchronization, Distributed Resource Scheduling, and Localized Laplacians.
+    \item \textbf{Level III: Global Shuffle Algorithms (Tasks III-21 to III-30):} Intricate distributed computing kernels, including Parallel Bitonic Merge Sort, Distributed Breadth-First Search (BFS) Tree Construction, Decentralized K-Means Centroid Convergence, Global Prefix-Sum Scans, and Distributed Graph Coloring.
 \end{itemize}
 
 % ------------------------------------------------------------------------------
@@ -820,46 +788,48 @@ Task III-30 & Distributed Graph Coloring & Level III: Shuffle & Neighbor conflic
 }
 \end{table*}
 
-\subsection{Detailed Task Mechanics and Mathematical Predicates}
-To ensure complete reproducibility and scientific clarity, we document the operational mechanics and verification predicates for all 15 evaluated tasks:
+\subsection{Task Geometry and Verification Predicates}
+To guarantee mathematical rigor, each task in SILO-BENCH is evaluated against a formal algorithmic predicate. In Level~I tasks, the predicate requires exact numerical equality or epsilon convergence across all surviving agents. In Task I-01 (Distributed Summation), each agent holds a private integer $x_i \in [-10^4, 10^4]$; all surviving agents must compute $\hat{y}_i = \sum_{j=1}^N x_j$. In Task I-09 (Top-$K$ Selection), each agent holds an unordered list of 5 real numbers. The collective must identify the globally largest 3 numbers without dumping raw private arrays into global transcripts.
 
-\subsubsection{Level I: Cross-Silo Aggregation Workloads}
-\begin{enumerate}
-    \item \textbf{Task I-01 (Distributed Summation):} Each agent $a_i$ receives a private integer scalar $x_i \in [-10^4, 10^4]$. The collective objective is for all surviving agents to output the exact scalar sum $\hat{y}_i = \sum_{j=1}^N x_j$. Verification checks $\mathbb{I}(\hat{y}_i = \sum_{j=1}^N x_j)$ for all active $a_i$.
-    \item \textbf{Task I-03 (Global Mean Computation):} Each agent receives a private vector $X_i \subset \mathbb{R}^d$ containing $M$ real numbers sampled from $\mathcal{N}(0, \sigma^2)$. Agents must compute the global arithmetic mean. The predicate verifies $|\hat{y}_i - \bar{\mathcal{X}}| < 10^{-3}$.
-    \item \textbf{Task I-05 (Disjoint Set Union - DSU):} A global undirected graph $G = (V, E)$ with $|V| = 20$ is partitioned such that each agent holds a disjoint edge subset $E_i$. Agents must determine the global connected components using Tarjan's DSU semantics \cite{tarjan1975efficiency}. Verification checks equivalence between agent-reported component labels and ground-truth connected components.
-    \item \textbf{Task I-07 (Majority Voting Consensus):} Each agent holds an array of categorical votes drawn from a finite label set $\mathcal{L} = \{A, B, C, D\}$. Agents must aggregate counts to identify the modal label without transmitting individual voter identities. Verification checks $\hat{y}_i = \arg\max_{l \in \mathcal{L}} \sum_{j=1}^N \text{Count}(l, x_j)$.
-    \item \textbf{Task I-09 (Top-$K$ Element Selection):} Each agent holds an unordered list of 5 real numbers. The collective must identify the globally largest $K=3$ elements across all silos without any single agent dumping its raw private array into a global broadcast transcript. Verification requires exact set equality $\hat{y}_i = \text{TopK}(\bigcup_{j=1}^N x_j)$.
-\end{enumerate}
+In Level~II tasks, predicates evaluate topological path validity. In Task II-11 (Decentralized Grid Routing), an $M \times M$ grid contains static obstacles partitioned horizontally across agents. Agent $a_1$ holds the start coordinate and Agent $a_N$ holds the destination. Agents must exchange boundary waypoint coordinates to synthesize a continuous path $\mathbf{p} = [v_1, \dots, v_L]$ satisfying $\|v_{k+1} - v_k\|_1 = 1$ and $v_k \notin \mathcal{O}_{\text{obstacles}}$. In Task II-14 (Distributed Resource Scheduling), agents hold competing request queues; the schedule $\hat{y}$ must satisfy zero over-subscription $\sum_{i \in \text{Active}(t)} R_i \le R_{\text{total}}$ for all $t$.
 
-\subsubsection{Level II: Spatial Mesh Routing Workloads}
-\begin{enumerate}
-    \item \textbf{Task II-11 (Decentralized Grid Routing):} An $M \times M$ grid ($M=16$) contains static obstacles partitioned horizontally across agents. Agent $a_1$ holds the start coordinate and Agent $a_N$ holds the destination. Agents must exchange boundary waypoint coordinates to synthesize a continuous, non-colliding path vector $\mathbf{p} = [v_1, v_2, \dots, v_L]$ satisfying $\|v_{k+1} - v_k\|_1 = 1$ and $v_k \notin \mathcal{O}_{\text{obstacles}}$ for all $k$.
-    \item \textbf{Task II-13 (Localized Laplacian Filtering):} A discretized 2D heat diffusion matrix is sliced into vertical columns across agents. Agents must iteratively compute 5 discrete diffusion time-steps, requiring round-by-round exchange of boundary column vectors. The verification predicate checks numerical convergence of boundary cells to within $\epsilon = 10^{-2}$.
-    \item \textbf{Task II-14 (Distributed Resource Scheduling):} Agents hold competing task execution requests characterized by arrival times $t_{\text{arr}}$, duration $\delta$, and required compute resources $R$. The output is a valid schedule matrix $\hat{y}$ satisfying zero resource over-subscription $\sum_{i \in \text{Active}(t)} R_i \le R_{\text{total}}$ for all $t$.
-    \item \textbf{Task II-16 (Cellular Automata Synchrony):} A 1D Conway-style cyclic cellular automaton \cite{conway1970game} with binary states $\{0, 1\}^{64}$ is partitioned into contiguous stripes. Agents must compute the global state after 3 discrete generations. The verification predicate requires exact bit-vector agreement across all local boundaries.
-    \item \textbf{Task II-17 (Graph Shortest Pathfinding):} A weighted directed graph $G = (V, E, W)$ with $|V| = 25$ vertices is partitioned such that agents hold disjoint adjacency submatrices. Agents must compute the shortest path weight from source $s$ to target $t$ using distributed Bellman-Ford semantics \cite{bellman1958routing}. The predicate verifies exact cost optimality $W(\mathbf{p}) = d(s, t)$.
-\end{enumerate}
+In Level~III tasks, predicates demand global permutation verification. In Task III-25 (Parallel Bitonic Merge Sort), an unsorted sequence of length $M$ is partitioned evenly across $N$ agents. Agents execute $\log_2 N$ bitonic stages, alternating pairwise compare-exchange operations. The verification predicate checks that output concatenation forms a non-decreasing global sequence $\hat{y}_1 \le \dots \le \hat{y}_N$ and preserves the input multi-set $\biguplus_{i=1}^N \hat{y}_i = \biguplus_{i=1}^N x_i$.
 
-\subsubsection{Level III: Global Shuffle Workloads}
-\begin{enumerate}
-    \item \textbf{Task III-21 (Distributed Prefix-Sum Scan):} An array of integers is partitioned across agents. Agents must compute the inclusive prefix-sum array such that each agent's local segment reflects the cumulative sum of all preceding elements across all silos: $\hat{y}_i[k] = \sum_{j=1}^{\text{rank}(i,k)} x_j$.
-    \item \textbf{Task III-23 (Decentralized K-Means Clustering):} Each agent holds $M=10$ spatial feature points in $\mathbb{R}^2$. Agents must iteratively update $K=3$ global cluster centroids \cite{macqueen1967kmeans} over 3 synchronization barriers. The predicate verifies that final cluster assignments achieve minimal inertia within tolerance $\epsilon = 0.05$.
-    \item \textbf{Task III-25 (Parallel Bitonic Merge Sort):} The input is an unsorted sequence of length $M=20$ partitioned evenly across $N$ agents. Agents must execute $\log_2 N$ bitonic stages, alternating pairwise compare-exchange operations \cite{cormen2022introduction}. The predicate checks that the concatenation of local outputs forms a strictly non-decreasing global sequence $\hat{y}_1 \le \hat{y}_2 \le \dots \le \hat{y}_N$ and preserves the input multi-set $\biguplus_{i=1}^N \hat{y}_i = \biguplus_{i=1}^N x_i$.
-    \item \textbf{Task III-27 (Distributed BFS Tree Construction):} Given a sparse graph partitioned across agents, agents must construct a distributed Breadth-First Search tree from a root vertex $v_0$. Each agent outputs parent pointers and depth levels for its local vertices. Verification checks depth consistency and edge validity.
-    \item \textbf{Task III-30 (Distributed Graph Coloring):} A graph with chromatic number $\chi(G) \le 4$ is partitioned across agents. Agents must assign colors $c(v) \in \{1, 2, 3, 4\}$ such that no adjacent vertices share a color. Verification verifies zero adjacent vertex collisions across silo boundaries.
-\end{enumerate}
+% ------------------------------------------------------------------------------
+% FIGURE 4: DRAW.IO PLACEHOLDER (SILO-BENCH & TOPOLOGY TAXONOMY)
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.92\columnwidth}{%
+\centering
+\vspace{0.6em}
+\textbf{\large [Figure 4: SILO-BENCH & Baseline Topologies Diagram]}\\[0.4em]
+\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
+\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
+\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
+\begin{itemize}
+    \item \textbf{Panel (a) Independent Ensembles:} Isolated nodes with zero edges ($E=\emptyset$) under isolated data silos $x_1 \dots x_N$.
+    \item \textbf{Panel (b) Flat Broadcast (ChatDev):} Complete bidirectional mesh with quadratic $\mathcal{O}(N^2)$ edge density.
+    \item \textbf{Panel (c) Central Coordinator (AutoGen):} Star topology with Agent~0 as the central coordinator hub.
+    \item \textbf{Panel (d) Hierarchical Tree (MacNet):} Static multi-tier tree (Root executive $\to$ Tier managers $\to$ Leaf workers).
+    \item \textbf{Panel (e) ORCHESTRA (Ours):} Dynamic peer-to-peer topology with task-adaptive edge formation and zero predefined roles.
+\end{itemize}}
+\vspace{0.6em}
+}}
+\caption{SILO-BENCH Distributed Information Silo Architecture and Baseline Communication Topologies. Unlike static literature structures, ORCHESTRA dynamically evolves communication channels to match the underlying problem geometry.}
+\label{fig:silobench_topologies}
+\end{figure}
 
 \subsection{Baseline Architectures and Standardization}
 To compare against prominent architectures in the multi-agent literature, we implemented the canonical communication topologies established by AutoGen (Central Star Hub; Wu et al., 2024), MacNet (Hierarchical Tree; Wang et al., 2024), ChatDev (All-to-all Broadcast; Qian et al., 2024), and Independent Ensembles (Wang et al., 2023) within the standardized SILO-BENCH message-passing environment.
 
-To ensure rigorous, unassailable scientific comparisons, all baselines and ORCHESTRA were standardized under identical environmental conditions:
+To ensure unassailable scientific comparisons, all baselines and ORCHESTRA were standardized under identical environmental conditions:
 \begin{enumerate}
-    \item \textbf{Independent Ensembles \cite{wang2023selfconsistency}:} Agents execute reasoning completely decoupled, with zero inter-agent communication channels ($\mathcal{E}^{(t)} = \emptyset$). At round $r_{\max}$, an external majority voter aggregates local predictions.
-    \item \textbf{Flat Broadcast Debate (ChatDev) \cite{qian2024chatdev}:} Agents operate within an unconstrained complete mesh topology. Every agent broadcasts its entire message payload to all $N-1$ peers at every round ($A_{ij}^{(t)} = 1$ for all $i \neq j$). Contextual buffers accumulate all peer messages chronologically.
-    \item \textbf{Central Star Coordinator (AutoGen) \cite{wu2024autogen}:} A designated coordinator agent ($a_1$) operates as the central hub. In odd rounds, all worker agents $\{a_2, \dots, a_N\}$ send their private observations and deductions to $a_1$. In even rounds, $a_1$ synthesizes the inputs and broadcasts updated coordination instructions back to the workers. Worker-to-worker direct communication is strictly prohibited.
-    \item \textbf{Hierarchical Tree (MacNet) \cite{wang2025macnet}:} Agents are arranged in a static hierarchical tree DAG. For $N=2$, $a_1$ serves as parent and $a_2$ as child. For $N=5$, $a_1$ serves as the root executive, $a_2, a_3$ serve as intermediate tier managers, and $a_4, a_5$ serve as leaf worker nodes. Messages flow strictly along tree edges: leaf workers report to managers, managers aggregate and report to the root, and the root broadcasts directives downward.
-    \item \textbf{ORCHESTRA (Ours):} Zero predefined roles, completely symmetric prompt initialization, and unconstrained peer-to-peer message routing. Agents autonomously choose outbound recipients at each round.
+    \item \textbf{Independent Ensembles \cite{wang2023selfconsistency}:} Agents execute reasoning decoupled with zero communication channels ($\mathcal{E}^{(t)} = \emptyset$). A majority voter aggregates local predictions at $r_{\max}$.
+    \item \textbf{Flat Broadcast Debate (ChatDev) \cite{qian2024chatdev}:} Agents operate within a complete mesh topology. Every agent broadcasts its entire message payload to all $N-1$ peers at every round ($A_{ij}^{(t)} = 1$ for all $i \neq j$).
+    \item \textbf{Central Star Coordinator (AutoGen) \cite{wu2024autogen}:} Agent $a_1$ operates as the central hub. In odd rounds, workers $\{a_2, \dots, a_N\}$ report to $a_1$. In even rounds, $a_1$ broadcasts consolidated instructions back. Worker-to-worker communication is strictly prohibited.
+    \item \textbf{Hierarchical Tree (MacNet) \cite{wang2025macnet}:} Agents form a static tree DAG. For $N=2$, $a_1$ serves as parent and $a_2$ as child. For $N=5$, $a_1$ serves as root, $a_2, a_3$ as managers, and $a_4, a_5$ as leaf workers. Messages flow strictly along tree edges.
+    \item \textbf{ORCHESTRA (Ours):} Zero predefined roles, symmetric prompt initialization, and unconstrained peer-to-peer message routing. Agents autonomously choose outbound recipients at each round.
 \end{enumerate}
 
 \subsection{Foundation Model and Infrastructure Specifications}
@@ -874,35 +844,17 @@ All experiments were executed using the **Qwen 3.8 27B** foundation model (speci
     \item \textbf{Hardware Testbed:} Dual 8 $\times$ NVIDIA A100-SXM4-80GB GPU server nodes interconnected via 400 Gbps InfiniBand networking.
 \end{itemize}
 
-\subsection{Evaluation Protocols and Metrics}
+\subsection{Evaluation Protocols and Adversarial Perturbation}
 We measure multi-agent system performance across five quantitative dimensions:
 \begin{enumerate}
-    \item \textbf{Task Success Rate ($S \in [0, 1]$):} The fraction of active agents that converge to the mathematically verified correct answer at execution termination. A run is considered fully successful ($S=1.0$) if and only if all active agents satisfy the verification predicate:
-    \begin{equation}
-    S = \frac{1}{|\mathcal{A}_{\text{active}}|} \sum_{a_i \in \mathcal{A}_{\text{active}}} \mathbb{I}\left( \Phi(\hat{y}_i; \mathcal{X}) = 1 \right)
-    \end{equation}
-    \item \textbf{Partial Correctness Score ($P \in [0, 1]$):} Continuous metric capturing solution proximity when full success is not achieved (e.g., fraction of correctly routed path vertices in Level II, or normalized edit distance of sorted sequences in Level III).
-    \item \textbf{Token Consumption ($C$):} Total output tokens generated across all agents during the entire execution lifecycle, tracking computational and economic cost.
-    \item \textbf{Communication Density ($D$):} The ratio of realized directed communication edges to the maximum theoretically possible directed edges:
-    \begin{equation}
-    \label{eq:density_formulation}
-    D = \frac{\sum_{t=1}^{r_{\text{term}}} |\mathcal{E}^{(t)}|}{r_{\text{term}} \cdot N(N-1)}
-    \end{equation}
-    \item \textbf{Resilience Delta under Crash Perturbation ($\Delta_{\text{drop}}$):} The performance drop under adversarial fail-stop node crashes:
-    \begin{equation}
-    \label{eq:resilience_delta}
-    \Delta_{\text{drop}} = S_{\text{perturbed}} - S_{\text{nominal}}
-    \end{equation}
+    \item \textbf{Task Success Rate ($S \in [0, 1]$):} The fraction of active agents that converge to the verified correct answer: $S = \frac{1}{|\mathcal{A}_{\text{active}}|} \sum_{a_i \in \mathcal{A}_{\text{active}}} \mathbb{I}\left( \Phi(\hat{y}_i; \mathcal{X}) = 1 \right)$.
+    \item \textbf{Partial Correctness Score ($P \in [0, 1]$):} Continuous metric capturing solution proximity when full success is not achieved.
+    \item \textbf{Token Consumption ($C$):} Total output tokens generated across all agents during execution.
+    \item \textbf{Communication Density ($D$):} Ratio of realized edges to maximum possible directed edges: $D = \frac{\sum_{t=1}^{r_{\text{term}}} |\mathcal{E}^{(t)}|}{r_{\text{term}} \cdot N(N-1)}$.
+    \item \textbf{Resilience Delta under Perturbation ($\Delta_{\text{drop}}$):} Performance drop under adversarial fail-stop crashes: $\Delta_{\text{drop}} = S_{\text{perturbed}} - S_{\text{nominal}}$.
 \end{enumerate}
 
-\subsection{Adversarial Perturbation Protocol}
-To evaluate topological fault tolerance and self-healing, we inject an unannounced fail-stop crash perturbation (`agent_dropout`) at round $r_{\text{drop}} = \lfloor r_{\max} / 2 \rfloor = 7$. At round 7, a randomly selected agent $a_{\text{fail}} \in \mathcal{A}$ is permanently terminated:
-\begin{itemize}
-    \item All outbound messages from $a_{\text{fail}}$ are suppressed.
-    \item All inbound messages dispatched to $a_{\text{fail}}$ are silently dropped by the environment.
-    \item No explicit architectural reconfiguration signal or error interrupt is provided to the surviving agents; agents must infer peer silence through environmental observation.
-\end{itemize}
-In hierarchical tree baselines (MacNet), terminating an intermediate manager node severs communication between leaf workers and the root. In star coordinators (AutoGen), crashing $a_1$ disables the hub. In ORCHESTRA, surviving agents must autonomously rewire communication channels around the dead node.
+To evaluate fault tolerance and self-healing, we inject an unannounced fail-stop crash perturbation (`agent_dropout`) at round $r_{\text{drop}} = \lfloor r_{\max} / 2 \rfloor = 7$. A randomly selected agent $a_{\text{fail}} \in \mathcal{A}$ is permanently terminated: outbound messages are suppressed, and inbound messages are dropped by the environment without notifying surviving peers.
 
 
 % ==============================================================================
@@ -911,7 +863,7 @@ In hierarchical tree baselines (MacNet), terminating an intermediate manager nod
 \section{Results and Discussion}
 \label{sec:results}
 
-We present an exhaustive quantitative evaluation grounded in 300 controlled experimental runs across two agent population scales ($N=2$ and $N=5$) and 15 SILO-BENCH distributed algorithmic tasks. We structure our empirical analysis around the core research questions, presenting overall head-to-head performance, scaling degradation, complexity tier breakdowns, the Emergence Curve, Pareto frontier efficiency, fault-tolerant self-healing, and micro-task execution traces.
+We present an exhaustive quantitative evaluation grounded in 300 controlled experimental runs across two agent population scales ($N=2$ and $N=5$) and 15 SILO-BENCH distributed algorithmic tasks. We structure our empirical analysis around head-to-head performance, scaling degradation, complexity tier breakdowns, the Emergence Curve, Pareto efficiency, fault-tolerant self-healing, and micro-task execution traces.
 
 % ------------------------------------------------------------------------------
 % TABLE IV: MASTER HEAD-TO-HEAD COMPARISON
@@ -938,12 +890,10 @@ Hierarchical Tree (MacNet) \cite{wang2025macnet} & 34.3\% & 10,532 & 12.0 & 6.7\
 \subsection{Overall Head-to-Head Performance}
 Table~\ref{tab:master_comparison} presents the master head-to-head comparison across all 300 executed runs. Several foundational observations emerge:
 \begin{enumerate}
-    \item \textbf{Independent Ensembles Establish the Lower Bound:} Independent agents achieve a nominal accuracy of only 12.0\%, demonstrating that SILO-BENCH tasks cannot be solved through isolated inference. Inter-agent communication is strictly necessary to bridge information silos. When data are strictly non-overlapping, majority voting among isolated deductions provides negligible utility because each agent is blind to $(N-1)/N$ of the global input state. Individual reasoning paths cannot synthesize global invariants without interactive data exchange.
-    \item \textbf{Flat Broadcast Delivers Raw Accuracy at Unsustainable Cost:} Flat Broadcast achieves the highest nominal accuracy across scales (37.3\%), but exhibits severe token scaling explosion when moving to larger agent societies, as detailed in Section~\ref{subsec:scaling_analysis}. On pairwise setups ($N=2$), broadcasting is identical to point-to-point peer messaging. However, as the collective expands to $N=5$, broadcast debate floods context buffers with redundant and conflicting reasoning paths.
-    \item \textbf{ORCHESTRA Achieves Parity Without Hardcoded Roles:} ORCHESTRA achieves a nominal accuracy of 33.3\%, outperforming Central Coordinator (29.0\%) and closely trailing Hierarchical Tree (34.3\%) and Flat Broadcast (37.3\%). Crucially, while all baselines rely on human-engineered graphs or hardcoded managers, ORCHESTRA achieves competitive accuracy with \textit{zero predefined roles} and \textit{zero topological constraints}. This resolves $\mathbf{RQ_1}$: role-free, symmetrically initialized agents are fully capable of autonomous coordination without human engineering.
+    \item \textbf{Independent Ensembles Establish the Lower Bound:} Independent agents achieve a nominal accuracy of only 12.0\%, demonstrating that SILO-BENCH tasks cannot be solved through isolated inference. Inter-agent communication is strictly necessary to bridge information silos. When data are strictly non-overlapping, majority voting among isolated deductions provides negligible utility because each agent is blind to $(N-1)/N$ of the global input state.
+    \item \textbf{Flat Broadcast Incurs Unsustainable Token Scaling:} Flat Broadcast achieves the highest gross nominal accuracy across scales (37.3\%), but exhibits severe token scaling explosion when moving to larger agent societies, as detailed in Section~\ref{subsec:scaling_analysis}. On pairwise setups ($N=2$), broadcasting is identical to point-to-point peer messaging. However, as the collective expands to $N=5$, broadcast debate floods context buffers with redundant reasoning paths.
+    \item \textbf{ORCHESTRA Delivers Parity Without Roles:} ORCHESTRA achieves a nominal accuracy of 33.3\%, outperforming Central Coordinator (29.0\%) and closely trailing Hierarchical Tree (34.3\%) and Flat Broadcast (37.3\%). Crucially, while all baselines rely on human-engineered graphs or hardcoded managers, ORCHESTRA achieves competitive accuracy with \textit{zero predefined roles} and \textit{zero topological constraints}. This resolves $\mathbf{RQ_1}$: role-free, symmetrically initialized agents are fully capable of autonomous coordination without human engineering.
 \end{enumerate}
-
-The master comparison demonstrates that raw accuracy in isolation is an incomplete metric for multi-agent evaluation. While Flat Broadcast marginally edges ORCHESTRA in gross nominal accuracy (37.3\% vs. 33.3\%), it does so through brute-force message saturation that fails under operational scaling. When we analyze token economy, structural resilience, and algorithmic complexity, the scientific limitations of rigid topologies become starkly apparent.
 
 % ------------------------------------------------------------------------------
 % TABLE V: GRANULAR RESULTS AT N=2
@@ -993,14 +943,14 @@ Hierarchical Tree (MacNet) & 18.7\% & 13,918 & 14.8 & 0.257 & \textbf{0.0\%} & \
 \label{subsec:scaling_analysis}
 Comparing performance across agent scales $N=2$ (Table~\ref{tab:results_n2}) and $N=5$ (Table~\ref{tab:results_n5}) exposes the architectural vulnerabilities of rigid human-engineered topologies. The scaling degradation metrics are summarized in Table~\ref{tab:scaling_degradation}:
 
-\subsubsection{The Catastrophic Collapse of Hierarchical Trees}
-At $N=2$, Hierarchical Tree (MacNet) exhibits strong accuracy (50.0\%), benefiting from simple two-node master-worker delegation. However, when scaled to $N=5$, MacNet suffers a catastrophic collapse of **-31.3 percentage points**, dropping to an accuracy of only 18.7\%. In a 5-agent tree, messages must traverse multiple intermediate management layers to reach the root. This introduces multi-hop latency and compounding context loss: intermediate agents frequently summarize or distort worker calculations, leading to complete coordination failure. The rigid parent-child tree structure acts as an information filter that discards fine-grained numerical constraints before they reach the decision-making root.
+\subsubsection{Catastrophic Collapse of Hierarchical Trees}
+At $N=2$, Hierarchical Tree (MacNet) exhibits strong accuracy (50.0\%), benefiting from simple two-node master-worker delegation. However, when scaled to $N=5$, MacNet suffers a catastrophic collapse of **-31.3 percentage points**, dropping to an accuracy of only 18.7\%. In a 5-agent tree, messages must traverse multiple intermediate management layers to reach the root. This introduces multi-hop latency and compounding context loss: intermediate agents summarize or distort worker calculations, leading to complete coordination failure.
 
 \subsubsection{Token Scaling Explosion in Flat Broadcast}
-Flat Broadcast maintains an accuracy of 28.0\% at $N=5$, but incurs an exorbitant token explosion. Its mean token consumption inflates by **5.18$\times$**, skyrocketing from 3,848 tokens/run at $N=2$ to 19,927 tokens/run at $N=5$. In contrast, ORCHESTRA exhibits bounded token scaling, increasing by only **2.90$\times$** (from 6,136 to 17,802 tokens). ORCHESTRA agents selectively route messages to relevant peers rather than spamming the entire network, preventing quadratic context saturation. While Broadcast expends 19,927 tokens to achieve 28.0\%, ORCHESTRA achieves 26.7\% using 17,802 tokens, and on complex spatial mesh routing, ORCHESTRA achieves 28.0\% while consuming far fewer tokens.
+Flat Broadcast maintains an accuracy of 28.0\% at $N=5$, but incurs an exorbitant token explosion. Its mean token consumption inflates by **5.18$\times$**, skyrocketing from 3,848 tokens/run at $N=2$ to 19,927 tokens/run at $N=5$. In contrast, ORCHESTRA exhibits bounded token scaling, increasing by only **2.90$\times$** (from 6,136 to 17,802 tokens). ORCHESTRA agents selectively route messages to relevant peers rather than broadcasting to the entire network, preventing quadratic context saturation.
 
 \subsubsection{The 47\% Token Tax of Centralized Coordinators}
-Central Coordinator (AutoGen) achieves 28.0\% accuracy at $N=5$, but burns **26,186 tokens/run**---the highest of all evaluated methods. AutoGen requires 47.1\% more tokens than ORCHESTRA (17,802 tokens) for a negligible 1.3\% accuracy edge. Funneling all conversation turns through Agent~0 inflates the hub's context window, burning massive token budgets on redundant contextual echoing. At $N=5$, the coordinator must ingest 4 inbound messages per round and emit consolidated syntheses, consuming vast attention resources and slowing down wall-clock execution.
+Central Coordinator (AutoGen) achieves 28.0\% accuracy at $N=5$, but burns **26,186 tokens/run**---the highest of all evaluated methods. AutoGen requires 47.1\% more tokens than ORCHESTRA (17,802 tokens) for a negligible 1.3\% accuracy edge. Funneling all conversation turns through Agent~0 inflates the hub's context window, burning massive token budgets on redundant contextual echoing.
 
 % ------------------------------------------------------------------------------
 % TABLE VII: SCALING DEGRADATION AND TOKEN GROWTH
@@ -1025,7 +975,7 @@ Hierarchical Tree (MacNet) & 50.0\% & 18.7\% & \textbf{-31.3\% (Collapse)} & 1.9
 \end{table}
 
 % ------------------------------------------------------------------------------
-% FIGURE 3: EMPIRICAL ACCURACY PLOT
+% FIGURE 5: EMPIRICAL ACCURACY PLOT
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
@@ -1068,7 +1018,7 @@ On the most intellectually demanding distributed algorithms (Level III: Bitonic 
     \item Flat Broadcast (ChatDev): 10.0\%
     \item Independent Ensembles: 0.0\%
 \end{itemize}
-On Level III tasks, independent ensembles fail completely (0.0\%). Flat broadcast collapses to 10.0\% due to cognitive noise and quadratic message collision. Central star coordinators suffer from context saturation at the hub (17.0\%). ORCHESTRA's role-free peer-to-peer routing enables agents to dynamically coordinate iterative barrier phases, achieving the highest problem-solving capacity on complex distributed algorithms. In parallel sorting and graph search, data dependencies are cyclic and multi-phase. Fixed trees force horizontal comparisons through vertical parent nodes, introducing latency and distortion. ORCHESTRA agents establish direct, round-specific comparison channels, achieving superior synchronization.
+On Level III tasks, independent ensembles fail completely (0.0\%). Flat broadcast collapses to 10.0\% due to cognitive noise and quadratic message collision. Central star coordinators suffer from context saturation at the hub (17.0\%). ORCHESTRA's role-free peer-to-peer routing enables agents to dynamically coordinate iterative barrier phases, achieving the highest problem-solving capacity on complex distributed algorithms. In parallel sorting and graph search, data dependencies are cyclic. Fixed trees force horizontal comparisons through vertical parent nodes, introducing distortion. ORCHESTRA agents establish direct comparison channels, achieving superior synchronization.
 
 \subsubsection{Win 2: Rank \#1 on Complex Spatial Mesh Routing at Scale ($N=5$)}
 On Level II spatial mesh routing tasks at scale $N=5$, ORCHESTRA achieves **28.0\% accuracy**, securing Rank~\#1 over all competitors:
@@ -1078,10 +1028,10 @@ On Level II spatial mesh routing tasks at scale $N=5$, ORCHESTRA achieves **28.0
     \item Flat Broadcast: 20.0\%
     \item Hierarchical Tree: 8.0\%
 \end{itemize}
-ORCHESTRA outperforms AutoGen by **+8.0 percentage points** while consuming **46.8\% fewer tokens** (18,392 vs. 34,581 tokens on Level II). Fixed star topologies force spatial grid coordinates through an unnecessary central hub, whereas ORCHESTRA agents communicate directly along adjacent grid boundaries. This provides an empirical validation of $\mathbf{RQ_3}$: role-free dynamic routing establishes a superior Pareto frontier over both centralized and broadcast topologies on structured spatial problems.
+ORCHESTRA outperforms AutoGen by **+8.0 percentage points** while consuming **46.8\% fewer tokens** (18,392 vs. 34,581 tokens on Level II). Fixed star topologies force spatial grid coordinates through an unnecessary central hub, whereas ORCHESTRA agents communicate directly along adjacent grid boundaries. This validates $\mathbf{RQ_3}$: role-free dynamic routing establishes a superior Pareto frontier over both centralized and broadcast topologies on structured spatial problems.
 
 % ------------------------------------------------------------------------------
-% FIGURE 4: RESILIENCE PLOT
+% FIGURE 6: RESILIENCE PLOT
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
@@ -1094,10 +1044,10 @@ ORCHESTRA outperforms AutoGen by **+8.0 percentage points** while consuming **46
 Figure~\ref{fig:empirical_resilience} illustrates the resilience profiles of all architectures under mid-execution fail-stop node crashes (`agent_dropout` at round 7).
 
 \subsubsection{Win 3: The 0.0\% Total System Collapse of MacNet}
-Under node failure at scale $N=5$, **Hierarchical Tree (MacNet) suffers a complete 100\% systemic collapse, dropping to 0.0\% accuracy across all 15 tasks**. In MacNet, when an intermediate manager node crashes, the tree is permanently partitioned. Leaf worker nodes cannot transmit their partial calculations to the root, and the root produces empty or hallucinated final outputs. Static hierarchical structures exhibit zero innate fault tolerance.
+Under node failure at scale $N=5$, **Hierarchical Tree (MacNet) suffers a complete 100\% systemic collapse, dropping to 0.0\% accuracy across all 15 tasks**. In MacNet, when an intermediate manager node crashes, the tree is permanently partitioned. Leaf worker nodes cannot transmit partial calculations to the root, and the root produces empty or hallucinated final outputs. Static hierarchical structures exhibit zero innate fault tolerance.
 
 \subsubsection{ORCHESTRA Dynamic Bypass and Re-Election}
-In stark contrast, ORCHESTRA sustains operation under agent crashes, achieving **6.7\% survival accuracy** at $N=5$. When an agent crashes, surviving peers observe peer silence. Instead of deadlocking, surviving agents dynamically rewire their communication channels around the dead node, as formalized in Algorithm~\ref{alg:dynamic_reconfiguration}. This directly resolves $\mathbf{RQ_4}$: role-free agent societies possess intrinsic structural self-healing capabilities that rigid human-engineered topologies cannot match.
+In stark contrast, ORCHESTRA sustains operation under agent crashes, achieving **6.7\% survival accuracy** at $N=5$. When an agent crashes, surviving peers observe peer silence. Instead of deadlocking, surviving agents dynamically rewire communication channels around the dead node, as formalized in Algorithm~\ref{alg:dynamic_reconfiguration}. This directly resolves $\mathbf{RQ_4}$: role-free agent societies possess intrinsic structural self-healing capabilities that rigid human-engineered topologies cannot match.
 
 % ------------------------------------------------------------------------------
 % TABLE IX: EMERGENCE CURVE TRAJECTORY
@@ -1123,19 +1073,19 @@ Level III (Global Shuffle) & 0.401 & 0.248 & 0.548 & 0.315 \\
 \subsection{The Emergence Curve: Quantifying Self-Organization}
 A central scientific breakthrough of this research is the empirical discovery of the \textit{Emergence Curve}, quantitatively documented in Table~\ref{tab:emergence_curve} and visualized in Figure~\ref{fig:longitudinal_n5}.
 
-In prior literature, Gini specialization is either zero by definition (Independent Ensembles, $G \equiv 0.0$) or rigidly locked by human programming: Flat Broadcast enforces forced equality ($G = 0.154 \to 0.221$), while Central Coordinator hardcodes Agent~0 as the hub ($G = 0.363$ at $N=5$).
+In prior literature, Gini specialization is either zero by definition (Independent Ensembles, $G \equiv 0.0$) or locked by human programming: Flat Broadcast enforces forced equality ($G = 0.154 \to 0.221$), while Central Coordinator hardcodes Agent~0 as the hub ($G = 0.363$ at $N=5$).
 
-In ORCHESTRA, the Gini coefficient is not fixed: **it evolves organically as a function of task difficulty and environmental stress**:
+In ORCHESTRA, the Gini coefficient evolves organically as a function of task difficulty and environmental stress:
 \begin{itemize}
-    \item \textbf{Level I (Simple Aggregation):} $G = 0.266$. Agents self-organize as a flat, decentralized democracy. All agents participate nearly equally, with high reciprocity ($R = 0.724$) and low betweenness centralization ($C_B = 0.142$).
+    \item \textbf{Level I (Simple Aggregation):} $G = 0.266$. Agents self-organize as a flat democracy. All agents participate nearly equally, with high reciprocity ($R = 0.724$) and low betweenness centralization ($C_B = 0.142$).
     \item \textbf{Level II (Spatial Mesh Routing):} $G = 0.334$. Moderate organizational hierarchy emerges organically. Agents routing grid boundaries naturally emerge as communication conduits ($C_B = 0.228$).
     \item \textbf{Level III (Complex Global Algorithms):} $G = 0.401$. High degree specialization. Complex iterative algorithms drive agents to autonomously elect 1--2 coordination leaders to arbitrate sorting phases and barrier synchronizations.
-    \item \textbf{Under Fail-Stop Node Crashes:} $G = 0.600$. Intense organizational consolidation. When an agent crashes, surviving peers immediately converge communication around a designated surviving hub, spiking Gini to 0.600 and Jaccard drift to 0.584.
+    \item \textbf{Under Fail-Stop Node Crashes:} $G = 0.600$. Intense organizational consolidation. When an agent crashes, surviving peers converge communication around a designated surviving hub, spiking Gini to 0.600 and Jaccard drift to 0.584.
 \end{itemize}
-This provides definitive quantitative proof that multi-agent LLM societies can dynamically evolve organizational hierarchies tailored to task demands without human intervention, resolving $\mathbf{RQ_2}$.
+This provides quantitative proof that multi-agent LLM societies can dynamically evolve organizational hierarchies tailored to task demands without human intervention, resolving $\mathbf{RQ_2}$.
 
 % ------------------------------------------------------------------------------
-% FIGURE 5: TOKEN ACCURACY PARETO PLOT
+% FIGURE 7: TOKEN ACCURACY PARETO PLOT
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
@@ -1147,7 +1097,7 @@ This provides definitive quantitative proof that multi-agent LLM societies can d
 \subsection{Pareto Frontier Analysis: Accuracy vs. Token Efficiency}
 Figure~\ref{fig:pareto_frontier} illustrates the multi-objective Pareto frontier balancing task accuracy against computational token expenditure.
 
-An architecture is Pareto-optimal if no competing system achieves higher accuracy at lower token cost. While Flat Broadcast achieves slightly higher accuracy at $N=2$, it moves deeply off the Pareto frontier at $N=5$ due to quadratic token explosion (19,927 tokens). Central Coordinator achieves identical accuracy to Broadcast at $N=5$ (28.0\%) but consumes an unsustainable 26,186 tokens/run.
+An architecture is Pareto-optimal if no competing system achieves higher accuracy at lower token cost. While Flat Broadcast achieves slightly higher accuracy at $N=2$, it moves off the Pareto frontier at $N=5$ due to quadratic token explosion (19,927 tokens). Central Coordinator achieves identical accuracy to Broadcast at $N=5$ (28.0\%) but consumes an unsustainable 26,186 tokens/run.
 
 ORCHESTRA occupies the dominant upper-left region of the Pareto space:
 \begin{itemize}
@@ -1157,23 +1107,13 @@ ORCHESTRA occupies the dominant upper-left region of the Pareto space:
 ORCHESTRA achieves an optimal trade-off, outperforming centralized architectures in token economy while avoiding the catastrophic fragility of hierarchical trees.
 
 % ------------------------------------------------------------------------------
-% FIGURE 6: LONGITUDINAL DYNAMICS N=5
+% FIGURE 8: LONGITUDINAL DYNAMICS N=5
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figure_longitudinal_n5.png}
 \caption{Longitudinal Emergence Dynamics at Collective Scale $N=5$. Round-by-round trajectory of Communication Density ($D$), Gini Specialization ($G$), and Jaccard Structural Drift ($J$). Note the adaptive stabilization of $J$ during consensus and the emergence of degree concentration.}
 \label{fig:longitudinal_n5}
-\end{figure}
-
-% ------------------------------------------------------------------------------
-% FIGURE 7: LONGITUDINAL DYNAMICS N=2
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figure_longitudinal_n2.png}
-\caption{Longitudinal Emergence Dynamics at Dyadic Scale $N=2$. Round-by-round trajectory showing rapid topological convergence and high reciprocal edge exchange between paired agents.}
-\label{fig:longitudinal_n2}
 \end{figure}
 
 % ------------------------------------------------------------------------------
@@ -1198,12 +1138,12 @@ Task III-25 (Bitonic Sort) & \textbf{40.0\%} & 0.0\% & 0.0\% & 20.0\% & 20.0\% &
 \end{table*}
 
 \subsection{Micro-Task Execution Traces and Algorithmic Breakthroughs}
-Table~\ref{tab:micro_tasks} highlights four micro-task case studies at scale $N=5$ demonstrating ORCHESTRA's qualitative reasoning advantages over static architectures. Below, we provide granular, step-by-step cognitive trace dissections for each task:
+Table~\ref{tab:micro_tasks} highlights four micro-task case studies at scale $N=5$ demonstrating ORCHESTRA's qualitative reasoning advantages over static architectures. Below, we provide step-by-step cognitive trace dissections for each task:
 
 \subsubsection{Task I-09: Distributed Top-$K$ Value Selection}
-In Task I-09, five agents hold unordered scalar arrays and must collectively identify the globally largest $K=3$ elements across all silos without any single agent disclosing its entire raw private partition.
+In Task I-09, five agents hold unordered scalar arrays and must collectively identify the globally largest $K=3$ elements without disclosing all raw private partitions.
 \begin{itemize}
-    \item \textbf{Failure Mode in Baselines:} All four baselines failed completely (**0.0\% accuracy**). In Flat Broadcast, each agent broadcast its complete local 5-element array simultaneously in Round 1. Inboxes were immediately flooded with 20 raw numbers without metadata. In Round 2, the agents attempted to parse the unstructured wall of numbers; context attention displacement caused multiple agents to omit numbers from Agents~3 and 4, producing conflicting top-3 sets. In AutoGen, worker agents submitted local arrays to Agent~0; however, Agent~0's synthesis hallucinated a non-existent value (94 instead of 91) due to numeric blending across lines, which was then broadcast downward to corrupt all workers.
+    \item \textbf{Failure Mode in Baselines:} All four baselines failed completely (**0.0\% accuracy**). In Flat Broadcast, each agent broadcast its complete local 5-element array simultaneously in Round 1. Inboxes were flooded with 20 raw numbers without metadata. Context attention displacement caused multiple agents to omit numbers from Agents~3 and 4, producing conflicting top-3 sets. In AutoGen, worker agents submitted local arrays to Agent~0; however, Agent~0's synthesis hallucinated a non-existent value (94 instead of 91) due to numeric blending across lines, which corrupted all workers.
     \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved **100.0\% accuracy**. At Round 1, agents autonomously applied local sorting to their private partitions: Agent~2 emitted `<action targets="[Agent_0, Agent_3]"> my top candidates are [88, 76] </action>`. By Round 2, Agent~3 had received proposals from three peers. In its scratchpad, Agent~3 noted:
     \begin{quote}
     \texttt{<thought> I have received localized maxima from Agents 0, 1, and 2. My own maximum is 91. The combined candidate pool is [91, 88, 84, 76, 72]. Pruning values below rank 3 leaves {91, 88, 84}. I will announce this candidate set and query Agent 4 for veto. </thought>}
@@ -1214,14 +1154,14 @@ In Task I-09, five agents hold unordered scalar arrays and must collectively ide
 \subsubsection{Task II-14: Distributed Resource Scheduling}
 Task II-14 requires five agents to allocate non-colliding time slots across shared compute clusters.
 \begin{itemize}
-    \item \textbf{Failure Mode in Flat Broadcast:} Flat Broadcast ran for **102 minutes** (6,146.5 seconds), generated **38,668 tokens**, and ultimately failed (0\% accuracy). At every round, all five agents broadcast full scheduling proposals for all 10 time windows. Because agents acted concurrently, Agent~1 and Agent~4 simultaneously claimed Slot~3; in the subsequent round, both detected the collision and simultaneously vacated Slot~3 to claim Slot~5, creating a classic distributed livelock. The 32K context window filled with repeated collision warnings, driving attention entropy to saturation.
-    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA solved the task in **13 minutes** (798.2 seconds) using only **11,688 tokens**---achieving a **7.7$\times$ execution speedup** and consuming **3.3$\times$ fewer tokens**. Instead of broadcasting, agents engaged in localized pairwise negotiation. Agent~1 identified an overlap specifically with Agent~4 and dispatched a point-to-point query: `<action targets="[Agent_4]"> Propose concession: I will take Slot 2 if you retain Slot 3 </action>`. Agent~4 reciprocated within one round. Agents with disjoint time windows (e.g., Agent~0 and Agent~3) exchanged zero messages, keeping contexts compact and resolving the schedule in 6 rounds.
+    \item \textbf{Failure Mode in Flat Broadcast:} Flat Broadcast ran for **102 minutes** (6,146.5 seconds), generated **38,668 tokens**, and failed (0\% accuracy). At every round, all five agents broadcast full scheduling proposals for all 10 time windows. Because agents acted concurrently, Agent~1 and Agent~4 simultaneously claimed Slot~3; in the subsequent round, both detected the collision and simultaneously vacated Slot~3 to claim Slot~5, creating a distributed livelock. The 32K context window filled with repeated collision warnings, driving attention entropy to saturation.
+    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA solved the task in **13 minutes** (798.2 seconds) using only **11,688 tokens**---achieving a **7.7$\times$ execution speedup** and consuming **3.3$\times$ fewer tokens**. Instead of broadcasting, agents engaged in localized pairwise negotiation. Agent~1 identified an overlap specifically with Agent~4 and dispatched a point-to-point query: `<action targets="[Agent_4]"> Propose concession: I will take Slot 2 if you retain Slot 3 </action>`. Agent~4 reciprocated within one round. Agents with disjoint time windows (e.g., Agent~0 and Agent~3) exchanged zero messages, resolving the schedule in 6 rounds.
 \end{itemize}
 
 \subsubsection{Task II-17: Graph Shortest Pathfinding}
 In Task II-17, agents hold disjoint adjacency submatrices of a directed graph and must find the global shortest path from source $s$ to target $t$.
 \begin{itemize}
-    \item \textbf{Failure Mode in Baselines:} All baselines failed (**0.0\% accuracy**). In MacNet's hierarchical tree, Agent~4 held the outgoing edges from vertex $v_6$, and Agent~5 held the incoming edges to target $t$. Because Agent~4 and Agent~5 were sibling leaf nodes, they could not communicate directly. Path cost updates were forced upward to Manager~Agent~2, which summarized the distance weights; during summarization, the intermediate edge weight $w(v_6, t)=3$ was rounded or omitted, leading the root executive to output an invalid path.
+    \item \textbf{Failure Mode in Baselines:} All baselines failed (**0.0\% accuracy**). In MacNet's hierarchical tree, Agent~4 held the outgoing edges from vertex $v_6$, and Agent~5 held the incoming edges to target $t$. Because Agent~4 and Agent~5 were sibling leaf nodes, they could not communicate directly. Path cost updates were forced upward to Manager~Agent~2, which summarized distance weights; during summarization, the intermediate edge weight $w(v_6, t)=3$ was omitted, leading the root executive to output an invalid path.
     \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved **100.0\% accuracy**. Agents dynamically constructed a chain-like routing topology tracing the exact frontier of the graph traversal. Agent~0 initiated a path proposal and forwarded it to Agent~2 (who held adjacent vertices); Agent~2 extended the path and routed it directly to Agent~4, who then contacted Agent~5. The communication graph formed a directed path graph mirroring the topological shortest path, achieving exact cost optimality $W(\mathbf{p}) = 14$.
 \end{itemize}
 
@@ -1244,7 +1184,7 @@ In fixed topologies, this gap is exacerbated. Centralized hubs dilute critical v
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-In this paper, we introduced \textbf{ORCHESTRA}, an autonomous multi-agent research framework investigating emergent organizational evolution, behavioral specialization, and fault-tolerant coordination in AI agent societies initialized with \textit{zero predefined roles} and \textit{unconstrained peer-to-peer communication}. Grounded in the standardized SILO-BENCH distributed algorithmic benchmark across 300 controlled experimental runs powered by the Qwen 3.8 27B foundation model, we conducted a rigorous comparative study against four canonical literature paradigms: Independent Ensembles, Flat Broadcast Debate (ChatDev), Central Star Coordinator (AutoGen), and Hierarchical Tree (MacNet).
+In this paper, we introduced \textbf{ORCHESTRA}, an autonomous multi-agent research framework investigating emergent organizational evolution, behavioral specialization, and fault-tolerant coordination in AI agent societies initialized with \textit{zero predefined roles} and \textit{unconstrained peer-to-peer communication}. Grounded in the standardized SILO-BENCH distributed algorithmic benchmark across 300 controlled experimental runs powered by the Qwen 3.8 27B foundation model, we conducted a comparative study against four canonical literature paradigms: Independent Ensembles, Flat Broadcast Debate (ChatDev), Central Star Coordinator (AutoGen), and Hierarchical Tree (MacNet).
 
 \subsection{Summary of Empirical and Theoretical Findings}
 Our investigation establishes five key scientific conclusions:
@@ -1253,31 +1193,31 @@ Our investigation establishes five key scientific conclusions:
     \item \textbf{The Empirical Emergence Curve:} Using the Gini out-degree specialization metric ($G$), we proved that organizational hierarchy scales dynamically with task difficulty ($G = 0.266$ on simple aggregation $\to 0.401$ on complex global shuffle algorithms) and intensifies under adversarial stress ($G = 0.600$), validating Hypothesis $\mathcal{H}_2$.
     \item \textbf{Dominance on Complex Distributed Workloads:} On Level~III global shuffle algorithms, ORCHESTRA achieves Rank~\#1 with 22.0\% accuracy, outperforming all literature baselines (Hierarchical Tree: 20.0\%, Central Coordinator: 17.0\%, Broadcast: 10.0\%, Independent: 0.0\%).
     \item \textbf{Bounded Token Scaling and Runtime Efficiency:} At scale ($N=5$), ORCHESTRA circumvents the quadratic token explosion of broadcast debate ($2.90\times$ vs. $5.18\times$ scaling) and achieves a $7.7\times$ execution speedup over broadcast on spatial coordination tasks, confirming Hypothesis $\mathcal{H}_3$.
-    \item \textbf{Fault Tolerance and Self-Healing:} Under mid-execution fail-stop node crashes at $N=5$, while static hierarchical trees suffer a complete 100\% systemic collapse (0.0\% accuracy across all 15 tasks), ORCHESTRA dynamically rewires communication pathways around the failed vertex, sustaining execution with 6.7\% survival, confirming Hypothesis $\mathcal{H}_4$.
+    \item \textbf{Fault Tolerance and Self-Healing:} Under mid-execution fail-stop node crashes at $N=5$, while static hierarchical trees suffer a 100\% systemic collapse (0.0\% accuracy across all 15 tasks), ORCHESTRA dynamically rewires communication pathways around the failed vertex, sustaining execution with 6.7\% survival, confirming Hypothesis $\mathcal{H}_4$.
 \end{enumerate}
 
 \subsection{Theoretical and Philosophical Implications}
-Our findings challenge the prevailing dogma in multi-agent research that foundation models require rigid anthropomorphic prompt scaffolding. Just as biological collectives achieve intricate division of labor through stigmergy and localized chemical signaling without centralized leadership, artificial neural agents exhibit spontaneous symmetry breaking driven by stochastic generation and informational gradients. When freed from hardcoded corporate trees and star coordinators, agent societies discover efficient, non-obvious communication geometries tailored to the task. Self-organization is not merely a theoretical possibility; it is a demonstrable empirical property of multi-agent foundation model collectives.
+Our findings challenge the prevailing dogma in multi-agent research that foundation models require rigid anthropomorphic prompt scaffolding. Just as biological collectives achieve intricate division of labor through stigmergy and localized chemical signaling without centralized leadership, artificial neural agents exhibit spontaneous symmetry breaking driven by stochastic generation and informational gradients. When freed from hardcoded corporate trees and star coordinators, agent societies discover efficient, non-obvious communication geometries tailored to the task. Self-organization is an empirical property of multi-agent foundation model collectives.
 
-This work also bridges a conceptual divide between distributed systems engineering and cognitive foundation model research. In classical distributed computing, fault tolerance is engineered via rigid consensus algorithms (e.g., Paxos or Raft) operating over static node clusters. In contrast, generative agent societies exhibit biological-like plasticity: when a communication channel fails, the society adapts not by running a rigid election protocol, but by dynamically redirecting natural language queries to surviving nodes based on contextual relevance. This biological plasticity suggests that future autonomous systems can achieve fault tolerance through emergent semantic adaptation rather than brittle procedural state machines.
+This work also bridges a conceptual divide between distributed systems engineering and cognitive foundation model research. In classical distributed computing, fault tolerance is engineered via rigid consensus algorithms (e.g., Paxos or Raft) operating over static node clusters. In contrast, generative agent societies exhibit biological-like plasticity: when a communication channel fails, the society adapts not by running a rigid election protocol, but by dynamically redirecting natural language queries to surviving nodes based on contextual relevance. Future autonomous systems can achieve fault tolerance through emergent semantic adaptation rather than brittle procedural state machines.
 
 \subsection{Explicit Limitations}
 To maintain rigorous scientific objectivity, we delineate four explicit technical limitations of this study:
 \begin{enumerate}
-    \item \textbf{Backbone Model Parameter Scale:} Experiments were conducted using open-weights models in the 27B--32B parameter regime (Qwen 3.8 27B). While demonstrating architectural superiority, overall absolute accuracy numbers reflect model reasoning limits on complex mathematical algorithms. Frontier models (e.g., 70B+ parameters or frontier reasoning models) would elevate baseline accuracy. Our scientific claims focus on the architectural relationships and relative advantages of dynamic self-organization rather than claiming solved distributed algorithms.
-    \item \textbf{Synchronous Round Barrier Latency:} ORCHESTRA currently enforces a synchronized round barrier, where all active agents must complete deliberation before message dispatch. If one agent encounters generation delays or longer reasoning traces, surviving agents must wait at the synchronization barrier. In asynchronous environments, straggler agents would introduce wall-clock latency overhead.
-    \item \textbf{Lack of Cryptographic Byzantine Verification:} The current message transport layer assumes cooperative agents. It does not incorporate cryptographic signatures, zero-knowledge proofs, or Byzantine-fault-tolerant consensus protocols to guard against active adversaries emitting maliciously fabricated state values. If a compromised agent intentionally injects deceptive numerical claims, surviving agents currently lack formal verification primitives to isolate the Byzantine node.
-    \item \textbf{Scalability Horizon:} While evaluated at $N \in \{2, 5\}$, scaling to massive collectives ($N \ge 20$) requires hierarchical sub-clustering to prevent context buffer saturation during multi-hop exchanges. Fully unconstrained peer-to-peer recipient selection in a 100-agent society would present each agent with a search space of 99 candidate interlocutors, potentially introducing selection entropy and coordination thrashing.
+    \item \textbf{Backbone Model Parameter Scale:} Experiments were conducted using open-weights models in the 27B--32B parameter regime (Qwen 3.8 27B). While demonstrating architectural superiority, overall absolute accuracy numbers reflect model reasoning limits on complex mathematical algorithms. Frontier models (70B+ parameters) would elevate baseline accuracy. Our scientific claims focus on architectural relationships rather than claiming solved distributed algorithms.
+    \item \textbf{Synchronous Round Barrier Latency:} ORCHESTRA currently enforces a synchronized round barrier, where all active agents must complete deliberation before message dispatch. If one agent encounters generation delays or longer reasoning traces, surviving agents wait at the barrier. In asynchronous environments, straggler agents would introduce latency overhead.
+    \item \textbf{Lack of Cryptographic Byzantine Verification:} The current message transport layer assumes cooperative agents. It does not incorporate cryptographic signatures or zero-knowledge proofs to guard against active adversaries emitting maliciously fabricated state values.
+    \item \textbf{Scalability Horizon:} While evaluated at $N \in \{2, 5\}$, scaling to massive collectives ($N \ge 20$) requires hierarchical sub-clustering to prevent context buffer saturation during multi-hop exchanges.
 \end{enumerate}
 
 \subsection{Future Research Directions}
 Promising future extensions include:
 \begin{enumerate}
-    \item \textbf{Scaling to Massive Collectives with Dynamic Sub-Clustering:} Extending empirical evaluations to larger agent societies ($N \in \{10, 20, 50, 100\}$) utilizing hierarchical dynamic sub-clustering and sliding-window context compression, allowing localized peer teams to form and merge dynamically.
-    \item \textbf{Heterogeneous Agent Societies:} Investigating societies where agents embody varying model capacities (e.g., a mixture of 7B, 27B, and 70B models), differing sensory modalities, or specialized cognitive tools, analyzing whether stronger models spontaneously emerge as leadership hubs.
-    \item \textbf{Asynchronous and Event-Driven Message Transport:} Transitioning from discrete synchronous round barriers toward asynchronous, event-driven message queues where agents deliberatively read and dispatch messages as computational events occur.
-    \item \textbf{Cryptographic Byzantine Defense Protocols:} Integrating lightweight cryptographic verification primitives and decentralized reputation scoring to provide provable Byzantine fault tolerance against adversarial prompt injections.
-    \item \textbf{JSON-Constrained Schema Decoding:} Implementing grammar-constrained decoding (e.g., via Outlines or vLLM guided decoding) to enforce strict schema adherence for complex nested matrix and graph outputs, eliminating syntactic parse failures.
+    \item \textbf{Scaling with Dynamic Sub-Clustering:} Extending empirical evaluations to larger agent societies ($N \in \{10, 20, 50, 100\}$) utilizing hierarchical dynamic sub-clustering and sliding-window context compression.
+    \item \textbf{Heterogeneous Agent Societies:} Investigating societies where agents embody varying model capacities (e.g., a mixture of 7B, 27B, and 70B models), analyzing whether stronger models spontaneously emerge as leadership hubs.
+    \item \textbf{Asynchronous Message Transport:} Transitioning from discrete synchronous barriers toward asynchronous, event-driven message queues.
+    \item \textbf{Cryptographic Byzantine Defense:} Integrating lightweight cryptographic verification primitives and decentralized reputation scoring to provide Byzantine fault tolerance.
+    \item \textbf{JSON-Constrained Schema Decoding:} Implementing grammar-constrained decoding to enforce strict schema adherence for complex nested matrix and graph outputs, eliminating syntactic parse failures.
 \end{enumerate}
 
 % ==============================================================================

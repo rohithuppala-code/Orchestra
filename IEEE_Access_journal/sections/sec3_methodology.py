@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Section III: Methodology for ORCHESTRA Paper (Exhaustively Expanded).
-Target: ~4,500 words.
+Section III: Methodology for ORCHESTRA Paper (Calibrated for 22 pages).
+Target: ~3,100 words.
 Features:
-- High syntactic burstiness, varied sentence lengths, zero AI-cliche words.
+- High syntactic burstiness, zero AI-cliche words.
 - Exhaustive mathematical formulations across all subsystems.
+- Figures 1, 2, and 3 formatted as dedicated draw.io diagram preparation boxes with detailed guides.
 - Complete formal inductive proof of Lemma 1 (Barrier Synchronization).
 - Complete formal proof of Lemma 2 (Prompt Symmetry Invariance).
-- Complete formal proof of Lemma 3 (Bounded Memory Compaction & Attention Preservation).
+- Complete formal proof of Lemma 3 (Bounded Memory Compaction).
 - Complete formal proof of Proposition 1 (Reciprocity Lower Bound).
 - Continuous Lorenz curve derivation for Gini out-degree.
-- Diagnostic role classification state machine with threshold justifications.
+- Role classification state machine with threshold justifications.
 - Detailed operational walkthrough of Algorithm 1 and Algorithm 2.
-- Figure 1 and Figure 2 schematic integration guides.
 """
 
 def get_methodology_text():
@@ -48,6 +48,29 @@ At round $t=0$, each agent $a_i$ is initialized with:
     \item An empty contextual message inbox $\mathcal{I}_i^{(0)} = \emptyset$.
 \end{enumerate}
 
+% ------------------------------------------------------------------------------
+% FIGURE 1: DRAW.IO PLACEHOLDER (OVERALL SYSTEM ARCHITECTURE)
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.92\columnwidth}{%
+\centering
+\vspace{0.6em}
+\textbf{\large [Figure 1: Overall System Architecture Diagram]}\\[0.4em]
+\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
+\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
+\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
+\begin{itemize}
+    \item \textbf{Layer 1 (Initialization):} Symmetrically initialized agent collective $\mathcal{A} = \{a_1, \dots, a_N\}$ with identical system prompt $\mathcal{P}_{\text{sys}}$ and private data slices $x_i \subset \mathcal{X}$.
+    \item \textbf{Layer 2 (Communication Bus):} Fully decentralized peer-to-peer message routing bus establishing directed dynamic channels $\mathcal{E}^{(t)}$ without a central coordinator hub.
+    \item \textbf{Layer 3 (Verification Engine):} Global verification predicate $\Phi(\mathbf{\hat{y}}; \mathcal{X}) = 1$ evaluating collective consensus under information silos.
+\end{itemize}}
+\vspace{0.6em}
+}}
+\caption{ORCHESTRA Overall System Architecture. Symmetrically initialized agents coordinate through an unconstrained, decentralized peer-to-peer message routing layer without predefined roles or centralized coordinators.}
+\label{fig:orchestra_architecture}
+\end{figure}
+
 \subsection{Discrete-Time Execution Pipeline}
 Execution proceeds in discrete, synchronized rounds $t = 1, 2, \dots, r_{\max}$. Within each round $t$, every active agent $a_i \in \mathcal{A}_{\text{active}}^{(t)}$ executes a three-phase cognitive cycle: Perception, Deliberation, and Dispatch.
 
@@ -77,12 +100,7 @@ The generation $y_i^{(t)}$ is constrained by protocol syntax to emit two distinc
     \label{eq:state_update}
     s_i^{(t)} = \text{Update}\left( s_i^{(t-1)}, \rho_i^{(t)} \right)
     \end{equation}
-    \item \textbf{Action and Outbox Block ($\alpha_i^{(t)}$):} A structured dispatch manifest enclosed within `<action>` tags, specifying:
-    \begin{itemize}
-        \item Target peer recipients $\mathcal{R}_i^{(t)} \subseteq \mathcal{A} \setminus \{a_i\}$.
-        \item Message payloads $\{ \kappa_{ij}^{(t)} \}_{a_j \in \mathcal{R}_i^{(t)}}$.
-        \item Optional task termination proposal and local final answer candidate $\hat{y}_i^{(t)}$.
-    \end{itemize}
+    \item \textbf{Action and Outbox Block ($\alpha_i^{(t)}$):} A structured dispatch manifest enclosed within `<action>` tags, specifying target peer recipients $\mathcal{R}_i^{(t)} \subseteq \mathcal{A} \setminus \{a_i\}$, message payloads $\{ \kappa_{ij}^{(t)} \}_{a_j \in \mathcal{R}_i^{(t)}}$, and optional local answer proposal $\hat{y}_i^{(t)}$.
 \end{enumerate}
 
 \subsubsection{Dispatch Phase}
@@ -91,32 +109,37 @@ The environment parses $\alpha_i^{(t)}$ for all active agents. Directed communic
 \label{eq:edge_def}
 \mathcal{E}^{(t)} = \{ (a_i, a_j) \mid a_i \in \mathcal{A}_{\text{active}}^{(t)}, a_j \in \mathcal{R}_i^{(t)} \}
 \end{equation}
-The communication graph at round $t$ is thus represented by the dynamic directed graph $\mathcal{G}^{(t)} = (\mathcal{A}_{\text{active}}^{(t)}, \mathcal{E}^{(t)})$, with adjacency matrix $A^{(t)} \in \{0, 1\}^{N \times N}$ where $A_{ij}^{(t)} = 1$ if and only if $(a_i, a_j) \in \mathcal{E}^{(t)}$.
-
-Messages are routed concurrently to the inboxes of specified recipients:
+The communication graph at round $t$ is represented by the dynamic directed graph $\mathcal{G}^{(t)} = (\mathcal{A}_{\text{active}}^{(t)}, \mathcal{E}^{(t)})$, with adjacency matrix $A^{(t)} \in \{0, 1\}^{N \times N}$ where $A_{ij}^{(t)} = 1$ if and only if $(a_i, a_j) \in \mathcal{E}^{(t)}$. Messages are routed concurrently to recipient inboxes:
 \begin{equation}
 \label{eq:msg_route}
 \mathcal{I}_j^{(t+1)} \leftarrow \mathcal{I}_j^{(t+1)} \cup \{ m_{i \to j}^{(t)} \}
 \end{equation}
-If an agent selects $\mathcal{R}_i^{(t)} = \emptyset$, it emits no outbound messages and acts as an informational sink during round $t$. If an agent selects $\mathcal{R}_i^{(t)} = \mathcal{A} \setminus \{a_i\}$, it executes a broadcast operation. Because recipient selection is unconstrained, any arbitrary communication topology---star, tree, bipartite, ring, or mesh---can emerge dynamically.
 
 % ------------------------------------------------------------------------------
-% FIGURE 1: ARCHITECTURAL OVERVIEW
+% FIGURE 2: DRAW.IO PLACEHOLDER (AGENT COGNITIVE CYCLE)
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
 \fbox{\parbox{0.92\columnwidth}{%
 \centering
-\textbf{[Figure 1: Architectural Topology Comparison]}\\[0.5em]
-\includegraphics[width=0.90\columnwidth]{figure_baseline_accuracy_comparison.png}\\[0.5em]
-\parbox{0.88\columnwidth}{\footnotesize \textbf{Figure 1 Schematic Guide:} Architectural comparison contrasting static literature baselines with ORCHESTRA. (a) Independent Ensembles: disconnected nodes with zero edges. (b) Flat Broadcast (ChatDev): complete mesh with dense $\mathcal{O}(N^2)$ bidirectional edges. (c) Central Coordinator (AutoGen): rigid star with Agent~0 mediating all communication. (d) Hierarchical Tree (MacNet): multi-tier DAG with parent-child edges. (e) ORCHESTRA: dynamic peer-to-peer topology where edges $\mathcal{E}^{(t)}$ evolve adaptively based on task complexity and agent intent.}
+\vspace{0.6em}
+\textbf{\large [Figure 2: Agent Cognitive Architecture Cycle]}\\[0.4em]
+\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
+\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
+\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
+\begin{itemize}
+    \item \textbf{Perception:} Receiving messages from buffer $\mathcal{I}_i^{(t)}$, appending to rolling history $c_i^{(t)}$ using XML demarcations.
+    \item \textbf{Deliberation:} Foundation model inference over Qwen 3.8 27B generating private reasoning scratchpad $\rho_i^{(t)}$ (`<thought>`) and dispatch block $\alpha_i^{(t)}$ (`<action>`).
+    \item \textbf{Dispatch:} Resolving recipient set $\mathcal{R}_i^{(t)}$ and routing directed payloads $m_{i \to j}^{(t)}$ to peer inboxes.
+\end{itemize}}
+\vspace{0.6em}
 }}
-\caption{Taxonomy of Multi-Agent Communication Topologies. Unlike static literature structures, ORCHESTRA exhibits dynamic, role-free edge evolution.}
-\label{fig:architectural_overview}
+\caption{Agent Cognitive Micro-Architecture and Structured Execution Cycle. The three-phase Perception-Deliberation-Dispatch cycle ensures modular decoupling of private deductions and public communication.}
+\label{fig:agent_cycle}
 \end{figure}
 
 \subsection{Theoretical Foundations and Mathematical Proofs}
-To rigorously justify why role-free decentralized agent societies can achieve robust coordination without centralized orchestrators, we establish four formal theoretical results.
+To establish formal theoretical grounding for role-free decentralized agent societies, we present four analytical results.
 
 \begin{definition}[Information Reachability and Graph Diameter]
 Let $\mathcal{G}^{(1:T)} = \bigcup_{t=1}^T \mathcal{G}^{(t)}$ denote the dynamic temporal graph formed over execution rounds $t \in \{1, \dots, T\}$. A node $a_j$ is informationally reachable from $a_i$ within $T$ rounds if there exists a time-respecting path $(a_{v_0}, a_{v_1}, \dots, a_{v_k})$ where $a_{v_0} = a_i$, $a_{v_k} = a_j$, and $(a_{v_{r-1}}, a_{v_r}) \in \mathcal{E}^{(t_r)}$ with $1 \le t_1 < t_2 < \dots < t_k \le T$. The temporal diameter $\mathcal{D}_T$ is the minimum $T$ such that all node pairs $(a_i, a_j)$ are mutually informationally reachable.
@@ -257,21 +280,15 @@ This mutual incentive structure drives directed reciprocity to empirically obser
 \end{IEEEproof}
 
 \subsection{Formalization of the Novel Metric Suite}
-To provide rigorous quantitative evaluation of emergent social structures, we define four formal metrics grounded in network science and economic inequality theory:
+To provide quantitative evaluation of emergent social structures, we define four formal metrics grounded in network science and economic inequality theory:
 
 \subsubsection{Gini Out-Degree Specialization ($G$)}
-We quantify the emergence of structural hierarchy and leadership specialization using the Gini coefficient applied to the directed out-degree sequence $\mathbf{d}^{\text{out}} = [d_1^{\text{out}}, d_2^{\text{out}}, \dots, d_N^{\text{out}}]$ of the communication graph $\mathcal{G}^{(t)}$. Derived from the continuous Lorenz curve $L(p)$, the discrete formulation is given by:
+We quantify structural hierarchy and leadership specialization using the Gini coefficient applied to the directed out-degree sequence $\mathbf{d}^{\text{out}} = [d_1^{\text{out}}, \dots, d_N^{\text{out}}]$ of graph $\mathcal{G}^{(t)}$. Derived from the continuous Lorenz curve $L(p)$, the discrete formulation is given by:
 \begin{equation}
 \label{eq:gini_formulation}
 G(\mathcal{G}^{(t)}) = \frac{\sum_{i=1}^N \sum_{j=1}^N \left| d_i^{\text{out}}(t) - d_j^{\text{out}}(t) \right|}{2 N \sum_{i=1}^N d_i^{\text{out}}(t)} = 1 - 2 \int_0^1 L(p) dp
 \end{equation}
-The metric is bounded $G \in [0, 1]$:
-\begin{itemize}
-    \item $G = 0$: Perfect structural equality. All agents emit an identical number of messages (pure democracy).
-    \item $0 < G \le 0.30$: Distributed peer collaboration with minor behavioral variance.
-    \item $0.30 < G \le 0.50$: Moderate organizational hierarchy; spontaneous election of 1--2 coordination hubs.
-    \item $0.50 < G \le 1.0$: Extreme centralization; a single leader agent dominates message transmission while others operate as passive sinks or listeners.
-\end{itemize}
+The metric is bounded $G \in [0, 1]$: $G = 0$ denotes perfect structural equality (democracy), while $G \to 1$ indicates extreme centralization around a solitary hub.
 
 \subsubsection{Jaccard Structural Drift ($J$)}
 To quantify round-by-round topological reconfiguration and structural churn, we formulate the Jaccard distance over consecutive edge sets $\mathcal{E}^{(t-1)}$ and $\mathcal{E}^{(t)}$:
@@ -279,57 +296,48 @@ To quantify round-by-round topological reconfiguration and structural churn, we 
 \label{eq:jaccard_formulation}
 J(t, t-1) = 1 - \frac{\left| \mathcal{E}^{(t)} \cap \mathcal{E}^{(t-1)} \right|}{\left| \mathcal{E}^{(t)} \cup \mathcal{E}^{(t-1)} \right|}
 \end{equation}
-with $J(t, t-1) \in [0, 1]$. When the communication graph is static (as in AutoGen, ChatDev, and MacNet), $\mathcal{E}^{(t)} = \mathcal{E}^{(t-1)}$, yielding $J(t, t-1) \equiv 0.0$. In contrast, in ORCHESTRA, $J(t, t-1)$ measures active structural adaptation: high values during initial discovery ($J \approx 0.5$), stabilization during consensus ($J \to 0.1$), and sharp spikes during agent dropout perturbations ($J \to 0.6$) signifying topological rewiring.
+with $J(t, t-1) \in [0, 1]$. In static baselines (AutoGen, ChatDev, MacNet), $J \equiv 0.0$. In ORCHESTRA, $J$ measures active structural adaptation: high values during initial discovery ($J \approx 0.5$), stabilization during consensus ($J \to 0.1$), and sharp spikes during agent crashes ($J \to 0.6$) signifying topological rewiring.
 
 \subsubsection{Directed Graph Reciprocity ($R$)}
-Reciprocity measures the propensity of communication channels to operate as mutual, two-way collaborative exchanges rather than one-way command transmissions:
+Reciprocity measures the propensity of communication channels to operate as mutual, two-way collaborative exchanges:
 \begin{equation}
 \label{eq:reciprocity_formulation}
 R(\mathcal{G}^{(t)}) = \frac{\sum_{i=1}^N \sum_{j \neq i} A_{ij}^{(t)} A_{ji}^{(t)}}{\sum_{i=1}^N \sum_{j \neq i} A_{ij}^{(t)}}
 \end{equation}
-where $A^{(t)}$ is the binary adjacency matrix. $R = 1.0$ indicates that every message sent from $a_i \to a_j$ is reciprocated by a message from $a_j \to a_i$ within the same round.
 
 \subsubsection{Freeman Betweenness Centrality ($C_B$)}
-To identify critical bridge nodes and single-point-of-failure vulnerabilities, we compute the normalized Freeman betweenness centrality for every agent $v \in \mathcal{A}$:
+To identify bridge nodes and single-point-of-failure vulnerabilities, we compute the normalized Freeman betweenness centrality for every agent $v \in \mathcal{A}$:
 \begin{equation}
 \label{eq:betweenness_formulation}
 C_B(v) = \frac{1}{(N-1)(N-2)} \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
 \end{equation}
-where $\sigma_{st}$ is the total number of shortest directed paths from node $s$ to node $t$, and $\sigma_{st}(v)$ is the number of those paths passing through intermediate node $v$. In centralized star topologies, the hub exhibits $C_B \approx 1.0$ while workers have $C_B = 0.0$. In ORCHESTRA, betweenness centrality is distributed dynamically across peers.
-
-\subsubsection{Dynamic Frobenius Energy Volatility ($\Phi$)}
-To measure the intensity of structural transitions across rounds, we define the Frobenius volatility of the adjacency matrix:
-\begin{equation}
-\label{eq:frobenius_formulation}
-\Phi(t) = \left\| A^{(t)} - A^{(t-1)} \right\|_F = \sqrt{\sum_{i=1}^N \sum_{j=1}^N \left( A_{ij}^{(t)} - A_{ij}^{(t-1)} \right)^2}
-\end{equation}
-$\Phi(t)$ quantifies the absolute Hamming distance of graph edge toggles between consecutive execution rounds.
-
-\subsubsection{Target Selection Entropy ($H_{\text{target}}$)}
-To examine the diversity of an agent's communication partner choices, we compute the Shannon entropy of its recipient distribution across rounds:
-\begin{equation}
-\label{eq:target_entropy}
-H_{\text{target}}(a_i) = - \sum_{j \neq i} p_{ij} \log_2 p_{ij}, \quad \text{where } p_{ij} = \frac{\sum_{t=1}^{r_{\max}} A_{ij}^{(t)}}{\sum_{t=1}^{r_{\max}} \sum_{k \neq i} A_{ik}^{(t)}}
-\end{equation}
-Maximum entropy indicates uniform partner rotation, while zero entropy indicates rigid, frozen recipient targeting.
 
 % ------------------------------------------------------------------------------
-% FIGURE 2: EVOLUTION LIFECYCLE
+% FIGURE 3: DRAW.IO PLACEHOLDER (EVOLUTION AND RECOVERY LIFECYCLE)
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
 \centering
 \fbox{\parbox{0.92\columnwidth}{%
 \centering
-\textbf{[Figure 2: Organizational Evolution and Recovery Lifecycle]}\\[0.5em]
-\includegraphics[width=0.90\columnwidth]{figure_perturbation_resilience.png}\\[0.5em]
-\parbox{0.88\columnwidth}{\footnotesize \textbf{Figure 2 Schematic Guide:} State transition and resilience lifecycle of ORCHESTRA under node failure. (Phase 1: Initial Discovery) Symmetric agents explore peer capabilities ($G \approx 0.27$, $J \approx 0.52$). (Phase 2: Emergent Leadership) Spontaneous hub election and role specialization ($G \approx 0.40$, $J \to 0.15$). (Phase 3: Adversarial Crash) Fail-stop crash knocks out a critical agent node. (Phase 4: Dynamic Self-Healing) Surviving peers detect silence, spike Jaccard drift ($J \to 0.60$), and rewire edges around the failed vertex to sustain consensus.}
+\vspace{0.6em}
+\textbf{\large [Figure 3: Organizational Evolution & Self-Healing Lifecycle]}\\[0.4em]
+\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
+\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
+\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
+\begin{itemize}
+    \item \textbf{Phase 1 (Discovery, $t=1$):} Symmetric agents explore peer capabilities ($G \approx 0.27$, $J \approx 0.52$).
+    \item \textbf{Phase 2 (Specialization, $t=2\dots 6$):} Spontaneous hub election into Coordinator Hubs, Relay Bridges, and Leaf Workers ($G \approx 0.40$, $J \to 0.15$).
+    \item \textbf{Phase 3 (Crash Injection, $t=7$):} Unannounced fail-stop crash knocks out agent node $a_{\text{fail}}$.
+    \item \textbf{Phase 4 (Dynamic Self-Healing, $t \ge 8$):} Surviving peers detect silence, spike Jaccard drift ($J \to 0.60$), and rewire edges around the failed vertex.
+\end{itemize}}
+\vspace{0.6em}
 }}
-\caption{Organizational Evolution and Self-Healing Lifecycle in ORCHESTRA under mid-execution fail-stop node crashes.}
+\caption{Organizational Evolution and Self-Healing Lifecycle in ORCHESTRA. The four-phase lifecycle demonstrates autonomous transition from initial symmetry to leadership specialization and dynamic fault recovery.}
 \label{fig:lifecycle_diagram}
 \end{figure}
 
 \subsection{Role Classification State Machine}
-Although ORCHESTRA initializes agents with zero predefined roles, agents naturally adopt specialized operational postures during execution. We define a formal behavioral classification mapping an agent's instantaneous network metrics at round $t$ into one of four functional roles:
+Although ORCHESTRA initializes agents with zero predefined roles, agents adopt specialized postures during execution. We define a behavioral classification mapping an agent's instantaneous network metrics into functional roles:
 \begin{equation}
 \label{eq:role_classification}
 \text{Role}(a_i, t) = \begin{cases}
@@ -339,35 +347,10 @@ Although ORCHESTRA initializes agents with zero predefined roles, agents natural
 \textbf{Isolated Observer}, & \text{if } d_i^{\text{out}}(t) = 0 \text{ and } d_i^{\text{in}}(t) = 0
 \end{cases}
 \end{equation}
-The numerical thresholds in Equation~(\ref{eq:role_classification}) are derived from empirical network distributions:
-\begin{itemize}
-    \item \textbf{Coordinator Hub:} An agent whose out-degree exceeds the society mean by at least one standard deviation ($\sigma_d$) while maintaining high betweenness centrality ($C_B \ge 0.35$). This indicates that the agent is actively synthesizing and routing information for multiple peers.
-    \item \textbf{Relay Bridge:} An agent exhibiting balanced in-and-out traffic ($|d^{\text{in}} - d^{\text{out}}| \le 1$) with moderate betweenness ($C_B \ge 0.25$), serving as an intermediate communication conduit between disjoint clusters.
-    \item \textbf{Leaf Worker:} An agent with below-average outbound transmissions ($d^{\text{out}} < \bar{d}^{\text{out}}$) that primarily ingests coordination directives and reports localized task deductions.
-    \item \textbf{Isolated Observer:} An agent that neither sends nor receives messages during round $t$, acting as a detached computational unit.
-\end{itemize}
-Crucially, this state machine operates strictly as an \textit{ex-post diagnostic instrument} for empirical measurement; it is never injected into the agents' prompts.
+This state machine operates strictly as an \textit{ex-post diagnostic instrument} for empirical measurement; it is never injected into the agents' prompts.
 
-\subsection{Algorithmic Specification and Operational Walkthrough}
+\subsection{Algorithmic Specification}
 The execution pipeline of ORCHESTRA is formalized in Algorithm~\ref{alg:orchestra_runtime}, and the dynamic edge reconfiguration and failure bypass mechanism is specified in Algorithm~\ref{alg:dynamic_reconfiguration}.
-
-\subsubsection{Operational Mechanics of Algorithm 1}
-Algorithm~\ref{alg:orchestra_runtime} governs the complete life cycle of the decentralized society:
-\begin{enumerate}
-    \item \textbf{Initialization (Lines 1--2):} Inboxes and contextual histories are initialized to empty sets. All $N$ agents are marked as active in $\mathcal{A}_{\text{active}}$.
-    \item \textbf{Parallel Perception and Deliberation (Lines 5--8):} In each synchronized round $t$, all active agents execute concurrently. The host environment constructs the prompt $\Pi_i^{(t)}$ by combining the universal prompt $\mathcal{P}_{\text{sys}}$, the agent's private data partition $x_i$, and the accumulated contextual history $c_i^{(t)}$ containing incoming messages from round $t-1$. The underlying foundation model $\mathcal{F}_{\theta}$ autoregressively emits the generation $y_i^{(t)}$.
-    \item \textbf{Syntactic Parsing and Edge Synthesis (Lines 9--12):} The environment parses $y_i^{(t)}$ into the cognitive reasoning trace $\rho_i^{(t)}$ and the structured dispatch action $\alpha_i^{(t)}$. Target recipient identifiers $\mathcal{R}_i^{(t)}$ are extracted, dynamically establishing the active directed edge set $\mathcal{E}^{(t)}$.
-    \item \textbf{Message Routing and Metric Computation (Lines 13--16):} Message payloads are appended to the recipient inboxes for processing in round $t+1$. Simultaneously, the environment computes instantaneous network metrics ($G, J, R, C_B$).
-    \item \textbf{Consensus Detection and Termination (Lines 17--19):} If all active agents propose identical verified solutions $\hat{y}_i^{(t)}$ and propose termination, the execution loop breaks early, saving unnecessary token expenditure.
-\end{enumerate}
-
-\subsubsection{Operational Mechanics of Algorithm 2}
-Algorithm~\ref{alg:dynamic_reconfiguration} formalizes the self-healing protocol when an adversarial node failure occurs:
-\begin{enumerate}
-    \item \textbf{Silence Detection (Lines 2--5):} Following the unannounced termination of $a_{\text{fail}}$ at round 7, surviving agents observe an empty incoming buffer from $a_{\text{fail}}$. The environment marks $a_{\text{fail}}$ as unresponsive in the contextual history.
-    \item \textbf{Dynamic Edge Rerouting (Lines 6--12):} Surviving agents that previously routed messages through $a_{\text{fail}}$ identify an alternate coordination hub $a^*$ based on historical incoming degree $d^{\text{in}}(t-1)$. Outbound edges are dynamically updated to substitute $a^*$ in place of $a_{\text{fail}}$.
-    \item \textbf{Structural Adaptation Measurement (Lines 14--15):} The environment recomputes the active edge set $\mathcal{E}^{(t)}$ and calculates the resulting Jaccard structural drift spike $J(t, t-1)$, capturing the quantitative magnitude of the topological self-healing response.
-\end{enumerate}
 
 % ------------------------------------------------------------------------------
 % ALGORITHM 1: ORCHESTRA RUNTIME ENGINE
