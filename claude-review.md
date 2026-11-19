@@ -585,4 +585,5 @@ Clear cause in silo bench which is a benchmark daaset tip models also scre betwe
 
 Sir, 20% is normal on SILO-BENCH because it tests distributed algorithms with exact all-or-nothing matching (even GPT-4o deepseek v 3.1 scores in this range). Without any pre-assigned roles, ORCHESTRA ranked #1 on the hardest tasks (22%), used half the tokens of AutoGen, and self-healed when MacNet collapsed to 0%."
 
+“We implemented an exploratory, reproducible instrumentation layer over SILO-BENCH and observed task-dependent communication patterns in role-free P2P LLM-agent runs.”
 
