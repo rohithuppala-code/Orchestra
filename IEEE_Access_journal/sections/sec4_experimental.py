@@ -25,11 +25,11 @@ In this section, we describe the empirical evaluation testbed, detailing the SIL
 \subsection{SILO-BENCH Benchmark Suite}
 We evaluate all architectures on SILO-BENCH \cite{john2026silobench}, an exacting distributed algorithmic benchmark specifically designed to diagnose multi-agent reasoning under information silos. SILO-BENCH enforces strict input isolation: each agent receives an isolated, private partition of the task input and cannot read peer states except through explicit, discrete-round message passing. 
 
-The benchmark encompasses 15 stratified algorithmic tasks organized across three difficulty tiers, detailed in Table~\ref{tab:silobench_tasks}:
+The benchmark encompasses 15 stratified algorithmic tasks organized across three difficulty tiers, grounded in classical algorithmic foundations \cite{cormen2022introduction}, detailed in Table~\ref{tab:silobench_tasks}:
 \begin{itemize}
-    \item \textbf{Level I: Cross-Silo Aggregation (Tasks I-01 to I-10):} Fundamental distributed reduction operations, including Distributed Sum, Element-wise Mean, Disjoint Set Union, Top-$K$ Value Selection, Median Approximation, and Global String Concatenation.
-    \item \textbf{Level II: Spatial Mesh Routing (Tasks II-11 to II-20):} Topologically constrained geometric reasoning, including Decentralized Grid Routing, Graph Shortest Pathfinding, 2D Cellular Automata Step Synchronization, Distributed Resource Scheduling, and Localized Laplacians.
-    \item \textbf{Level III: Global Shuffle Algorithms (Tasks III-21 to III-30):} Intricate distributed computing kernels, including Parallel Bitonic Merge Sort, Distributed Breadth-First Search (BFS) Tree Construction, Decentralized K-Means Centroid Convergence, Global Prefix-Sum Scans, and Distributed Graph Coloring.
+    \item \textbf{Level I: Cross-Silo Aggregation (Tasks I-01 to I-10):} Fundamental distributed reduction operations, including Distributed Sum, Element-wise Mean, Disjoint Set Union \cite{tarjan1975efficiency}, Top-$K$ Value Selection, Median Approximation, and Global String Concatenation.
+    \item \textbf{Level II: Spatial Mesh Routing (Tasks II-11 to II-20):} Topologically constrained geometric reasoning, including Decentralized Grid Routing, Graph Shortest Pathfinding \cite{dijkstra1959note, bellman1958routing}, 2D Cellular Automata Step Synchronization, Distributed Resource Scheduling \cite{ford1956network, hopcroft1973algorithm}, and Localized Laplacians.
+    \item \textbf{Level III: Global Shuffle Algorithms (Tasks III-21 to III-30):} Intricate distributed computing kernels, including Parallel Bitonic Merge Sort, Distributed Breadth-First Search (BFS) Tree Construction, Decentralized K-Means Centroid Convergence \cite{macqueen1967kmeans}, Global Prefix-Sum Scans, and Distributed Graph Coloring.
 \end{itemize}
 
 % ------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ To ensure unassailable scientific comparisons, all baselines and ORCHESTRA were 
 \end{enumerate}
 
 \subsection{Foundation Model and Infrastructure Specifications}
-All experiments were executed using the **Qwen 3.8 27B** foundation model (specifically, the Qwen2.5-Coder-32B/27B open-weights model series \cite{yang2024qwen25}) served via high-throughput vLLM inference endpoints. Key operational hyper-parameters were fixed across all 300 experimental runs:
+All experiments were executed using the \textbf{Qwen 3.8 27B} foundation model (specifically, the Qwen2.5-Coder-32B/27B open-weights model series \cite{yang2024qwen25}) served via high-throughput vLLM inference endpoints. Key operational hyper-parameters were fixed across all 300 experimental runs:
 \begin{itemize}
     \item \textbf{Model Precision:} 16-bit Bfloat16 (BF16) tensor core execution.
     \item \textbf{Context Window Horizon:} 32,768 tokens, ensuring zero prompt truncation during multi-round exchanges.

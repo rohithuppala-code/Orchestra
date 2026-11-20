@@ -136,13 +136,27 @@ def assemble():
     figures = len(re.findall(r'\\begin\{figure\*?\}', full_text))
     algorithms = len(re.findall(r'\\begin\{algorithm\}', full_text))
     equations = len(re.findall(r'\\begin\{equation\}', full_text))
-    citations = len(re.findall(r'\\bibitem\{', full_text))
+    bibitems = re.findall(r'\\bibitem\{([^}]+)\}', full_text)
+    citations = len(bibitems)
+
+    cites = set(re.findall(r'\\cite\{([^}]+)\}', full_text))
+    all_cited = set()
+    for c in cites:
+        for k in c.split(','):
+            all_cited.add(k.strip())
+    missing_cites = all_cited - set(bibitems)
+    unused_cites = set(bibitems) - all_cited
 
     print(f"Tables found: {tables} (Target: 10)")
-    print(f"Figures found: {figures} (Target: 8: 4 draw.io diagrams + 4 empirical plots)")
+    print(f"Figures found: {figures} (Target: 9: 4 draw.io diagrams + 5 empirical plots)")
     print(f"Algorithms found: {algorithms} (Target: 2)")
     print(f"Numbered equations found: {equations}")
     print(f"Citations found: {citations} (Target: 50)")
+    print(f"Distinct cited keys in text: {len(all_cited)} / {len(bibitems)}")
+    if missing_cites:
+        print(f"WARNING: Missing bibitems for cited keys: {missing_cites}")
+    if unused_cites:
+        print(f"WARNING: Unused bibitems: {unused_cites}")
 
 if __name__ == "__main__":
     assemble()

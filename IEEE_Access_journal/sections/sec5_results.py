@@ -100,18 +100,18 @@ Hierarchical Tree (MacNet) & 18.7\% & 13,918 & 14.8 & 0.257 & \textbf{0.0\%} & \
 Comparing performance across agent scales $N=2$ (Table~\ref{tab:results_n2}) and $N=5$ (Table~\ref{tab:results_n5}) exposes the architectural vulnerabilities of rigid human-engineered topologies. The scaling degradation metrics are summarized in Table~\ref{tab:scaling_degradation}:
 
 \subsubsection{Catastrophic Collapse of Hierarchical Trees}
-At $N=2$, Hierarchical Tree (MacNet) exhibits strong accuracy (50.0\%), benefiting from simple two-node master-worker delegation. However, when scaled to $N=5$, MacNet suffers a catastrophic collapse of **-31.3 percentage points**, dropping to an accuracy of only 18.7\%. In a 5-agent tree, messages must traverse multiple intermediate management layers to reach the root. This introduces multi-hop latency and compounding context loss: intermediate agents summarize or distort worker calculations, leading to complete coordination failure.
+At $N=2$, Hierarchical Tree (MacNet) exhibits strong accuracy (50.0\%), benefiting from simple two-node master-worker delegation. However, when scaled to $N=5$, MacNet suffers a catastrophic collapse of \textbf{-31.3 percentage points}, dropping to an accuracy of only 18.7\%. In a 5-agent tree, messages must traverse multiple intermediate management layers to reach the root. This introduces multi-hop latency and compounding context loss: intermediate agents summarize or distort worker calculations, leading to complete coordination failure.
 
 \subsubsection{Token Scaling Explosion in Flat Broadcast}
-Flat Broadcast maintains an accuracy of 28.0\% at $N=5$, but incurs an exorbitant token explosion. Its mean token consumption inflates by **5.18$\times$**, skyrocketing from 3,848 tokens/run at $N=2$ to 19,927 tokens/run at $N=5$. In contrast, ORCHESTRA exhibits bounded token scaling, increasing by only **2.90$\times$** (from 6,136 to 17,802 tokens). ORCHESTRA agents selectively route messages to relevant peers rather than broadcasting to the entire network, preventing quadratic context saturation.
+Flat Broadcast maintains an accuracy of 28.0\% at $N=5$, but incurs an exorbitant token explosion. Its mean token consumption inflates by \textbf{5.18$\times$}, skyrocketing from 3,848 tokens/run at $N=2$ to 19,927 tokens/run at $N=5$. In contrast, ORCHESTRA exhibits bounded token scaling, increasing by only \textbf{2.90$\times$} (from 6,136 to 17,802 tokens). ORCHESTRA agents selectively route messages to relevant peers rather than broadcasting to the entire network, preventing quadratic context saturation.
 
 \subsubsection{The 47\% Token Tax of Centralized Coordinators}
-Central Coordinator (AutoGen) achieves 28.0\% accuracy at $N=5$, but burns **26,186 tokens/run**---the highest of all evaluated methods. AutoGen requires 47.1\% more tokens than ORCHESTRA (17,802 tokens) for a negligible 1.3\% accuracy edge. Funneling all conversation turns through Agent~0 inflates the hub's context window, burning massive token budgets on redundant contextual echoing.
+Central Coordinator (AutoGen) achieves 28.0\% accuracy at $N=5$, but burns \textbf{26,186 tokens/run}---the highest of all evaluated methods. AutoGen requires 47.1\% more tokens than ORCHESTRA (17,802 tokens) for a negligible 1.3\% accuracy edge. Funneling all conversation turns through Agent~0 inflates the hub's context window, burning massive token budgets on redundant contextual echoing.
 
 % ------------------------------------------------------------------------------
 % TABLE VII: SCALING DEGRADATION AND TOKEN GROWTH
 % ------------------------------------------------------------------------------
-\begin{table}[h]
+\begin{table}[!t]
 \centering
 \caption{Scaling Degradation and Token Growth from $N=2$ to $N=5$.}
 \label{tab:scaling_degradation}
@@ -146,7 +146,7 @@ Table~\ref{tab:complexity_breakdown} and Figure~\ref{fig:empirical_accuracy} pre
 % ------------------------------------------------------------------------------
 % TABLE VIII: COMPLEXITY TIER BREAKDOWN
 % ------------------------------------------------------------------------------
-\begin{table}[h]
+\begin{table}[!t]
 \centering
 \caption{Performance Breakdown by Task Complexity Tier (Combined $N=2$ and $N=5$, 10 Controlled Runs Per Cell).}
 \label{tab:complexity_breakdown}
@@ -166,9 +166,9 @@ Hierarchical Tree (MacNet) & 54.0\% & 29.0\% & 20.0\% \\
 \end{table}
 
 \subsubsection{Win 1: Rank \#1 on Level III Global Shuffle Tasks}
-On the most intellectually demanding distributed algorithms (Level III: Bitonic Sort, Distributed BFS, K-Means Clustering, Prefix-Sum), **ORCHESTRA achieves Rank~\#1 with 22.0\% accuracy**, outperforming all literature baselines:
+On the most intellectually demanding distributed algorithms (Level III: Bitonic Sort, Distributed BFS, K-Means Clustering, Prefix-Sum), \textbf{ORCHESTRA achieves Rank~\#1 with 22.0\% accuracy}, outperforming all literature baselines:
 \begin{itemize}
-    \item **ORCHESTRA:** **22.0\%** (Rank 1)
+    \item \textbf{ORCHESTRA:} \textbf{22.0\%} (Rank 1)
     \item Hierarchical Tree (MacNet): 20.0\%
     \item Central Coordinator (AutoGen): 17.0\%
     \item Flat Broadcast (ChatDev): 10.0\%
@@ -177,14 +177,14 @@ On the most intellectually demanding distributed algorithms (Level III: Bitonic 
 On Level III tasks, independent ensembles fail completely (0.0\%). Flat broadcast collapses to 10.0\% due to cognitive noise and quadratic message collision. Central star coordinators suffer from context saturation at the hub (17.0\%). ORCHESTRA's role-free peer-to-peer routing enables agents to dynamically coordinate iterative barrier phases, achieving the highest problem-solving capacity on complex distributed algorithms. In parallel sorting and graph search, data dependencies are cyclic. Fixed trees force horizontal comparisons through vertical parent nodes, introducing distortion. ORCHESTRA agents establish direct comparison channels, achieving superior synchronization.
 
 \subsubsection{Win 2: Rank \#1 on Complex Spatial Mesh Routing at Scale ($N=5$)}
-On Level II spatial mesh routing tasks at scale $N=5$, ORCHESTRA achieves **28.0\% accuracy**, securing Rank~\#1 over all competitors:
+On Level II spatial mesh routing tasks at scale $N=5$, ORCHESTRA achieves \textbf{28.0\% accuracy}, securing Rank~\#1 over all competitors:
 \begin{itemize}
-    \item **ORCHESTRA:** **28.0\%** (Rank 1)
+    \item \textbf{ORCHESTRA:} \textbf{28.0\%} (Rank 1)
     \item Central Coordinator (AutoGen): 20.0\%
     \item Flat Broadcast: 20.0\%
     \item Hierarchical Tree: 8.0\%
 \end{itemize}
-ORCHESTRA outperforms AutoGen by **+8.0 percentage points** while consuming **46.8\% fewer tokens** (18,392 vs. 34,581 tokens on Level II). Fixed star topologies force spatial grid coordinates through an unnecessary central hub, whereas ORCHESTRA agents communicate directly along adjacent grid boundaries. This validates $\mathbf{RQ_3}$: role-free dynamic routing establishes a superior Pareto frontier over both centralized and broadcast topologies on structured spatial problems.
+ORCHESTRA outperforms AutoGen by \textbf{+8.0 percentage points} while consuming \textbf{46.8\% fewer tokens} (18,392 vs. 34,581 tokens on Level II). Fixed star topologies force spatial grid coordinates through an unnecessary central hub, whereas ORCHESTRA agents communicate directly along adjacent grid boundaries. This validates $\mathbf{RQ_3}$: role-free dynamic routing establishes a superior Pareto frontier over both centralized and broadcast topologies on structured spatial problems.
 
 % ------------------------------------------------------------------------------
 % FIGURE 6: RESILIENCE PLOT
@@ -192,23 +192,23 @@ ORCHESTRA outperforms AutoGen by **+8.0 percentage points** while consuming **46
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figure_perturbation_resilience.png}
-\caption{Fault Tolerance and Perturbation Resilience under Fail-Stop Node Crashes (`agent_dropout`). While static hierarchical trees (MacNet) collapse to 0.0\% accuracy at $N=5$, ORCHESTRA dynamically self-heals communication pathways.}
+\caption{Fault Tolerance and Perturbation Resilience under Fail-Stop Node Crashes (\texttt{agent\_dropout}). While static hierarchical trees (MacNet) collapse to 0.0\% accuracy at $N=5$, ORCHESTRA dynamically self-heals communication pathways.}
 \label{fig:empirical_resilience}
 \end{figure}
 
 \subsection{Fault Tolerance and Dynamic Self-Healing}
-Figure~\ref{fig:empirical_resilience} illustrates the resilience profiles of all architectures under mid-execution fail-stop node crashes (`agent_dropout` at round 7).
+Figure~\ref{fig:empirical_resilience} illustrates the resilience profiles of all architectures under mid-execution fail-stop node crashes (\texttt{agent\_dropout} at round 7).
 
 \subsubsection{Win 3: The 0.0\% Total System Collapse of MacNet}
-Under node failure at scale $N=5$, **Hierarchical Tree (MacNet) suffers a complete 100\% systemic collapse, dropping to 0.0\% accuracy across all 15 tasks**. In MacNet, when an intermediate manager node crashes, the tree is permanently partitioned. Leaf worker nodes cannot transmit partial calculations to the root, and the root produces empty or hallucinated final outputs. Static hierarchical structures exhibit zero innate fault tolerance.
+Under node failure at scale $N=5$, \textbf{Hierarchical Tree (MacNet) suffers a complete 100\% systemic collapse, dropping to 0.0\% accuracy across all 15 tasks}. In MacNet, when an intermediate manager node crashes, the tree is permanently partitioned. Leaf worker nodes cannot transmit partial calculations to the root, and the root produces empty or hallucinated final outputs. Static hierarchical structures exhibit zero innate fault tolerance.
 
 \subsubsection{ORCHESTRA Dynamic Bypass and Re-Election}
-In stark contrast, ORCHESTRA sustains operation under agent crashes, achieving **6.7\% survival accuracy** at $N=5$. When an agent crashes, surviving peers observe peer silence. Instead of deadlocking, surviving agents dynamically rewire communication channels around the dead node, as formalized in Algorithm~\ref{alg:dynamic_reconfiguration}. This directly resolves $\mathbf{RQ_4}$: role-free agent societies possess intrinsic structural self-healing capabilities that rigid human-engineered topologies cannot match.
+In stark contrast, ORCHESTRA sustains operation under agent crashes, achieving \textbf{6.7\% survival accuracy} at $N=5$. When an agent crashes, surviving peers observe peer silence. Instead of deadlocking, surviving agents dynamically rewire communication channels around the dead node, as formalized in Algorithm~\ref{alg:dynamic_reconfiguration}. This directly resolves $\mathbf{RQ_4}$: role-free agent societies possess intrinsic structural self-healing capabilities that rigid human-engineered topologies cannot match.
 
 % ------------------------------------------------------------------------------
 % TABLE IX: EMERGENCE CURVE TRAJECTORY
 % ------------------------------------------------------------------------------
-\begin{table}[h]
+\begin{table}[!t]
 \centering
 \caption{The Emergence Curve: Quantitative Progression of Network Metrics Across Task Complexity Tiers and Fault Perturbations in ORCHESTRA.}
 \label{tab:emergence_curve}
@@ -227,7 +227,7 @@ Level III (Global Shuffle) & 0.401 & 0.248 & 0.548 & 0.315 \\
 \end{table}
 
 \subsection{The Emergence Curve: Quantifying Self-Organization}
-A central scientific breakthrough of this research is the empirical discovery of the \textit{Emergence Curve}, quantitatively documented in Table~\ref{tab:emergence_curve} and visualized in Figure~\ref{fig:longitudinal_n5}.
+A central scientific breakthrough of this research is the empirical discovery of the \textit{Emergence Curve}, quantitatively documented in Table~\ref{tab:emergence_curve} and visualized across agent scales in Figure~\ref{fig:longitudinal_n2} ($N=2$) and Figure~\ref{fig:longitudinal_n5} ($N=5$).
 
 In prior literature, Gini specialization is either zero by definition (Independent Ensembles, $G \equiv 0.0$) or locked by human programming: Flat Broadcast enforces forced equality ($G = 0.154 \to 0.221$), while Central Coordinator hardcodes Agent~0 as the hub ($G = 0.363$ at $N=5$).
 
@@ -263,12 +263,22 @@ ORCHESTRA occupies the dominant upper-left region of the Pareto space:
 ORCHESTRA achieves an optimal trade-off, outperforming centralized architectures in token economy while avoiding the catastrophic fragility of hierarchical trees.
 
 % ------------------------------------------------------------------------------
-% FIGURE 8: LONGITUDINAL DYNAMICS N=5
+% FIGURE 8: LONGITUDINAL DYNAMICS N=2
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figure_longitudinal_n2.png}
+\caption{Longitudinal Emergence Dynamics at Pair Scale $N=2$. Round-by-round evolution of Communication Density ($D$), Gini Specialization ($G$), and Jaccard Structural Drift ($J$). In dyadic collectives, communication density stabilizes rapidly with high reciprocity.}
+\label{fig:longitudinal_n2}
+\end{figure}
+
+% ------------------------------------------------------------------------------
+% FIGURE 9: LONGITUDINAL DYNAMICS N=5
+% ------------------------------------------------------------------------------
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figure_longitudinal_n5.png}
-\caption{Longitudinal Emergence Dynamics at Collective Scale $N=5$. Round-by-round trajectory of Communication Density ($D$), Gini Specialization ($G$), and Jaccard Structural Drift ($J$). Note the adaptive stabilization of $J$ during consensus and the emergence of degree concentration.}
+\caption{Longitudinal Emergence Dynamics at Collective Scale $N=5$. Round-by-round evolution of Communication Density ($D$), Gini Specialization ($G$), and Jaccard Structural Drift ($J$). Note the adaptive stabilization of $J$ during consensus and the emergence of degree concentration.}
 \label{fig:longitudinal_n5}
 \end{figure}
 
@@ -299,10 +309,11 @@ Table~\ref{tab:micro_tasks} highlights four micro-task case studies at scale $N=
 \subsubsection{Task I-09: Distributed Top-$K$ Value Selection}
 In Task I-09, five agents hold unordered scalar arrays and must collectively identify the globally largest $K=3$ elements without disclosing all raw private partitions.
 \begin{itemize}
-    \item \textbf{Failure Mode in Baselines:} All four baselines failed completely (**0.0\% accuracy**). In Flat Broadcast, each agent broadcast its complete local 5-element array simultaneously in Round 1. Inboxes were flooded with 20 raw numbers without metadata. Context attention displacement caused multiple agents to omit numbers from Agents~3 and 4, producing conflicting top-3 sets. In AutoGen, worker agents submitted local arrays to Agent~0; however, Agent~0's synthesis hallucinated a non-existent value (94 instead of 91) due to numeric blending across lines, which corrupted all workers.
-    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved **100.0\% accuracy**. At Round 1, agents autonomously applied local sorting to their private partitions: Agent~2 emitted `<action targets="[Agent_0, Agent_3]"> my top candidates are [88, 76] </action>`. By Round 2, Agent~3 had received proposals from three peers. In its scratchpad, Agent~3 noted:
+    \item \textbf{Failure Mode in Baselines:} All four baselines failed completely (\textbf{0.0\% accuracy}). In Flat Broadcast, each agent broadcast its complete local 5-element array simultaneously in Round 1. Inboxes were flooded with 20 raw numbers without metadata. Context attention displacement caused multiple agents to omit numbers from Agents~3 and 4, producing conflicting top-3 sets. In AutoGen, worker agents submitted local arrays to Agent~0; however, Agent~0's synthesis hallucinated a non-existent value (94 instead of 91) due to numeric blending across lines, which corrupted all workers.
+    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved \textbf{100.0\% accuracy}. At Round 1, agents autonomously applied local sorting to their private partitions: Agent~2 emitted \texttt{\small <action targets="[Agent\_0, Agent\_3]"> my top candidates are [88, 76] </action>}. By Round 2, Agent~3 had received proposals from three peers. In its scratchpad, Agent~3 noted:
     \begin{quote}
-    \texttt{<thought> I have received localized maxima from Agents 0, 1, and 2. My own maximum is 91. The combined candidate pool is [91, 88, 84, 76, 72]. Pruning values below rank 3 leaves {91, 88, 84}. I will announce this candidate set and query Agent 4 for veto. </thought>}
+    \small\ttfamily
+    $<$thought$>$ I have received localized maxima from Agents~0, 1, and~2. My own maximum is 91. The combined candidate pool is [91, 88, 84, 76, 72]. Pruning values below rank~3 leaves \{91, 88, 84\}. I will announce this candidate set and query Agent~4 for veto. $<$/thought$>$
     \end{quote}
     Agent~3 spontaneously emerged as the aggregator hub ($G=0.48$). In Round 3, Agent~4 confirmed that its maximum was 65, which fell below the proposed threshold. Unanimous consensus was reached on $\{91, 88, 84\}$ with zero hallucinations.
 \end{itemize}
@@ -310,22 +321,22 @@ In Task I-09, five agents hold unordered scalar arrays and must collectively ide
 \subsubsection{Task II-14: Distributed Resource Scheduling}
 Task II-14 requires five agents to allocate non-colliding time slots across shared compute clusters.
 \begin{itemize}
-    \item \textbf{Failure Mode in Flat Broadcast:} Flat Broadcast ran for **102 minutes** (6,146.5 seconds), generated **38,668 tokens**, and failed (0\% accuracy). At every round, all five agents broadcast full scheduling proposals for all 10 time windows. Because agents acted concurrently, Agent~1 and Agent~4 simultaneously claimed Slot~3; in the subsequent round, both detected the collision and simultaneously vacated Slot~3 to claim Slot~5, creating a distributed livelock. The 32K context window filled with repeated collision warnings, driving attention entropy to saturation.
-    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA solved the task in **13 minutes** (798.2 seconds) using only **11,688 tokens**---achieving a **7.7$\times$ execution speedup** and consuming **3.3$\times$ fewer tokens**. Instead of broadcasting, agents engaged in localized pairwise negotiation. Agent~1 identified an overlap specifically with Agent~4 and dispatched a point-to-point query: `<action targets="[Agent_4]"> Propose concession: I will take Slot 2 if you retain Slot 3 </action>`. Agent~4 reciprocated within one round. Agents with disjoint time windows (e.g., Agent~0 and Agent~3) exchanged zero messages, resolving the schedule in 6 rounds.
+    \item \textbf{Failure Mode in Flat Broadcast:} Flat Broadcast ran for \textbf{102 minutes} (6,146.5 seconds), generated \textbf{38,668 tokens}, and failed (0\% accuracy). At every round, all five agents broadcast full scheduling proposals for all 10 time windows. Because agents acted concurrently, Agent~1 and Agent~4 simultaneously claimed Slot~3; in the subsequent round, both detected the collision and simultaneously vacated Slot~3 to claim Slot~5, creating a distributed livelock. The 32K context window filled with repeated collision warnings, driving attention entropy to saturation.
+    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA solved the task in \textbf{13 minutes} (798.2 seconds) using only \textbf{11,688 tokens}---achieving a \textbf{7.7$\times$ execution speedup} and consuming \textbf{3.3$\times$ fewer tokens}. Instead of broadcasting, agents engaged in localized pairwise negotiation. Agent~1 identified an overlap specifically with Agent~4 and dispatched a point-to-point query: \texttt{\small <action targets="[Agent\_4]"> Propose concession: I will take Slot 2 if you retain Slot 3 </action>}. Agent~4 reciprocated within one round. Agents with disjoint time windows (e.g., Agent~0 and Agent~3) exchanged zero messages, resolving the schedule in 6 rounds.
 \end{itemize}
 
 \subsubsection{Task II-17: Graph Shortest Pathfinding}
 In Task II-17, agents hold disjoint adjacency submatrices of a directed graph and must find the global shortest path from source $s$ to target $t$.
 \begin{itemize}
-    \item \textbf{Failure Mode in Baselines:} All baselines failed (**0.0\% accuracy**). In MacNet's hierarchical tree, Agent~4 held the outgoing edges from vertex $v_6$, and Agent~5 held the incoming edges to target $t$. Because Agent~4 and Agent~5 were sibling leaf nodes, they could not communicate directly. Path cost updates were forced upward to Manager~Agent~2, which summarized distance weights; during summarization, the intermediate edge weight $w(v_6, t)=3$ was omitted, leading the root executive to output an invalid path.
-    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved **100.0\% accuracy**. Agents dynamically constructed a chain-like routing topology tracing the exact frontier of the graph traversal. Agent~0 initiated a path proposal and forwarded it to Agent~2 (who held adjacent vertices); Agent~2 extended the path and routed it directly to Agent~4, who then contacted Agent~5. The communication graph formed a directed path graph mirroring the topological shortest path, achieving exact cost optimality $W(\mathbf{p}) = 14$.
+    \item \textbf{Failure Mode in Baselines:} All baselines failed (\textbf{0.0\% accuracy}). In MacNet's hierarchical tree, Agent~4 held the outgoing edges from vertex $v_6$, and Agent~5 held the incoming edges to target $t$. Because Agent~4 and Agent~5 were sibling leaf nodes, they could not communicate directly. Path cost updates were forced upward to Manager~Agent~2, which summarized distance weights; during summarization, the intermediate edge weight $w(v_6, t)=3$ was omitted, leading the root executive to output an invalid path.
+    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved \textbf{100.0\% accuracy}. Agents dynamically constructed a chain-like routing topology tracing the exact frontier of the graph traversal. Agent~0 initiated a path proposal and forwarded it to Agent~2 (who held adjacent vertices); Agent~2 extended the path and routed it directly to Agent~4, who then contacted Agent~5. The communication graph formed a directed path graph mirroring the topological shortest path, achieving exact cost optimality $W(\mathbf{p}) = 14$.
 \end{itemize}
 
 \subsubsection{Task III-25: Parallel Bitonic Merge Sort}
 In Task III-25, agents execute parallel bitonic comparison-exchange stages across partitioned numerical lists.
 \begin{itemize}
     \item \textbf{Failure Mode in Baselines:} Flat Broadcast collapsed to 0.0\% due to token exhaustion during multi-stage exchange. MacNet and AutoGen achieved 20.0\% accuracy; their fixed topologies could not accommodate the changing communication pairings required by bitonic sort stages (which alternate between distance-1, distance-2, and distance-4 agent pairs).
-    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved **40.0\% accuracy**, doubling the performance of Central Coordinator and Hierarchical Tree. In Round 1, agents self-sorted local segments. In Round 2 (Stage 1 bitonic merge), agents paired off with adjacent neighbors $(a_0 \leftrightarrow a_1, a_2 \leftrightarrow a_3)$. In Round 4 (Stage 2 bitonic merge), agents reconfigured their edges to communicate across distance-2 strides $(a_0 \leftrightarrow a_2, a_1 \leftrightarrow a_3)$. The dynamic topology directly matched the algorithmic dataflow of the bitonic sorting network.
+    \item \textbf{ORCHESTRA Emergent Execution Trace:} ORCHESTRA achieved \textbf{40.0\% accuracy}, doubling the performance of Central Coordinator and Hierarchical Tree. In Round 1, agents self-sorted local segments. In Round 2 (Stage 1 bitonic merge), agents paired off with adjacent neighbors $(a_0 \leftrightarrow a_1, a_2 \leftrightarrow a_3)$. In Round 4 (Stage 2 bitonic merge), agents reconfigured their edges to communicate across distance-2 strides $(a_0 \leftrightarrow a_2, a_1 \leftrightarrow a_3)$. The dynamic topology directly matched the algorithmic dataflow of the bitonic sorting network.
 \end{itemize}
 
 \subsection{The Communication-Reasoning Gap in Foundation Models}

@@ -280,7 +280,7 @@ This mutual incentive structure drives directed reciprocity to empirically obser
 \end{IEEEproof}
 
 \subsection{Formalization of the Novel Metric Suite}
-To provide quantitative evaluation of emergent social structures, we define four formal metrics grounded in network science and economic inequality theory:
+To provide rigorous quantitative evaluation of emergent social structures across communication channels \cite{shannon1948mathematical}, we define four formal metrics grounded in network science and economic inequality theory \cite{gini1912variabilita, jaccard1912distribution, freeman1977set}:
 
 \subsubsection{Gini Out-Degree Specialization ($G$)}
 We quantify structural hierarchy and leadership specialization using the Gini coefficient applied to the directed out-degree sequence $\mathbf{d}^{\text{out}} = [d_1^{\text{out}}, \dots, d_N^{\text{out}}]$ of graph $\mathcal{G}^{(t)}$. Derived from the continuous Lorenz curve $L(p)$, the discrete formulation is given by:

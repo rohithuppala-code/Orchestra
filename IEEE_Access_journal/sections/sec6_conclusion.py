@@ -53,6 +53,7 @@ Promising future extensions include:
     \item \textbf{Asynchronous Message Transport:} Transitioning from discrete synchronous barriers toward asynchronous, event-driven message queues.
     \item \textbf{Cryptographic Byzantine Defense:} Integrating lightweight cryptographic verification primitives and decentralized reputation scoring to provide Byzantine fault tolerance.
     \item \textbf{JSON-Constrained Schema Decoding:} Implementing grammar-constrained decoding to enforce strict schema adherence for complex nested matrix and graph outputs, eliminating syntactic parse failures.
+    \item \textbf{Human-Agent Supervisory Teaming:} Investigating human-in-the-loop governance boundaries and supervisory intervention dynamics in decentralized agent collectives \cite{mosquera2026human}.
 \end{enumerate}
 
 % ==============================================================================
