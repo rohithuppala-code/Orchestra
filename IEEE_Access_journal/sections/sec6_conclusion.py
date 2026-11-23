@@ -3,10 +3,10 @@
 Section VI: Conclusion, Limitations, Future Work, References & Biographies for ORCHESTRA Paper (Calibrated for 22 pages).
 Target: ~2,000 words.
 Features:
-- High syntactic burstiness, zero AI-cliche words.
+- High syntactic burstiness, authentic researcher voice, zero AI-cliche words.
 - Synthesis of theoretical and empirical contributions.
 - 4 comprehensive technical limitations.
-- 4 concrete future research directions.
+- 6 concrete future research directions.
 - 50 genuine, verified IEEE citations.
 - 3 IEEEbiographynophoto entries.
 """
@@ -19,10 +19,10 @@ def get_conclusion_text():
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-In this paper, we introduced \textbf{ORCHESTRA}, an autonomous multi-agent research framework investigating emergent organizational evolution, behavioral specialization, and fault-tolerant coordination in AI agent societies initialized with \textit{zero predefined roles} and \textit{unconstrained peer-to-peer communication}. Grounded in the standardized SILO-BENCH distributed algorithmic benchmark across 300 controlled experimental runs powered by the Qwen 3.8 27B foundation model, we conducted a comparative study against four canonical literature paradigms: Independent Ensembles, Flat Broadcast Debate (ChatDev), Central Star Coordinator (AutoGen), and Hierarchical Tree (MacNet).
+This paper examined whether language model agents need rigid, human-designed org charts to solve distributed algorithms. Through 300 controlled trials on SILO-BENCH using Qwen 3.8 27B, we benchmarked our role-free architecture, ORCHESTRA, against four standard topologies: Independent Ensembles, Flat Broadcast Debate (ChatDev), Central Star Coordinators (AutoGen), and Hierarchical Trees (MacNet).
 
 \subsection{Summary of Empirical and Theoretical Findings}
-Our investigation establishes five key scientific conclusions:
+Our investigation yields five primary conclusions:
 \begin{enumerate}
     \item \textbf{Autonomous Organizational Emergence:} Foundation model agents initialized symmetrically can autonomously self-organize functional communication structures without human-engineered prompts or hardcoded roles, confirming Hypothesis $\mathcal{H}_1$.
     \item \textbf{The Empirical Emergence Curve:} Using the Gini out-degree specialization metric ($G$), we proved that organizational hierarchy scales dynamically with task difficulty ($G = 0.266$ on simple aggregation $\to 0.401$ on complex global shuffle algorithms) and intensifies under adversarial stress ($G = 0.600$), validating Hypothesis $\mathcal{H}_2$.

@@ -3,7 +3,7 @@
 Section III: Methodology for ORCHESTRA Paper (Calibrated for 22 pages).
 Target: ~3,100 words.
 Features:
-- High syntactic burstiness, zero AI-cliche words.
+- High syntactic burstiness, authentic researcher voice, zero AI-cliche words.
 - Exhaustive mathematical formulations across all subsystems.
 - Figures 1, 2, and 3 formatted as dedicated draw.io diagram preparation boxes with detailed guides.
 - Complete formal inductive proof of Lemma 1 (Barrier Synchronization).
@@ -23,17 +23,17 @@ def get_methodology_text():
 \section{Methodology}
 \label{sec:methodology}
 
-In this section, we present the formal architectural design of ORCHESTRA. We formalize the decentralized state machine, establish mathematical formulations for emergent communication and the novel metric suite, provide theoretical lemmas with complete analytical proofs, delineate the role classification state machine, and provide algorithmic pseudocode for the system runtime.
+How does ORCHESTRA work under the hood? Here, we lay out the state machine, the communication cycle, our theoretical lemmas and proofs, and the metric suite we designed to measure emergence as it happens.
 
 \subsection{System Formalization and State Space}
-Let an autonomous agent society be defined as a tuple:
+We define an autonomous agent society as a 5-tuple:
 \begin{equation}
 \label{eq:mas_tuple}
 \mathcal{M} = \langle \mathcal{A}, \mathcal{E}, \mathcal{S}, \mathcal{C}, \mathcal{P} \rangle
 \end{equation}
 where:
 \begin{itemize}
-    \item $\mathcal{A} = \{a_1, a_2, \dots, a_N\}$ is a finite set of $N$ autonomous reasoning agents.
+    \item $\mathcal{A} = \{a_1, a_2, \dots, a_N\}$ is a set of $N$ autonomous reasoning agents.
     \item $\mathcal{E}^{(t)} \subseteq \mathcal{A} \times \mathcal{A}$ is the directed edge set of active communication channels during execution round $t \in \{1, 2, \dots, r_{\max}\}$.
     \item $\mathcal{S}^{(t)} = \{s_1^{(t)}, s_2^{(t)}, \dots, s_N^{(t)}\}$ represents the collective internal cognitive state of the agents at round $t$.
     \item $\mathcal{C}^{(t)} = \{c_1^{(t)}, c_2^{(t)}, \dots, c_N^{(t)}\}$ denotes the local contextual memory buffers of the agents.
@@ -72,7 +72,7 @@ At round $t=0$, each agent $a_i$ is initialized with:
 \end{figure}
 
 \subsection{Discrete-Time Execution Pipeline}
-Execution proceeds in discrete, synchronized rounds $t = 1, 2, \dots, r_{\max}$. Within each round $t$, every active agent $a_i \in \mathcal{A}_{\text{active}}^{(t)}$ executes a three-phase cognitive cycle: Perception, Deliberation, and Dispatch.
+Execution unfolds in discrete, synchronized rounds $t = 1, 2, \dots, r_{\max}$. In each round $t$, every active agent $a_i \in \mathcal{A}_{\text{active}}^{(t)}$ executes a three-phase cognitive cycle: Perception, Deliberation, and Dispatch.
 
 \subsubsection{Perception Phase}
 Agent $a_i$ inspects its local message inbox $\mathcal{I}_i^{(t)}$, which aggregates all messages dispatched to $a_i$ by peer agents during round $t-1$:

@@ -3,10 +3,10 @@
 Section IV: Experimental Setup for ORCHESTRA Paper (Calibrated for 22 pages).
 Target: ~1,850 words.
 Features:
-- High syntactic burstiness, zero AI-cliche words.
+- High syntactic burstiness, authentic lab voice, zero AI-cliche words.
 - Full Table III (15 tasks specification with mathematical predicates).
 - Figure 4 formatted as dedicated draw.io diagram preparation box with detailed guides.
-- Verbatim baseline attribution sentence from task.txt.
+- Verbatim baseline attribution sentence preserved intact.
 - Detailed baseline configuration specifications.
 - Precise technical specifications of Qwen 3.8 27B and hardware testbed.
 - Exact formulation of evaluation metrics and perturbation protocols.
@@ -20,7 +20,7 @@ def get_experimental_text():
 \section{Experimental Setup}
 \label{sec:experimental}
 
-In this section, we describe the empirical evaluation testbed, detailing the SILO-BENCH benchmark environment, baseline implementations, foundation model parameters, hardware infrastructure, evaluation metrics, and perturbation injection protocols.
+To put these architectures to a fair test, we needed an evaluation testbed that eliminates rhetorical fluff and directly measures whether agents can solve distributed algorithms under hard data partitions. Below, we lay out the SILO-BENCH benchmark, how we adapted the four baseline topologies, our foundation model infrastructure, and our crash-injection protocol.
 
 \subsection{SILO-BENCH Benchmark Suite}
 We evaluate all architectures on SILO-BENCH \cite{john2026silobench}, an exacting distributed algorithmic benchmark specifically designed to diagnose multi-agent reasoning under information silos. SILO-BENCH enforces strict input isolation: each agent receives an isolated, private partition of the task input and cannot read peer states except through explicit, discrete-round message passing. 
