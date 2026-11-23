@@ -272,6 +272,11 @@ P((a_i, a_j) \in \mathcal{E}^{(t+1)} \mid (a_j, a_i) \in \mathcal{E}^{(t)}) > \f
 This mutual incentive structure drives directed reciprocity to empirically observed values of $R = 0.724$ on Level~I and $R = 0.612$ on Level~II, completing the proof.
 \end{IEEEproof}
 
+\subsection{Temporal Reachability and Asynchronous Information Cascades}
+A natural question in sparse peer-to-peer topologies is whether skipping edges risks disconnecting the collective. If agents route messages to only a small subset of peers at each step ($\bar{d}^{\text{out}} \ll N-1$), does the network risk informational deadlock?
+
+Temporal graph theory provides the answer \cite{holme2012temporal}. A static snapshot $\mathcal{G}^{(t)}$ does not need to be strongly connected at every individual round $t$ for global consensus to emerge. Instead, the collective requires only \textit{temporal connectivity}: the union graph over a sliding window $W$, defined as $\mathcal{G}^{(t:t+W)} = \bigcup_{\tau=t}^{t+W} \mathcal{G}^{(\tau)}$, must contain a time-respecting directed path between all node pairs. In ORCHESTRA, because agents dynamically adjust their outbound recipient lists as deductions evolve, edges shift naturally across rounds. In round $t$, Agent~0 queries Agent~2 for missing boundary coordinates; in round $t+1$, having folded Agent~2's reply into its scratchpad, Agent~0 pivots to send the synthesized waypoint to Agent~4. This alternating communication pattern drives an asynchronous information cascade: partial deductions spread across all $N$ agents within $W \le \lceil \log_2 N \rceil + 1$ rounds, ensuring global reachability while sidestepping the quadratic token tax of simultaneous broadcast.
+
 \subsection{Formalization of the Novel Metric Suite}
 To evaluate structural changes on dynamic communication graphs with mathematical precision \cite{shannon1948mathematical}, we define four formal metrics grounded in network science and economic inequality theory \cite{gini1912variabilita, jaccard1912distribution, freeman1977set}:
 
