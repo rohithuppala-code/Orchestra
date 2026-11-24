@@ -198,9 +198,9 @@ def plot_pareto_frontier():
 # 4. Figure 8 (NEW): Algorithmic Complexity Tier Breakdown (Table VIII)
 # ==============================================================================
 def plot_complexity_tiers():
-    fig, ax = plt.subplots(figsize=(7.0, 4.4), dpi=300)
+    fig, ax = plt.subplots(figsize=(7.2, 5.0), dpi=300)
     
-    tiers = ["Level I: Aggregation\n(Scalar Reductions)", "Level II: Spatial Mesh\n(Topological Routing)", "Level III: Global Shuffle\n(Distributed Kernels)"]
+    tiers = ["Level I\nAggregation", "Level II\nSpatial Mesh", "Level III\nGlobal Shuffle"]
     
     # Accuracy for each method across the 3 tiers (from Table VIII)
     indep = [18.0, 18.0, 0.0]
@@ -210,7 +210,7 @@ def plot_complexity_tiers():
     orchestra = [54.0, 24.0, 22.0] # Rank 1 on Level III
     
     x = np.arange(len(tiers))
-    width = 0.16
+    width = 0.15
     
     r1 = ax.bar(x - 2*width, indep, width, label="Independent", color=C_INDEP, edgecolor="black", linewidth=1.1)
     r2 = ax.bar(x - width, broadcast, width, label="Broadcast (ChatDev)", color=C_BROADCAST, edgecolor="black", linewidth=1.1)
@@ -219,25 +219,35 @@ def plot_complexity_tiers():
     r5 = ax.bar(x + 2*width, orchestra, width, label="ORCHESTRA (Ours)", color=C_ORCHESTRA, edgecolor="black", linewidth=1.3)
     
     # Highlight Rank #1 on Level III
-    ax.annotate("Rank #1 (22.0%)\nBest on Shuffle", xy=(2 + 2*width, 22.0), xytext=(2 + width*0.5, 39),
-                arrowprops=dict(facecolor=C_ORCHESTRA, shrink=0.08, width=2.2, headwidth=7),
-                fontsize=11.5, fontweight="bold", color="#065f46", ha="center",
+    ax.annotate("Rank #1 (22.0%)\nBest on Shuffle", xy=(2 + 2*width, 22.0), xytext=(2 + width*0.3, 38),
+                arrowprops=dict(facecolor=C_ORCHESTRA, shrink=0.08, width=2.0, headwidth=6),
+                fontsize=11, fontweight="bold", color="#065f46", ha="center",
                 bbox=dict(boxstyle="round,pad=0.25", facecolor="#d1fae5", edgecolor="#10b981", lw=1.2))
     
     # Value annotations on Level III bars
     for rect in [r1[2], r2[2], r3[2], r4[2], r5[2]]:
         h = rect.get_height()
         ax.annotate(f"{h:.0f}%", xy=(rect.get_x() + rect.get_width()/2, h),
-                    xytext=(0, 2.5), textcoords="offset points", ha="center", va="bottom",
-                    fontsize=11, fontweight="bold")
+                    xytext=(0, 2), textcoords="offset points", ha="center", va="bottom",
+                    fontsize=10.5, fontweight="bold")
+
+    # Value annotations on Level I bars
+    for rect in [r1[0], r2[0], r3[0], r4[0], r5[0]]:
+        h = rect.get_height()
+        ax.annotate(f"{h:.0f}%", xy=(rect.get_x() + rect.get_width()/2, h),
+                    xytext=(0, 2), textcoords="offset points", ha="center", va="bottom",
+                    fontsize=10.5, fontweight="bold")
         
-    ax.set_ylabel("Task Success Rate (%)", fontweight="bold", fontsize=14)
-    ax.set_title("Performance Across Algorithmic Complexity Tiers", pad=10, fontsize=14.5, fontweight="bold")
+    ax.set_ylabel("Task Success Rate (%)", fontweight="bold", fontsize=13.5)
     ax.set_xticks(x)
-    ax.set_xticklabels(tiers, fontweight="bold", fontsize=11.5)
-    ax.set_ylim(0, 70)
+    ax.set_xticklabels(tiers, fontweight="bold", fontsize=12.5)
+    ax.set_ylim(0, 68)
     ax.grid(axis="y", linestyle="--", alpha=0.6, linewidth=1.0)
-    ax.legend(frameon=True, facecolor="white", edgecolor="#cbd5e1", loc="upper right", ncol=2, fontsize=10.5)
+    
+    # Legend placed cleanly above the plot (completely outside the bars to prevent collision with Level 1 graphs)
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.02), ncol=3, fontsize=10.5,
+              frameon=True, facecolor="white", edgecolor="#cbd5e1", framealpha=0.95)
+    ax.set_title("Performance Across Algorithmic Complexity Tiers", pad=54, fontsize=14.5, fontweight="bold")
     
     plt.tight_layout()
     p = out_dir / "figure_complexity_tiers.png"
