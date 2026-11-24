@@ -42,27 +42,14 @@ At round $t=0$, each agent $a_i$ starts with:
 \end{enumerate}
 
 % ------------------------------------------------------------------------------
-% FIGURE 1: DRAW.IO PLACEHOLDER (OVERALL SYSTEM ARCHITECTURE)
+% FIGURE 1: OVERALL SYSTEM ARCHITECTURE DIAGRAM
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure*}[!t]
 \centering
-\fbox{\parbox{0.92\columnwidth}{%
-\centering
-\vspace{0.6em}
-\textbf{\large [Figure 1: Overall System Architecture Diagram]}\\[0.4em]
-\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
-\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
-\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
-\begin{itemize}
-    \item \textbf{Layer 1 (Initialization):} Symmetrically initialized agent collective $\mathcal{A} = \{a_1, \dots, a_N\}$ with identical system prompt $\mathcal{P}_{\text{sys}}$ and private data slices $x_i \subset \mathcal{X}$.
-    \item \textbf{Layer 2 (Communication Bus):} Fully decentralized peer-to-peer message routing bus establishing directed dynamic channels $\mathcal{E}^{(t)}$ without a central coordinator hub.
-    \item \textbf{Layer 3 (Verification Engine):} Global verification predicate $\Phi(\mathbf{\hat{y}}; \mathcal{X}) = 1$ evaluating collective consensus under information silos.
-\end{itemize}}
-\vspace{0.6em}
-}}
+\includegraphics[width=0.88\textwidth]{fig1_orchestra_architecture.png}
 \caption{ORCHESTRA Overall System Architecture. Symmetrically initialized agents coordinate through an unconstrained, decentralized peer-to-peer message routing layer without predefined roles or centralized coordinators.}
 \label{fig:orchestra_architecture}
-\end{figure}
+\end{figure*}
 
 \subsection{Discrete-Time Execution Pipeline}
 Runs advance in synchronized rounds $t = 1, 2, \dots, r_{\max}$. In each round, every active agent $a_i \in \mathcal{A}_{\text{active}}^{(t)}$ cycles through three clear phases: Perception, Deliberation, and Dispatch.
@@ -109,27 +96,14 @@ This forms the directed graph $\mathcal{G}^{(t)} = (\mathcal{A}_{\text{active}}^
 \end{equation}
 
 % ------------------------------------------------------------------------------
-% FIGURE 2: DRAW.IO PLACEHOLDER (AGENT COGNITIVE CYCLE)
+% FIGURE 2: AGENT COGNITIVE ARCHITECTURE CYCLE
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure*}[!t]
 \centering
-\fbox{\parbox{0.92\columnwidth}{%
-\centering
-\vspace{0.6em}
-\textbf{\large [Figure 2: Agent Cognitive Architecture Cycle]}\\[0.4em]
-\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
-\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
-\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
-\begin{itemize}
-    \item \textbf{Perception:} Receiving messages from buffer $\mathcal{I}_i^{(t)}$, appending to rolling history $c_i^{(t)}$ using XML demarcations.
-    \item \textbf{Deliberation:} Foundation model inference over Qwen 3.8 27B generating private reasoning scratchpad $\rho_i^{(t)}$ (`<thought>`) and dispatch block $\alpha_i^{(t)}$ (`<action>`).
-    \item \textbf{Dispatch:} Resolving recipient set $\mathcal{R}_i^{(t)}$ and routing directed payloads $m_{i \to j}^{(t)}$ to peer inboxes.
-\end{itemize}}
-\vspace{0.6em}
-}}
+\includegraphics[width=0.98\textwidth]{fig2_agent_cognitive_cycle.png}
 \caption{Agent Cognitive Micro-Architecture and Structured Execution Cycle. The three-phase Perception-Deliberation-Dispatch cycle ensures modular decoupling of private deductions and public communication.}
 \label{fig:agent_cycle}
-\end{figure}
+\end{figure*}
 
 \subsection{Theoretical Foundations and Mathematical Proofs}
 To establish formal theoretical grounding for role-free decentralized agent societies, we present four analytical results.
@@ -311,28 +285,14 @@ C_B(v) = \frac{1}{(N-1)(N-2)} \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigm
 \end{equation}
 
 % ------------------------------------------------------------------------------
-% FIGURE 3: DRAW.IO PLACEHOLDER (EVOLUTION AND RECOVERY LIFECYCLE)
+% FIGURE 3: ORGANIZATIONAL EVOLUTION LIFECYCLE
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure*}[!t]
 \centering
-\fbox{\parbox{0.92\columnwidth}{%
-\centering
-\vspace{0.6em}
-\textbf{\large [Figure 3: Organizational Evolution & Self-Healing Lifecycle]}\\[0.4em]
-\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
-\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
-\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
-\begin{itemize}
-    \item \textbf{Phase 1 (Discovery, $t=1$):} Symmetric agents explore peer capabilities ($G \approx 0.27$, $J \approx 0.52$).
-    \item \textbf{Phase 2 (Specialization, $t=2\dots 6$):} Spontaneous hub election into Coordinator Hubs, Relay Bridges, and Leaf Workers ($G \approx 0.40$, $J \to 0.15$).
-    \item \textbf{Phase 3 (Crash Injection, $t=7$):} Unannounced fail-stop crash knocks out agent node $a_{\text{fail}}$.
-    \item \textbf{Phase 4 (Dynamic Self-Healing, $t \ge 8$):} Surviving peers detect silence, spike Jaccard drift ($J \to 0.60$), and rewire edges around the failed vertex.
-\end{itemize}}
-\vspace{0.6em}
-}}
+\includegraphics[width=0.98\textwidth]{fig3_lifecycle_diagram.png}
 \caption{Organizational Evolution and Self-Healing Lifecycle in ORCHESTRA. The four-phase lifecycle demonstrates autonomous transition from initial symmetry to leadership specialization and dynamic fault recovery.}
 \label{fig:lifecycle_diagram}
-\end{figure}
+\end{figure*}
 
 \subsection{Role Classification State Machine}
 Although ORCHESTRA initializes agents with zero predefined roles, agents adopt specialized postures during execution. We define a behavioral classification mapping an agent's instantaneous network metrics into functional roles:

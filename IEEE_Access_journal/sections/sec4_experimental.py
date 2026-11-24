@@ -70,29 +70,14 @@ Level~II tasks evaluate spatial and geometric constraints. In Task II-11 (Decent
 Level~III tasks test global array reshuffling and multi-phase synchrony. In Task III-25 (Parallel Bitonic Merge Sort), an unsorted list of numbers is partitioned across $N$ agents. Solving it requires alternating compare-exchange rounds across $\log_2 N$ bitonic stages. The verification code checks that the final concatenated sequence is non-decreasing ($\hat{y}_1 \le \dots \le \hat{y}_N$) and contains the exact multi-set of original inputs ($\biguplus_{i=1}^N \hat{y}_i = \biguplus_{i=1}^N x_i$).
 
 % ------------------------------------------------------------------------------
-% FIGURE 4: DRAW.IO PLACEHOLDER (SILO-BENCH & TOPOLOGY TAXONOMY)
+% FIGURE 4: SILO-BENCH TOPOLOGIES
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure*}[!t]
 \centering
-\fbox{\parbox{0.92\columnwidth}{%
-\centering
-\vspace{0.6em}
-\textbf{\large [Figure 4: SILO-BENCH & Baseline Topologies Diagram]}\\[0.4em]
-\textbf{\footnotesize (Draw.io Diagram Preparation Placeholder)}\\[0.5em]
-\rule{0.86\columnwidth}{0.4pt}\\[0.5em]
-\parbox{0.86\columnwidth}{\footnotesize \textbf{Draw.io Schematic Guide:}
-\begin{itemize}
-    \item \textbf{Panel (a) Independent Ensembles:} Isolated nodes with zero edges ($E=\emptyset$) under isolated data silos $x_1 \dots x_N$.
-    \item \textbf{Panel (b) Flat Broadcast (ChatDev):} Complete bidirectional mesh with quadratic $\mathcal{O}(N^2)$ edge density.
-    \item \textbf{Panel (c) Central Coordinator (AutoGen):} Star topology with Agent~0 as the central coordinator hub.
-    \item \textbf{Panel (d) Hierarchical Tree (MacNet):} Static multi-tier tree (Root executive $\to$ Tier managers $\to$ Leaf workers).
-    \item \textbf{Panel (e) ORCHESTRA (Ours):} Dynamic peer-to-peer topology with task-adaptive edge formation and zero predefined roles.
-\end{itemize}}
-\vspace{0.6em}
-}}
+\includegraphics[width=0.98\textwidth]{fig4_silo_bench_topologies.png}
 \caption{SILO-BENCH Distributed Information Silo Architecture and Baseline Communication Topologies. Unlike static literature structures, ORCHESTRA dynamically evolves communication channels to match the underlying problem geometry.}
 \label{fig:silobench_topologies}
-\end{figure}
+\end{figure*}
 
 \subsection{Baseline Architectures and Standardization}
 To compare against prominent architectures in the multi-agent literature, we implemented the canonical communication topologies established by AutoGen (Central Star Hub; Wu et al., 2024), MacNet (Hierarchical Tree; Wang et al., 2024), ChatDev (All-to-all Broadcast; Qian et al., 2024), and Independent Ensembles (Wang et al., 2023) within the standardized SILO-BENCH message-passing environment.
