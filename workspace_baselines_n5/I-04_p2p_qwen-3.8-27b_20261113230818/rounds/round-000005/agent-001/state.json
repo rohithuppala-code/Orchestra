@@ -1,0 +1,10 @@
+{
+  "agent_id":1,
+  "submitted":true,
+  "submission_round":5,
+  "last_active_round":5,
+  "messages_sent":1,
+  "messages_received":2,
+  "files_written":0,
+  "files_read":0
+}

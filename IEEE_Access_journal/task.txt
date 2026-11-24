@@ -1,0 +1,178 @@
+# ORCHESTRA — IEEE ACCESS RESEARCH PAPER DEVELOPMENT
+
+Act as a top-tier AI researcher, IEEE Access manuscript specialist, and critical journal reviewer. Your task is to develop a publication-quality research paper titled:
+
+**ORCHESTRA: Emergent Organizational Evolution in Autonomous AI Agent Societies**
+
+### 1. Project files and workspace
+
+All work must be performed inside the existing `IEEE_Access_journal/` folder. An IEEE Access template is already provided there. Use that template for the final manuscript.
+
+You have access to all project artifacts, including:
+
+- `final_workspace_n2/`
+- `final_workspace_n5/`
+- `workspace_baselines_n2/`
+- `workspace_baselines_n5/`
+- `N@results.md`
+- `N5results.md`
+- Claude review and related evaluation documents.
+- `papers.txt` containing research references.
+
+Thoroughly inspect these folders and files before writing. Understand the actual implementation, methodology, experimental configurations, and results. Cross-verify important numbers against the original experimental outputs.
+
+**Treat the existing experimental results as the source of truth. Do not fabricate results, metrics, configurations, or conclusions.**
+
+### 2. Research positioning and baseline comparisons
+
+The paper should establish ORCHESTRA as a framework investigating emergent organizational structures, coordination, adaptation, and evolution in autonomous AI agent societies.
+
+Include the following baseline architectures implemented within the standardized SILO-BENCH message-passing environment:
+
+- AutoGen — Central Star Hub (Wu et al., 2024).
+- MacNet — Hierarchical Tree (Wang et al., 2024).
+- ChatDev — All-to-all Broadcast (Qian et al., 2024).
+- Independent Ensembles (Wang et al., 2023).
+
+Use the following description as the basis for the baseline methodology, after verifying the implementation and references:
+
+"To compare against prominent architectures in the multi-agent literature, we implemented the canonical communication topologies established by AutoGen (Central Star Hub; Wu et al., 2024), MacNet (Hierarchical Tree; Wang et al., 2024), ChatDev (All-to-all Broadcast; Qian et al., 2024), and Independent Ensembles (Wang et al., 2023) within the standardized SILO-BENCH message-passing environment."
+
+Ensure that the descriptions accurately reflect our implementations. Distinguish standardized adaptations from exact reproductions wherever necessary.
+
+### 3. Manuscript structure
+
+Target **20–23 pages**, including figures, tables, equations, and references, using the provided IEEE Access template.
+
+Organize the paper into these six major sections:
+
+**I. INTRODUCTION**
+- Background and motivation.
+- Research problem and problem statement.
+- Research objectives.
+- Research gap.
+- Major contributions of ORCHESTRA.
+- Organization of the paper.
+
+**II. LITERATURE SURVEY**
+- Relevant research on multi-agent systems, communication architectures, organizational emergence, self-organization, coordination, and autonomous agent societies.
+- Include exactly two comprehensive literature comparison tables.
+- Highlight limitations of existing approaches and establish the research gap addressed by ORCHESTRA.
+
+**III. METHODOLOGY**
+- ORCHESTRA system architecture.
+- Agent architecture and interaction mechanisms.
+- Organizational formation and evolution.
+- Communication and coordination mechanisms.
+- End-to-end system pipeline.
+- Algorithms and pseudocode for the major mechanisms.
+- Mathematical formulations wherever appropriate.
+
+Explain the complete workflow from initialization to organizational evolution and task execution, strictly following the actual implementation.
+
+**IV. EXPERIMENTAL SETUP**
+- SILO-BENCH environment.
+- N2 and N5 experimental configurations.
+- Datasets/tasks and evaluation protocols.
+- Agent configurations.
+- Baseline implementations.
+- Evaluation metrics.
+- Software, libraries, frameworks, and hardware specifications.
+- Reproducibility details.
+
+Report only technical specifications that can be verified from the project files.
+
+**V. RESULTS AND DISCUSSION**
+This section deserves particular attention.
+
+Prioritize quantitative analysis over lengthy descriptive explanations.
+
+Include well-organized tables covering:
+- ORCHESTRA versus all baseline architectures.
+- N2 and N5 experimental results.
+- Performance metrics and comparative improvements.
+- Organizational emergence and evolution.
+- Communication and coordination performance.
+- Disruption response and recovery, if evaluated.
+- Human-in-the-loop outcomes, if evaluated.
+- Statistical results and variability, where available.
+
+Provide actual numerical values, appropriate units, and clear explanations of each metric.
+
+Include percentage improvements only when correctly calculated against the corresponding baseline. Never invent statistical significance or missing measurements.
+
+Focus on interpreting the experimental evidence and explaining why the results matter.
+
+**VI. CONCLUSION AND FUTURE WORK**
+- Summarize the research.
+- Highlight the main contributions.
+- Report the most important quantitative findings.
+- Explain the broader significance.
+- Discuss limitations.
+- Identify meaningful future research directions.
+
+### 4. Figures and diagrams
+
+Include approximately **4–6 figure placeholders** in the manuscript. We will create the actual diagrams separately using draw.io.
+
+Select appropriate diagrams based on the implementation, such as:
+
+1. ORCHESTRA overall system architecture.
+2. Agent architecture and organizational mechanisms.
+3. End-to-end organizational evolution pipeline.
+4. SILO-BENCH experimental and baseline architecture.
+5. Organizational evolution or coordination workflow.
+6. Experimental results visualization, if useful.
+
+For every placeholder, provide:
+- Figure number.
+- IEEE-style caption.
+- A brief description of what the draw.io diagram must illustrate.
+
+Do not generate arbitrary diagrams or insert irrelevant images.
+
+### 5. References and citations
+
+Target approximately **50 genuine, high-quality academic references**.
+
+Use `papers.txt` as the primary reference collection. Supplement it only when necessary with verified foundational and recent research.
+
+Requirements:
+- Follow IEEE numerical citation style: [1], [2], etc.
+- Cite references appropriately throughout the manuscript.
+- Number references by first appearance.
+- Verify author names, paper titles, publication venues, years, and DOIs.
+- Prioritize IEEE, ACM, and reputable AI conferences and journals.
+- Ensure all references are relevant and actually cited.
+- Never fabricate references or DOIs.
+
+### 6. Writing and quality requirements
+
+Write in formal, precise, technically sophisticated academic English suitable for IEEE Access.
+
+The paper must:
+- Have a strong research narrative and clearly identifiable novelty.
+- Explain the methodology with sufficient technical depth for reproducibility.
+- Use mathematical formulations and algorithms where appropriate.
+- Include substantial quantitative evidence, comparison tables, and two literature survey tables.
+- Avoid repetitive explanations, generic claims, and unsupported statements.
+- Clearly distinguish demonstrated findings from proposed capabilities.
+- Maintain consistency in terminology, metrics, equations, figures, and citations.
+- Follow IEEE Access formatting conventions.
+
+Do not simply convert existing project documentation into a paper. Analyze, synthesize, and present the research as a coherent scientific contribution.
+
+### 7. Final deliverables
+
+Save all manuscript-related work inside `IEEE_Access_journal/`.
+
+Deliver:
+
+1. A complete editable manuscript using the supplied IEEE Access template.
+3. All figure placeholders with captions and draw.io preparation descriptions.
+4. Properly formatted tables, algorithms, equations, and approximately 50 references.
+5. A final validation report checking citations, references, numerical consistency, formatting, and manuscript completeness.
+
+Use placeholders for author names, affiliations, corresponding author details, and email addresses. I will provide the actual author information later.
+
+**Final instruction:** Take ownership of the research analysis and manuscript development. Be scientifically critical, verify everything, and prioritize research credibility over impressive but unsupported claims. The objective is a strong, defensible IEEE Access journal submission—not merely a paper that looks complete.

@@ -20,7 +20,7 @@ from orchestra.analysis import (
     generate_markdown_summary_table,
     plot_longitudinal_evolution,
 )
-from orchestra.config import ExperimentConfig
+from orchestra.config import ExperimentConfig, expand_task_ids
 from orchestra.runner import ExperimentSummary, run_orchestra_experiment
 
 
@@ -78,6 +78,35 @@ def run_batch_matrix(matrix: MatrixConfig) -> List[ExperimentSummary]:
                         if pert:
                             exp_id += f"_{pert}"
                             
+                        # Check if this exact condition was already completed in the workspace
+                        proto_prefix = "p2p" if proto == "msg" else "bp"
+                        ws_p = Path(matrix.workspace)
+                        matched_dir = None
+                        if ws_p.exists():
+                            for cand in sorted(ws_p.glob(f"{task_id}_{proto_prefix}_*")):
+                                s_file = cand / "orchestra_summary.json"
+                                if cand.is_dir() and s_file.exists():
+                                    try:
+                                        with open(s_file, "r", encoding="utf-8") as f:
+                                            s_data = json.load(f)
+                                        cand_pert = s_data.get("perturbation_applied")
+                                        if cand_pert == pert and s_data.get("num_agents") == n:
+                                            matched_dir = cand
+                                            break
+                                    except Exception:
+                                        continue
+
+                        if matched_dir:
+                            print(f"\n[{run_idx}/{total_runs}] [CACHED] {exp_id} already completed in {matched_dir.name}. Skipping to next.")
+                            case_dirs.append(matched_dir)
+                            try:
+                                with open(matched_dir / "orchestra_summary.json", "r", encoding="utf-8") as f:
+                                    s_data = json.load(f)
+                                summaries.append(ExperimentSummary(**s_data))
+                            except Exception:
+                                pass
+                            continue
+
                         print(f"\n[{run_idx}/{total_runs}] Starting: {exp_id} (seed={seed})")
                         
                         pert_params = None
@@ -151,15 +180,7 @@ def main() -> None:
     
     perts = [None if p == "none" else p for p in args.perturbations]
     
-    task_ids = args.task_ids
-    if any(t.lower() == "all" for t in task_ids):
-        task_ids = [
-            f"I-{i:02d}" for i in range(1, 11)
-        ] + [
-            f"II-{i:02d}" for i in range(11, 21)
-        ] + [
-            f"III-{i:02d}" for i in range(21, 31)
-        ]
+    task_ids = expand_task_ids(args.task_ids)
     
     matrix = MatrixConfig(
         task_ids=task_ids,

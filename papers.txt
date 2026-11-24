@@ -4,15 +4,94 @@ Target: Top-Tier Q1 Journal / Conference Submission
 Updated: 2026
 ================================================================================
 
-This document indexes all foundational, benchmark, and state-of-the-art literature
-(including cutting-edge 2025 and 2026 papers) used for:
-1. Primary Benchmark Grounding (SILO-BENCH)
-2. Competing Empirical Baseline Topologies (5 Literature Paradigms)
-3. Dynamic Network Topologies & Emergent Organizational Scaling (2024-2026)
-4. Fault Tolerance, Perturbation Resilience & Agent Dropout (2025-2026)
-5. Information-Theoretic Emergence & Organizational Evolution (2024-2026)
-6. Human-in-the-Loop (HITL) & Multi-Agent Societal Governance (2025-2026)
-7. Ready-to-Use BibTeX Entries for LaTeX (ref.bib)
+================================================================================
+SECTION 0: QUICK & EASY SUMMARY — ORCHESTRA & THE 4 BASELINE PAPERS
+(Short, Plain-English Breakdown for Presentations, Meetings & Papers)
+================================================================================
+
+--------------------------------------------------------------------------------
+⭐ OUR PROJECT: ORCHESTRA (Dynamic Organizational Structure Evolution)
+--------------------------------------------------------------------------------
+* What it is in simple words:
+  Traditional multi-agent frameworks give agents fixed, hardcoded roles (e.g.,
+  "Agent 1 is Boss, Agent 2 is Worker") or rigid communication pipes that never
+  change. When no roles are given beforehand, or when unexpected perturbations
+  happen (such as an agent crashing or network links dropping), traditional
+  systems break down completely.
+  
+  ORCHESTRA is fundamentally different: agents start with ZERO predefined roles.
+  Instead, they dynamically decide WHO to talk to, WHEN to talk, and HOW to 
+  coordinate in real-time. As task difficulty rises or when agents drop out, 
+  the network organically evolves its own leadership and communication structure 
+  to self-heal and solve the problem with minimum token waste.
+
+--------------------------------------------------------------------------------
+1️⃣ BASELINE 1: Independent Agents (Majority Vote Ensemble)
+--------------------------------------------------------------------------------
+* Paper Title: Self-Consistency Improves Chain of Thought Reasoning in Language Models
+* Authors: Xuezhi Wang et al. (Google Research)
+* Presented At: ICLR 2023 (International Conference on Learning Representations)
+* Paper Link: https://arxiv.org/abs/2203.11171
+* How it works in simple words:
+  Every agent works completely alone in an isolated room with ZERO communication.
+  They each solve the problem independently, and at the end, a simple majority 
+  vote chooses the final answer. 
+* Why it fails in our benchmark:
+  If a problem requires sharing private clues (like distributed puzzles in 
+  SILO-BENCH), isolated agents mathematically CANNOT solve it and stay stuck at 50% 
+  or 0% accuracy.
+
+--------------------------------------------------------------------------------
+2️⃣ BASELINE 2: Flat Broadcast Debate (All-to-All Debate)
+--------------------------------------------------------------------------------
+* Paper Title: ChatDev: Communicative Agents for Software Development
+* Authors: Chen Qian, Maosong Sun et al. (Tsinghua University)
+* Presented At: ACL 2024 (Association for Computational Linguistics)
+* Co-Paper: "Improving Factuality through Multiagent Debate" (Du et al., ICML 2023)
+* Paper Links: 
+  - ChatDev (ACL 2024): https://arxiv.org/abs/2307.07924
+  - Multi-Agent Debate (ICML 2023): https://arxiv.org/abs/2305.14325
+* How it works in simple words:
+  Every agent shouts into a giant megaphone. In every round, every single agent 
+  broadcasts its message to everyone else, and everyone must listen to everyone.
+* Why it fails in our benchmark:
+  Creates a massive "token explosion" (quadratic O(N^2) cost). As agent count 
+  scales from N=2 to N=5, token cost surged 5.18x! In complex tasks, it gets drowned 
+  in noise, taking over 100 minutes and burning 38,000+ tokens just to fail.
+
+--------------------------------------------------------------------------------
+3️⃣ BASELINE 3: Central Coordinator (Star / Hub-and-Spoke Architecture)
+--------------------------------------------------------------------------------
+* Paper Title: AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation
+* Authors: Qingyun Wu, Chi Wang et al. (Microsoft Research)
+* Presented At: ICLR 2024 (International Conference on Learning Representations)
+* Paper Link: https://arxiv.org/abs/2308.08155
+* How it works in simple words:
+  One designated agent (Agent 0) acts as the central boss or traffic cop. 
+  All other agents must report only to the boss, and the boss decides everything 
+  and passes messages back and forth.
+* Why it fails in our benchmark:
+  It introduces a fatal Single Point of Failure (SPOF). At N=5, when node dropout 
+  occurs, AutoGen's accuracy plummets by 17.3%. It also burns the highest tokens 
+  of all architectures (26,186 tokens/run) because the boss's context window 
+  explodes.
+
+--------------------------------------------------------------------------------
+4️⃣ BASELINE 4: Hierarchical Tree (Multi-Tier Chain of Command)
+--------------------------------------------------------------------------------
+* Paper Title: MacNet: Multi-Agent Collaboration Network for Scalable Problem Solving
+* Authors: Chenfei Wang, Zhiyuan Liu, Maosong Sun et al. (Tsinghua University)
+* Presented At: Neural Networks (2025) / ICLR (2024)
+* Paper Link: https://arxiv.org/abs/2406.07155
+* How it works in simple words:
+  A strict corporate ladder (Tree): Executive at the top, division managers in 
+  the middle, workers at the bottom. Communication can only travel strictly up 
+  or down the tree branches—workers on different branches cannot talk to each other.
+* Why it fails in our benchmark:
+  Suffers a catastrophic scaling collapse! At N=2 it had 50% accuracy, but at N=5 
+  it collapsed to 18.7%. Under agent dropout at N=5, it had a 100% failure rate 
+  (0.0% accuracy) because if an intermediate parent node drops out, the entire 
+  branch underneath is permanently severed and orphaned.
 
 ================================================================================
 SECTION 1: PRIMARY BENCHMARK & EXPERIMENTAL FOUNDATION

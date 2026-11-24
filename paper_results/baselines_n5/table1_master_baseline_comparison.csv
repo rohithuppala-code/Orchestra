@@ -1,0 +1,6 @@
+Baseline,Paradigm,Citation,Success_N2,Success_N5,Success_N10,Success_Overall,Tokens_Mean,Rounds_Mean,Gini_OutDegree,Dropout_Success,Resilience_Delta
+Independent Agents,No Communication,Wang et al. (ICLR 2023),-,10.7%,-,10.7%,"11,113",9.3,0.000,6.7%,-4.0%
+Flat Broadcast Debate,Complete Mesh,Qian et al. (ACL 2024); Du et al. (2023),-,28.0%,-,28.0%,"19,927",13.0,0.221,12.0%,-16.0%
+Central Coordinator,Star Hub,Wu et al. (AutoGen / ICLR 2024),-,28.0%,-,28.0%,"26,186",13.2,0.363,10.7%,-17.3%
+Hierarchical Tree,Static Tree,"Wang et al. (MacNet, 2024/2025)",-,18.7%,-,18.7%,"13,918",14.8,0.257,0.0%,-18.7%
+ORCHESTRA (Ours),Emergent Dynamic,This Work,-,26.7%,-,26.7%,"17,802",14.4,0.334,6.7%,-20.0%

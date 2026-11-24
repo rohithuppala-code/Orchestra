@@ -1,0 +1,38 @@
+{
+  "experiment_id": "II-14_n5_msg_rep1_agent_dropout",
+  "case_dir": "final_workspace_n5\\II-14_p2p_qwen-3.8-27b_20261113085427",
+  "task_id": "II-14",
+  "num_agents": 5,
+  "protocol": "msg",
+  "model": "qwen-3.8-27b",
+  "total_time_seconds": 539.2945017814636,
+  "total_rounds": 15,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.0,
+  "token_consumption": 9352.3333333333,
+  "communication_density": 1.1,
+  "gini_out_degree": 0.4,
+  "gini_in_degree": 0.34545454545454546,
+  "mean_structural_drift": 0.9761904761904763,
+  "agent_roles": {
+    "0": "Broadcaster_Disseminator",
+    "1": "Aggregator_Collector",
+    "2": "Broadcaster_Disseminator",
+    "3": "Hub_Coordinator",
+    "4": "Hub_Coordinator"
+  },
+  "perturbation_applied": "agent_dropout",
+  "hitl_violations_count": 22,
+  "hitl_summary": {
+    "total_violations": 22,
+    "mode": "audit_only",
+    "violations_by_type": {
+      "isolation": 19,
+      "monopolization": 3
+    }
+  },
+  "error_message": null,
+  "seed": 43
+}

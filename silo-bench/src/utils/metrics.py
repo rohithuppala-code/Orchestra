@@ -190,11 +190,19 @@ def compute_partial_correctness(
             if isinstance(expected, list) and isinstance(actual, list):
                 if len(expected) == 0:
                     q = 1.0 if len(actual) == 0 else 0.0
+                elif any(isinstance(row, list) for row in expected):
+                    # 2D matrix / nested list task (e.g. Matrix Multiply, K-Means)
+                    total_cells = sum(len(r) if isinstance(r, list) else 1 for r in expected)
+                    matches = 0
+                    for er, ar in zip(expected, actual):
+                        if isinstance(er, list) and isinstance(ar, list):
+                            matches += sum(1 for e, a in zip(er, ar) if e == a)
+                        elif er == ar:
+                            matches += 1
+                    q = matches / total_cells if total_cells > 0 else 0.0
                 else:
-                    # Find longest subsequence of actual that appears in correct order
-                    # Create position map of expected elements
+                    # 1D sequence (e.g. Distributed Sort)
                     expected_pos = {v: i for i, v in enumerate(expected)}
-                    # Map actual elements to their expected positions
                     positions = []
                     for a in actual:
                         if a in expected_pos:

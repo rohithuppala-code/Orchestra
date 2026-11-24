@@ -1,0 +1,6 @@
+Baseline,Healthy_Accuracy,Dropout_Accuracy,Accuracy_Delta,Healthy_Tokens,Dropout_Tokens,Token_Delta
+Independent Agents,10.7%,6.7%,-4.0%,"11,113","16,550",+48.9%
+Flat Broadcast Debate,28.0%,12.0%,-16.0%,"19,927","14,435",-27.6%
+Central Coordinator,28.0%,10.7%,-17.3%,"26,186","12,759",-51.3%
+Hierarchical Tree,18.7%,0.0%,-18.7%,"13,918","12,600",-9.5%
+ORCHESTRA (Ours),26.7%,6.7%,-20.0%,"17,802","12,563",-29.4%

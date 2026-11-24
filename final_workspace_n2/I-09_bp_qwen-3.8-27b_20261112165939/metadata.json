@@ -1,0 +1,61 @@
+{
+  "case_id":"I-09_bp_qwen-3.8-27b_20261112165939",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\I-09_n2.json",
+  "task":{
+    "case_id":"I-09",
+    "case_name":"Top-K Select",
+    "paradigm":"Paradigm I",
+    "num_agents":2,
+    "task_description":"**Task: Top-K Selection**\n\nFind the 10 largest values across all agents' data.\n\n**Your Data:**\nYou (Agent {agent_id}) hold: {input_shard}\n\n**Algorithm:**\n1. Find the top 10 values in your local data\n2. Coordinate with other agents to find the global top-10\n3. Each agent only needs to send at most 10 values to a coordinator\n\n**Output:**\nA list of 10 integers, sorted in descending order.\n\n**Communication Protocol:**\nTopology: Star/Tree aggregation \u2192 broadcast.\nAll agents must submit the same final answer using submit_result([val1, val2, ..., val10]).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        [
+          996,
+          968,
+          956,
+          930,
+          926,
+          921,
+          921,
+          906,
+          905,
+          896
+        ],
+        [
+          996,
+          968,
+          956,
+          930,
+          926,
+          921,
+          921,
+          906,
+          905,
+          896
+        ]
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output for i in range(num_agents))",
+      "verification_logic_hint":"all(set(submitted_list) == set(global_top_k))",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":2,
+    "protocol":"broadcast",
+    "model":"qwen-3.8-27b",
+    "api_base":"https://bharatcode.ai/api/model/v1",
+    "api_key":"bc_live_9992a63135634137ac89a5a66594c46f_ROAFoWyTExYeX7M64t8qfP-zgIh8dtiYmXGYwWgw25M",
+    "max_rounds":15
+  },
+  "execution":{
+    "started_at":"2026-11-12T16:59:39.572966+00:00",
+    "finished_at":"2026-11-12T17:01:38.546857+00:00",
+    "status":"completed",
+    "current_round":5,
+    "total_input_tokens":8660,
+    "total_output_tokens":3696,
+    "all_submitted":true
+  }
+}

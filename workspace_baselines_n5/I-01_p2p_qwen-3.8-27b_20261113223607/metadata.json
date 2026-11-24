@@ -1,0 +1,42 @@
+{
+  "case_id":"I-01_p2p_qwen-3.8-27b_20261113223607",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\I-01_n5.json",
+  "task":{
+    "case_id":"I-01",
+    "case_name":"Global Max",
+    "paradigm":"Paradigm I",
+    "num_agents":5,
+    "task_description":"**Task: Global Maximum**\n\nFind the GLOBAL MAXIMUM value across all agents' data.\n\n**Your Data:**\nYou (Agent {agent_id}) hold: {input_shard}\n\n**Algorithm:**\n1. Compute the maximum in your local shard\n2. Coordinate with other agents to determine the global maximum\n\n**Output:**\nA single integer representing the global maximum value.\n\n**Communication Protocol:**\nTopology: Star/Tree aggregation \u2192 broadcast.\nAll agents must submit the same final answer using submit_result(global_max).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        988,
+        988,
+        988,
+        988,
+        988
+      ],
+      "is_segmented":false,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output for i in range(num_agents))",
+      "verification_logic_hint":"all(submitted_values) == max(global_data)",
+      "format_description":"ALL agents must submit their results using submit_result(answer). All agents should submit the same final answer after coordination."
+    }
+  },
+  "config":{
+    "agent_count":5,
+    "protocol":"msg",
+    "model":"qwen-3.8-27b",
+    "api_base":"https://bharatcode.ai/api/model/v1",
+    "api_key":"bc_live_5c495210b6fa4f20b64cc831d2dbb9f3_K1LF33bakg8ZKsffMbjK6WA-Le7Em-gqzb2JP8sYsZ8",
+    "max_rounds":15
+  },
+  "execution":{
+    "started_at":"2026-11-13T22:36:07.671654+00:00",
+    "finished_at":"2026-11-13T22:40:54.337491+00:00",
+    "status":"completed",
+    "current_round":10,
+    "total_input_tokens":67479,
+    "total_output_tokens":3493,
+    "all_submitted":true
+  }
+}

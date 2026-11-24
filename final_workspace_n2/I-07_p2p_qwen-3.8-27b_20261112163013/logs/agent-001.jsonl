@@ -1,0 +1,5 @@
+{"round":0,"event":"initialized","agent_id":1,"timestamp":"2026-11-12T16:30:13.354497+00:00"}
+{"round":1,"event":"llm_request","agent_id":1,"input_tokens":0,"timestamp":"2026-11-12T16:30:25.842285+00:00"}
+{"round":1,"event":"llm_response","agent_id":1,"input_tokens":1310,"output_tokens":62,"response":"I'll start by computing my local statistics.\n\nMy local sum of 25 numbers:<tool_call>\n  <tool>send_message</parameter>\n<parameter=target_id>0</parameter>\n<content>Agent 1 starting. Please share your local_sum and local_count.</parameter>\n</parameters>\n</tool_call>","timestamp":"2026-11-12T16:30:32.446168+00:00"}
+{"round":1,"event":"tool_call","agent_id":1,"tool":"send_message","parameters":{"content":"Agent 1 starting. Please share your local_sum and local_count."},"timestamp":"2026-11-12T16:30:32.453131+00:00"}
+{"round":1,"event":"tool_result","agent_id":1,"tool":"send_message","result":{"success":false,"message":"Invalid target_id: -1"},"timestamp":"2026-11-12T16:30:32.453879+00:00"}

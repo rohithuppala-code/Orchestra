@@ -1,0 +1,23 @@
+{
+  "case_id": "I-04_p2p_qwen-3.8-27b_20261112204658",
+  "baseline": "hierarchical_coordinator",
+  "citation": "Wang et al. (MacNet, ICLR 2024 / Neural Networks 2025)",
+  "task_id": "I-04",
+  "num_agents": 2,
+  "protocol": "msg",
+  "model": "qwen-3.8-27b",
+  "total_time_seconds": 34.68455648422241,
+  "total_rounds": 3,
+  "status": "completed",
+  "success": true,
+  "success_rate": 1.0,
+  "partial_correctness": 1.0,
+  "token_consumption": 1938.3333333333,
+  "communication_density": 1.0,
+  "gini_out_degree": 0.0,
+  "gini_in_degree": 0.0,
+  "mean_structural_drift": 0.5,
+  "perturbation": null,
+  "seed": 43,
+  "error_message": null
+}

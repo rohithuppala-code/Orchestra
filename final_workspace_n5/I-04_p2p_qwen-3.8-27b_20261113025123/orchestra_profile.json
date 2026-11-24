@@ -1,0 +1,1037 @@
+{
+  "case_id": "I-04_p2p_qwen-3.8-27b_20261113025123",
+  "task_id": "I-04",
+  "protocol": "msg",
+  "num_agents": 5,
+  "total_rounds": 12,
+  "snapshots": [
+    {
+      "round_num": 1,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        {
+          "from": 3,
+          "to": 2,
+          "weight": 1
+        },
+        {
+          "from": 3,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 2,
+          "weight": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 1,
+          "weight": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 1,
+          "weight": 1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 4,
+          "weight": 1
+        },
+        {
+          "from": 3,
+          "to": 1,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "weight": 1
+        },
+        {
+          "from": 1,
+          "to": 4,
+          "weight": 1
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "weight": 1
+        }
+      ],
+      "total_messages_this_round": 16,
+      "density": 0.8,
+      "reciprocity": 0.75,
+      "in_degrees": {
+        "0": 4,
+        "1": 3,
+        "2": 3,
+        "3": 3,
+        "4": 3
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 1.0,
+        "1": 0.75,
+        "2": 0.75,
+        "3": 0.75,
+        "4": 0.75
+      },
+      "clustering_coefficient": 1.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 0.0,
+      "adjacency_frobenius_diff": 0.0,
+      "tool_counts": {
+        "0": {
+          "send_message": 4,
+          "wait": 1
+        },
+        "1": {
+          "send_message": 4
+        },
+        "2": {
+          "send_message": 4,
+          "wait": 1
+        },
+        "3": {
+          "send_message": 4
+        },
+        "4": {
+          "send_message": 4,
+          "wait": 1
+        }
+      }
+    },
+    {
+      "round_num": 2,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "edges": [],
+      "total_messages_this_round": 0,
+      "density": 0,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 4.0,
+      "tool_counts": {
+        "0": {
+          "send_message": 4,
+          "receive_messages": 1
+        },
+        "1": {},
+        "2": {
+          "receive_messages": 1
+        },
+        "3": {
+          "receive_messages": 1
+        },
+        "4": {
+          "receive_messages": 1
+        }
+      }
+    },
+    {
+      "round_num": 3,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        {
+          "from": 4,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 4,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 2,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 1,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 1,
+          "weight": 1
+        },
+        {
+          "from": 3,
+          "to": 0,
+          "weight": 1
+        }
+      ],
+      "total_messages_this_round": 8,
+      "density": 0.4,
+      "reciprocity": 0.25,
+      "in_degrees": {
+        "0": 2,
+        "1": 2,
+        "2": 1,
+        "3": 2,
+        "4": 1
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 3,
+        "3": 1,
+        "4": 4
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.041666666666666664,
+        "4": 0.041666666666666664
+      },
+      "closeness_centrality": {
+        "0": 0.5625,
+        "1": 0.5,
+        "2": 0.25,
+        "3": 0.5,
+        "4": 0.25
+      },
+      "clustering_coefficient": 0.7666666666666666,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.027777777777777776,
+        "2": 0.027777777777777776,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 2.8284271247461903,
+      "tool_counts": {
+        "0": {
+          "send_message": 4
+        },
+        "1": {},
+        "2": {
+          "send_message": 3,
+          "wait": 1
+        },
+        "3": {
+          "send_message": 1
+        },
+        "4": {
+          "send_message": 4,
+          "wait": 1
+        }
+      }
+    },
+    {
+      "round_num": 4,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "edges": [],
+      "total_messages_this_round": 0,
+      "density": 0,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.027777777777777776,
+        "2": 0.027777777777777776,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 2.8284271247461903,
+      "tool_counts": {
+        "0": {
+          "send_message": 1,
+          "wait": 1
+        },
+        "1": {},
+        "2": {
+          "receive_messages": 1
+        },
+        "3": {
+          "receive_messages": 1
+        },
+        "4": {
+          "receive_messages": 1
+        }
+      }
+    },
+    {
+      "round_num": 5,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        {
+          "from": 2,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 0,
+          "weight": 1
+        }
+      ],
+      "total_messages_this_round": 2,
+      "density": 0.1,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 2,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 1
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.5,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.08333333333333333,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 1.4142135623730951,
+      "tool_counts": {
+        "0": {
+          "submit_result": 1
+        },
+        "1": {},
+        "2": {
+          "send_message": 1,
+          "wait": 1
+        },
+        "3": {
+          "receive_messages": 1
+        },
+        "4": {
+          "send_message": 1,
+          "wait": 1
+        }
+      }
+    },
+    {
+      "round_num": 6,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        {
+          "from": 3,
+          "to": 0,
+          "weight": 1
+        }
+      ],
+      "total_messages_this_round": 1,
+      "density": 0.05,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.25,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.125,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 1.7320508075688772,
+      "tool_counts": {
+        "0": {},
+        "1": {},
+        "2": {
+          "receive_messages": 1
+        },
+        "3": {
+          "send_message": 1
+        },
+        "4": {
+          "receive_messages": 1
+        }
+      }
+    },
+    {
+      "round_num": 7,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        {
+          "from": 2,
+          "to": 1,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "weight": 1
+        },
+        {
+          "from": 4,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 2,
+          "to": 4,
+          "weight": 1
+        }
+      ],
+      "total_messages_this_round": 5,
+      "density": 0.25,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 2,
+        "1": 1,
+        "2": 0,
+        "3": 1,
+        "4": 1
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 4,
+        "3": 0,
+        "4": 1
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.5,
+        "1": 0.25,
+        "2": 0.0,
+        "3": 0.25,
+        "4": 0.25
+      },
+      "clustering_coefficient": 0.4333333333333333,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.16666666666666666,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 2.449489742783178,
+      "tool_counts": {
+        "0": {},
+        "1": {},
+        "2": {
+          "send_message": 4,
+          "wait": 1
+        },
+        "3": {
+          "receive_messages": 1
+        },
+        "4": {
+          "send_message": 1,
+          "wait": 1
+        }
+      }
+    },
+    {
+      "round_num": 8,
+      "num_agents": 5,
+      "active_agents": [
+        2,
+        3,
+        4
+      ],
+      "edges": [],
+      "total_messages_this_round": 0,
+      "density": 0,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.16666666666666666,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 2.23606797749979,
+      "tool_counts": {
+        "0": {},
+        "1": {},
+        "2": {
+          "receive_messages": 1
+        },
+        "3": {
+          "receive_messages": 1
+        },
+        "4": {
+          "receive_messages": 1
+        }
+      }
+    },
+    {
+      "round_num": 9,
+      "num_agents": 5,
+      "active_agents": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        {
+          "from": 2,
+          "to": 0,
+          "weight": 1
+        },
+        {
+          "from": 3,
+          "to": 0,
+          "weight": 1
+        }
+      ],
+      "total_messages_this_round": 2,
+      "density": 0.1,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 2,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 1,
+        "3": 1,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.5,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.20833333333333331,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 1.4142135623730951,
+      "tool_counts": {
+        "0": {},
+        "1": {},
+        "2": {
+          "send_message": 1,
+          "wait": 1
+        },
+        "3": {
+          "send_message": 1
+        },
+        "4": {
+          "submit_result": 1
+        }
+      }
+    },
+    {
+      "round_num": 10,
+      "num_agents": 5,
+      "active_agents": [
+        2,
+        3
+      ],
+      "edges": [],
+      "total_messages_this_round": 0,
+      "density": 0,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.20833333333333331,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 1.0,
+      "adjacency_frobenius_diff": 1.4142135623730951,
+      "tool_counts": {
+        "0": {},
+        "1": {},
+        "2": {
+          "receive_messages": 1
+        },
+        "3": {
+          "receive_messages": 1
+        },
+        "4": {}
+      }
+    },
+    {
+      "round_num": 11,
+      "num_agents": 5,
+      "active_agents": [
+        2,
+        3
+      ],
+      "edges": [],
+      "total_messages_this_round": 0,
+      "density": 0,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.20833333333333331,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 0.0,
+      "adjacency_frobenius_diff": 0.0,
+      "tool_counts": {
+        "0": {},
+        "1": {},
+        "2": {
+          "submit_result": 1
+        },
+        "3": {
+          "receive_messages": 1
+        },
+        "4": {}
+      }
+    },
+    {
+      "round_num": 12,
+      "num_agents": 5,
+      "active_agents": [
+        3
+      ],
+      "edges": [],
+      "total_messages_this_round": 0,
+      "density": 0,
+      "reciprocity": 0.0,
+      "in_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "out_degrees": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "betweenness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "closeness_centrality": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "clustering_coefficient": 0.0,
+      "cumulative_density": 0.8,
+      "cumulative_edges_count": 16,
+      "cumulative_reciprocity": 0.75,
+      "cumulative_betweenness": {
+        "0": 0.0,
+        "1": 0.20833333333333331,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0
+      },
+      "jaccard_distance_from_prev": 0.0,
+      "adjacency_frobenius_diff": 0.0,
+      "tool_counts": {
+        "0": {},
+        "1": {},
+        "2": {},
+        "3": {
+          "submit_result": 1
+        },
+        "4": {}
+      }
+    }
+  ],
+  "gini_out_degree": 0.3764705882352941,
+  "gini_in_degree": 0.2235294117647059,
+  "gini_tool_usage": {
+    "send_message": 0.20425531914893616,
+    "wait": 0.509090909090909,
+    "receive_messages": 0.4235294117647059,
+    "submit_result": 0.2
+  },
+  "agent_roles": {
+    "0": "Aggregator_Collector",
+    "1": "Peer_Collaborator",
+    "2": "Broadcaster_Disseminator",
+    "3": "Peer_Collaborator",
+    "4": "Broadcaster_Disseminator"
+  },
+  "mean_structural_drift": 0.8181818181818182,
+  "final_network_entropy": 1.8822722018647204,
+  "network_diameter": 1,
+  "is_connected": true,
+  "success": false,
+  "success_rate": 0.6,
+  "partial_correctness": 0.6,
+  "token_consumption": 7776.25,
+  "communication_density": 1.7,
+  "perturbation": "none"
+}

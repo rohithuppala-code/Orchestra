@@ -16,6 +16,30 @@ from typing import Any, Dict, List, Optional
 SUPPORTED_AGENT_SCALES = [2, 5, 10, 20, 50, 100]
 SUPPORTED_PROTOCOLS = ["msg", "broadcast", "sfs"]
 
+# Canonical 30-task SILO-BENCH suite
+ALL_30_TASKS: List[str] = (
+    [f"I-{i:02d}" for i in range(1, 11)]
+    + [f"II-{i:02d}" for i in range(11, 21)]
+    + [f"III-{i:02d}" for i in range(21, 31)]
+)
+
+# Stratified 15-task Q1 subset (5 tasks evenly spanning easy, medium, and hard per level)
+SELECTED_15_TASKS: List[str] = [
+    "I-01", "I-04", "I-07", "I-09", "I-10",
+    "II-11", "II-14", "II-15", "II-17", "II-20",
+    "III-21", "III-23", "III-25", "III-28", "III-30",
+]
+
+
+def expand_task_ids(task_ids: List[str]) -> List[str]:
+    """Expand symbolic task selectors ('selected', 'all') into concrete task IDs."""
+    lowered = [t.lower() for t in task_ids]
+    if "selected" in lowered:
+        return list(SELECTED_15_TASKS)
+    if "all" in lowered:
+        return list(ALL_30_TASKS)
+    return list(task_ids)
+
 
 @dataclass
 class ExperimentConfig:

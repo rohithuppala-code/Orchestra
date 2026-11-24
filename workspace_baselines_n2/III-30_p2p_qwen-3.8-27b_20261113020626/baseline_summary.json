@@ -1,0 +1,23 @@
+{
+  "case_id": "III-30_p2p_qwen-3.8-27b_20261113020626",
+  "baseline": "independent",
+  "citation": "Wang et al. (ICLR 2023)",
+  "task_id": "III-30",
+  "num_agents": 2,
+  "protocol": "msg",
+  "model": "qwen-3.8-27b",
+  "total_time_seconds": 435.00167894363403,
+  "total_rounds": 9,
+  "status": "completed",
+  "success": false,
+  "success_rate": 0.0,
+  "partial_correctness": 0.25,
+  "token_consumption": 4096.1111111111,
+  "communication_density": 0.0,
+  "gini_out_degree": 0.0,
+  "gini_in_degree": 0.0,
+  "mean_structural_drift": 0.0,
+  "perturbation": "agent_dropout",
+  "seed": 43,
+  "error_message": null
+}

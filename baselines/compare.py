@@ -1,9 +1,11 @@
 """ORCHESTRA: Baseline Synthesis & Paper Comparison Module.
 
 Generates:
-1. Table 1 (Master Empirical Comparison across all 6 Baselines + ORCHESTRA)
-2. Table 2 (Perturbation Resilience & Fault Degradation Breakdown)
-3. Publication-quality Figures (Accuracy, Pareto Token Efficiency, Dropout Resilience, Gini Spectrum)
+1. Table 1 (Master Empirical Comparison across Baselines + ORCHESTRA)
+2. Table 2 (Detailed Metrics by Agent Scale N=2, 5, 10)
+3. Table 3 (Algorithmic Complexity Tier Breakdown)
+4. Table 4 (Perturbation Resilience & Fault Degradation Breakdown)
+5. Publication-quality Figures (Accuracy, Dropout Resilience, Pareto Token Efficiency)
 """
 
 from __future__ import annotations
@@ -99,6 +101,7 @@ def load_and_standardize_results(csv_input: list[Path] | Path) -> pd.DataFrame:
         df.loc[mask_missing & df["baseline"].isna(), "baseline"] = "orchestra"
 
     df["baseline"] = df["baseline"].fillna("orchestra").astype(str).str.lower().str.strip()
+    df.loc[df["baseline"] == "orchestra_broadcast", "baseline"] = "broadcast"
     df.loc[df["baseline"].isin(["nan", "none", "", "null"]), "baseline"] = "orchestra"
 
     # Standardize perturbation column
@@ -288,7 +291,7 @@ def generate_complexity_tier_table(df: pd.DataFrame, output_dir: Path) -> pd.Dat
     with open(md_file, "w", encoding="utf-8") as f:
         f.write("# Table 3: Performance Breakdown by Algorithmic Complexity Tier\n\n")
         f.write(str(table_df.to_markdown(index=False)))
-        f.write("\n\n*Task Tiers: Level I (1-10), Level II (11-20), Level III (21-30).*\n")
+        f.write("\n\n*Task Tiers: Level I (Aggregation, I-*), Level II (Mesh Routing, II-*), Level III (Global Shuffle, III-*).*\n")
     print(f"[COMPARE] Saved Table 3 to: {csv_file}")
     return table_df
 

@@ -1,0 +1,51 @@
+{
+  "case_id":"II-20_p2p_qwen-3.8-27b_20261112184153",
+  "task_file":"C:\\Users\\sairo\\OneDrive\\Documents\\UROP\\silo-bench\\benchmarks\\II-20_n2.json",
+  "task":{
+    "case_id":"II-20",
+    "case_name":"Pipeline Hash",
+    "paradigm":"Paradigm II",
+    "num_agents":2,
+    "task_description":"**Task: Pipeline Hash (Blockchain Simulation)**\n\nCompute a hash chain where each block's hash depends on the previous block's hash.\n\n**Agent Ordering:**\nAgents hold CONSECUTIVE blocks: 0 \u2192 1 \u2192 2 \u2192 ... \u2192 {max_id}\n\n**Your Data (Position {agent_id}):**\nBlocks: {input_shard}\n\n**Algorithm:**\nhash[i] = (sum(ASCII_values(block[i])) XOR hash[i-1]) % 10000\nhash[0] = 0 (genesis)\n- Agent i needs the FINAL HASH from Agent i-1 to start computing\n\n**Output:**\nEach agent submits their portion of hash values.\n\n**Communication Protocol:**\nTopology: Chain (0 \u2192 1 \u2192 2 \u2192 ... \u2192 {max_id}). Strict sequential dependency.\nEach agent submits their own segment using submit_result(your_computed_hashes).",
+    "expected_output":{
+      "type":"distributed",
+      "per_agent_values":[
+        [
+          1107,
+          7,
+          1106,
+          4,
+          1107
+        ],
+        [
+          11,
+          1106,
+          8,
+          1107,
+          15
+        ]
+      ],
+      "is_segmented":true,
+      "verification_logic":"len(agent_outputs) == num_agents and all(agent_outputs[i] == expected_output[i] for i in range(num_agents))",
+      "verification_logic_hint":"concat(agent_outputs) == valid_blockchain",
+      "format_description":"ALL agents must submit their results using submit_result(answer). Each agent submits their own portion of the result."
+    }
+  },
+  "config":{
+    "agent_count":2,
+    "protocol":"msg",
+    "model":"qwen-3.8-27b",
+    "api_base":"https://bharatcode.ai/api/model/v1",
+    "api_key":"bc_live_9992a63135634137ac89a5a66594c46f_ROAFoWyTExYeX7M64t8qfP-zgIh8dtiYmXGYwWgw25M",
+    "max_rounds":15
+  },
+  "execution":{
+    "started_at":"2026-11-12T18:41:54.092912+00:00",
+    "finished_at":"2026-11-12T18:48:33.876824+00:00",
+    "status":"completed",
+    "current_round":9,
+    "total_input_tokens":14514,
+    "total_output_tokens":20772,
+    "all_submitted":true
+  }
+}

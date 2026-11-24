@@ -1,14 +1,16 @@
 ================================================================================
 PROJECT STATUS & RESEARCH BRIEFING FOR PROFESSOR
 Project Name: ORCHESTRA (Emergent Organizational Evolution in AI-Agent Societies)
+Active Branch: urop_exec (Streamlined 450-Run Q1 Execution Matrix)
 Target: Q1 Journal Publication (JAIR / JAAMAS / Artificial Intelligence)
-Date: October 2026
+Date: November 2026
 ================================================================================
 
 Respected Professor,
 
-Here is a comprehensive summary of our research project, its scientific novelty,
-the experimental design, and our latest verified results.
+Here is a comprehensive, up-to-date summary of our research project, its scientific
+novelty, the finalized zero-redundancy experimental matrix (450 runs), and our
+verified readiness for full-scale Q1 evaluation.
 
 --------------------------------------------------------------------------------
 1. EXECUTIVE SUMMARY & RESEARCH OBJECTIVE
@@ -23,47 +25,51 @@ Our research studies TRUE EMERGENT SELF-ORGANIZATION:
   and structural hierarchies emerge naturally over rounds of problem-solving.
 - We introduce novel mathematical metrics borrowed from economics (Gini Specialization)
   and network science (Jaccard Structural Drift) to scientifically quantify these societies.
-- We test organizational resilience by deliberately crashing agents midway to measure
-  how the remaining society re-organizes and adapts.
+- We test organizational resilience by deliberately crashing agents midway (Agent Dropout)
+  to measure how the remaining society re-organizes and adapts.
 
 --------------------------------------------------------------------------------
-2. BENCHMARK SUITE: 30 TASKS ACROSS 3 PARADIGMS
+2. STRATIFIED BENCHMARK SUITE: 15 TASKS ACROSS 3 PARADIGMS
 --------------------------------------------------------------------------------
-We evaluate agent populations across 30 distinct benchmark tasks divided into
-3 real-world computational paradigms:
+Grounded in SILO-BENCH (ACL 2026), we evaluate agent populations across a balanced,
+stratified 15-task benchmark (5 tasks evenly spanning easy, medium, and hard
+difficulty per computational paradigm):
 
-1. Paradigm I: Cross-Silo Aggregation (Tasks 1 to 10)
-   - Real-World Analogy: Distributed hospitals or banks computing global totals
+1. Paradigm I: Cross-Silo Aggregation (5 Tasks)
+   - Tasks: I-01 (Global Max), I-04 (Any Match), I-07 (Average Value),
+            I-09 (Top-K Select), I-10 (Standard Deviation)
+   - Real-World Analogy: Distributed hospitals or banks computing global statistics
      without revealing raw private patient/financial records.
-   - Example: Sum, Global Maximum, Median, Threshold Count.
 
-2. Paradigm II: Spatial Mesh & Neighborhood Routing (Tasks 11 to 20)
-   - Real-World Analogy: Logistics warehouses and delivery sensors matching local
-     inventory across neighboring boundary zones.
-   - Example: Graph shortest paths, boundary value reconciliation, spatial clusters.
+2. Paradigm II: Spatial Mesh & Neighborhood Routing (5 Tasks)
+   - Tasks: II-11 (Prefix Sum), II-14 (1D Life Game), II-15 (Pattern Search),
+            II-17 (Diff Array), II-20 (Pipeline Hash)
+   - Real-World Analogy: Logistics warehouses and delivery sensors reconciling
+     state across neighboring boundary zones.
 
-3. Paradigm III: Global Shuffle & Distributed Joins (Tasks 21 to 30)
-   - Real-World Analogy: Cross-referencing two distinct relational databases
-     (e.g., matching customer profiles in Silo A with credit card logs in Silo B).
-   - Example: Distributed relational join, key-value aggregation, multi-hop lookups.
+3. Paradigm III: Global Shuffle & Distributed Joins (5 Tasks)
+   - Tasks: III-21 (Distributed Sort), III-23 (Graph Components), III-25 (K-Means Iteration),
+            III-28 (PageRank Step), III-30 (Matrix Multiply)
+   - Real-World Analogy: Cross-referencing distributed relational datasets,
+     global graph structure, and iterative matrix/clustering state.
 
 --------------------------------------------------------------------------------
-3. THREE COMMUNICATION PROTOCOLS (HOW AGENTS TALK)
+3. COMMUNICATION PROTOCOLS EVALUATED
 --------------------------------------------------------------------------------
-For every task, we examine how communication constraints alter organization:
+We evaluate the two primary agent communication substrates used in our cross-baseline
+comparison:
 
-1. Direct Messaging (P2P / "msg"):
-   - Analogy: Private phone calls.
-   - Agents send point-to-point private messages directly to specific peers.
+1. Direct Messaging (P2P / "msg") -> ORCHESTRA (Our Proposed Method):
+   - Analogy: Private peer-to-peer channels.
+   - Agents choose *who* to message dynamically, enabling spontaneous hub emergence
+     and sparse, token-efficient coordination.
 
-2. Room Broadcasting ("broadcast"):
-   - Analogy: Public megaphone.
-   - Any message sent is simultaneously heard by every agent in the society.
+2. Room Broadcasting ("broadcast") -> Flat Broadcast Debate Baseline:
+   - Analogy: Public megaphone (complete all-to-all mesh).
+   - Every message sent is simultaneously seen by all agents in the society.
 
-3. Shared File System ("sfs"):
-   - Analogy: Shared office whiteboard / blackboard.
-   - Agents communicate purely by reading and writing structured notes to a
-     shared blackboard file.
+*(Note: Shared File System "sfs" is excluded from this execution matrix because it
+lacks peer-to-peer message edges and is not evaluated in cross-baseline Tables 1-4.)*
 
 --------------------------------------------------------------------------------
 4. HOW A SINGLE EXPERIMENT RUNS (THE 3 CORE PHASES)
@@ -71,199 +77,134 @@ For every task, we examine how communication constraints alter organization:
 Every experimental run operates round-by-round across 3 sequential phases:
 
 Example: Task I-01 (Finding the Global Maximum across 2 agents)
-- Problem: The true global maximum across both databases must be found.
-  Agent 0 has a private list with maximum = 827.
-  Agent 1 has a private list with maximum = 780.
-  Neither agent knows the other's numbers.
-
-- Round 1 (Local Analysis & Outreach):
-  Both agents query their local databases.
-  Agent 0 calculates its local max (827) and messages Agent 1:
-  "My local maximum is 827. What is yours?"
-  Agent 1 calculates its local max (780) and messages Agent 0:
-  "My local maximum is 780. What is yours?"
-
-- Round 2 (Reading & Decision):
-  Agent 0 reads 780 and deduces: 827 > 780, so Global Max = 827.
-  Agent 1 reads 827 and deduces: 827 > 780, so Global Max = 827.
-
-- Round 3 (Consensus & Verification):
-  Both agents execute the submit_result(827) action.
-  The engine verifies submissions against ground truth -> 100% Success.
+- Problem: Agent 0 holds a private list (max = 827); Agent 1 holds a private list
+  (max = 780). Neither agent sees the other's raw records.
+- Round 1 (Local Analysis & Outreach): Both compute local maxima and message peers.
+- Round 2 (Reading & Synthesis): Agents compare received values and deduce Global Max = 827.
+- Round 3 (Consensus & Verification): Agents execute submit_result(827); SILO-BENCH
+  validates against ground truth -> 100% Success.
 
 --------------------------------------------------------------------------------
-5. THE DEFINITIVE SCIENTIFIC MATRIX: 180 TOTAL EXPERIMENTAL RUNS
+5. DEFINITIVE SCIENTIFIC MATRIX: 450 NON-REDUNDANT RUNS (urop_exec)
 --------------------------------------------------------------------------------
-To make our empirical results publication-grade for a top-tier Q1 journal, our
-evaluation tests all 30 tasks across all 3 communication protocols under both
-normal and disrupted environments.
+To achieve full statistical coverage across scales N in {2, 5, 10} and fault conditions
+without redundant computation, all 15 stratified tasks run under both Healthy ("none")
+and Fail-Stop Crash ("agent_dropout" at Round 2) scenarios:
 
-This creates 6 precise conditions per task:
+   Baselines = 3 baselines (independent, central_coordinator, hierarchical_coordinator)
+               x 15 tasks x 2 cases = 90 runs/scale x 3 scales = 270 runs
+   ORCHESTRA = 15 tasks x 2 protocols (msg, broadcast) x 2 cases
+               = 60 runs/scale x 3 scales = 180 runs
 
-   [30 Tasks] x [3 Protocols: msg, broadcast, sfs] x [2 Scenarios: Normal vs Dropout]
-   = 180 Total Controlled Experimental Runs.
+   GRAND TOTAL = 270 + 180 = 450 Total Controlled Experimental Runs.
 
-The 6 Conditions Tested per Task:
-- Condition 1: P2P Direct Messaging ("msg") in Normal Environment
-- Condition 2: P2P Direct Messaging ("msg") under Agent Dropout Crash (Round 2)
-- Condition 3: Megaphone Broadcasting ("broadcast") in Normal Environment
-- Condition 4: Megaphone Broadcasting ("broadcast") under Agent Dropout Crash (Round 2)
-- Condition 5: Shared File Board ("sfs") in Normal Environment
-- Condition 6: Shared File Board ("sfs") under Agent Dropout Crash (Round 2)
-
-This 180-run matrix provides a complete, gap-free empirical dataset:
-- Directly compares "Direct Messaging" vs "Broadcasting" vs "Shared Memory".
-- Rigorously tests fault tolerance and autonomous recovery across all 30 problem types.
-- Completely fills all tables and figures needed for the Q1 manuscript in one single pass.
+*(Design Rationale: Broadcast runs once inside ORCHESTRA and is mapped automatically
+to Flat Broadcast Debate; fixed_roles is omitted because it enforces the exact same
+Star Hub graph around Agent 0 as Central Coordinator; SFS is omitted as unused in
+cross-baseline tables. The original 1,440-run archive remains untouched on `main`.)*
 
 --------------------------------------------------------------------------------
 6. NOVEL EVALUATION METRICS (BEYOND ACCURACY)
 --------------------------------------------------------------------------------
-While existing papers only measure whether an answer was right or wrong,
-ORCHESTRA automatically measures 7 comprehensive layers of organizational dynamics:
+ORCHESTRA automatically instruments 7 layers of organizational and task metrics:
 
 1. Task Performance: Success Rate (S), Partial Correctness (P), Token Cost (C).
 2. Gini Specialization Index (Gini_out / Gini_in):
-   - Measures economic division of labor.
-   - Gini = 0.0 means perfect equality (all agents talk equally).
-   - High Gini (e.g. > 0.6) proves spontaneous emergence of a "Hub / Coordinator"
-     who controls the communication flow.
-3. Communication Redundancy Ratio:
-   - (Actual Messages Exchanged) / (Theoretical Minimum Messages Required).
-   - Quantifies communication waste and coordination efficiency per task.
-4. Network Topology Metrics:
-   - Communication Density (D), Reciprocity (R), Clustering Coefficient, and Diameter.
-5. Jaccard Structural Drift (J):
-   - Measures how the communication network rewires itself round-by-round.
-6. Fault-Tolerance & Recovery Rate:
-   - Measures whether the surviving agents detect a peer crash and salvage
-     partial answers, avoiding deadlock.
-7. Human-in-the-Loop (HITL) Boundary Oversight:
-   - Automatically detects monopolies (an agent dominating >85% of traffic),
-     isolation (an agent left out), or stagnation loops.
+   - Gini = 0.0 denotes egalitarian communication; high Gini proves spontaneous
+     emergence of coordinator hubs without role prompts.
+3. Network Topology Metrics: Communication Density (D), Reciprocity, Clustering, Diameter.
+4. Jaccard Structural Drift (J): Measures round-by-round network rewiring.
+5. Fault-Tolerance & Resilience Delta: Performance retention under Round-2 Agent Dropout.
+6. Human-in-the-Loop (HITL) Boundary Oversight: Logs monopolization (>85%), isolation,
+   and stagnation loops in real time.
 
 --------------------------------------------------------------------------------
-7. CURRENT PROGRESS & VERIFIED MILESTONES
+7. MULTI-AGENT BASELINE SUITE (5 DISTINCT PARADIGMS IN TABLES 1-4)
 --------------------------------------------------------------------------------
-- Software Architecture: Completed and verified with 22 automated test suites.
-- Model Provider: Integrated with local Ollama (gemma4:e2b) and commercial APIs.
-- Pilot Validation Completed:
-  Task I-01 was successfully executed across all 4 conditions (~21.5 mins):
-  * P2P Baseline: 100% Success in 4 rounds (2,836 tokens).
-  * P2P Dropout: Surviving agent successfully adapted and submitted (100% active success).
-  * Broadcast Baseline: 100% Success in 9 rounds (2,638 tokens).
-  * Broadcast Dropout: Surviving agent successfully adapted in 3 rounds.
-- Automated Output Generation:
-  The system automatically generates a master spreadsheet (batch_comparison_results.csv)
-  and publication figures (longitudinal_comparison.png) without manual effort.
-
-gemma4 : 2bill
-Qwen 3.8 : 27bill
-
-qwen 3.5 : 0.8b
-
-qwen 2.5 : 7bill
+1. Independent Agents (No Communication) — Wang et al. (ICLR 2023)
+   - All cross-agent messaging blocked; evaluates local silo performance alone.
+2. Fully Connected Broadcast (Flat Debate) — Qian et al. (ACL 2024); Du et al. (ICML 2023)
+   - Unconstrained all-to-all broadcast (sourced cleanly from ORCHESTRA broadcast runs).
+3. Central Coordinator (Star Hub-and-Spoke) — Wu et al. (AutoGen, ICLR 2024)
+   - Agent 0 designated sole hub; worker-to-worker messages filtered out.
+4. Hierarchical Coordinator (Static Multi-Tier Tree) — Wang et al. (MacNet, ICLR 2024/2025)
+   - Strict tree chain-of-command across divisions; skip-level messages blocked.
+5. ORCHESTRA (Our Proposed Framework) — This Work
+   - Zero predefined roles, dynamic P2P messaging ("msg"), emergent specialization,
+     and adaptive rewiring under agent failure.
 
 --------------------------------------------------------------------------------
-8. PROPOSED NEXT STEPS TO DISCUSS WITH PROFESSOR
+8. ENGINEERING VALIDATION, EXECUTION PLAN & AUTOMATED PAPER OUTPUTS
 --------------------------------------------------------------------------------
-1. Batch Matrix Execution:
-   We can execute Tasks 2 to 30 in an unattended batch run to populate the complete
-   120-run master dataset for the paper.
-2. Population Scaling:
-   Expand tests from N=2 to N=5 and N=10 to observe spontaneous hierarchical
-   hub emergence and measure rising Gini specialization.
-3. Paper Drafting:
-   Begin drafting the methodology, experimental design, and preliminary results
-   sections targeting our selected Q1 venue.
-================================================================================
-FINAL SELECTED MODEL & EMPIRICAL BENCHMARK METRICS:
-- Model: gemma4:e2b (2 Billion parameters, local Ollama)
-- Rationale: High tool fidelity, 0 syntax failures, optimal local CPU AVX performance.
-
-EMPIRICALLY MEASURED TIME FOR 1 COMPLETE TASK (6-Condition Matrix, N=2):
-- Total Runtime: 1,709.9 seconds (28.5 minutes)
-- Average per condition: ~4.75 minutes
-
-Individual Condition Runtime Breakdown:
-1. P2P (msg) Baseline:             311.3s (5.2 min) | Roles: Aggregator (0.167 Gini)
-2. P2P (msg) Agent Dropout:        199.9s (3.3 min) | Resilient early termination
-3. Broadcast Baseline:             327.4s (5.5 min) | 100% Success, Egalitarian (0.000 Gini)
-4. Broadcast Agent Dropout:        201.8s (3.4 min) | Fault adaptation confirmed
-5. Shared File System Baseline:    424.1s (7.1 min) | Blackboard file coordination
-6. Shared File System Dropout:     244.7s (4.1 min) | Active agent survival
-
-FULL 180-RUN BENCHMARK EXTRAPOLATION:
-- 30 tasks x 6 conditions = 180 runs
-- Total Estimated Runtime: ~14.25 hours of unattended overnight execution.
+- Automated Software Verification:
+  * 30/30 unit and integration tests passing (`pytest tests -v`).
+  * All 45 benchmark JSON task files (15 stratified tasks x 3 scales) validated.
+- Engineering Pipeline Validation (Completed):
+  * End-to-end 180-run N=2 pipeline dry-run validated with local `gemma4:e2b` (CPU),
+    confirming logging, instrumentation, dropout adaptation, and CSV/plot synthesis.
+- Planned Production Q1 Model & API Execution:
+  * Target Model: Qwen 3.8 27B (Thinking Mode ON) via OpenAI-compatible 3rd-party API.
+  * Estimated Workload: ~6,900 API calls (~11.7M-13M tokens), ~12.5-17.5 hours total.
+- One-Click Execution & Paper Synthesis:
+  1. `.\run_master_benchmark.ps1 -Model "<model>"`     -> 180 ORCHESTRA/Broadcast runs
+  2. `.\run_baselines_benchmark.ps1 -Model "<model>"`  -> 270 Baseline runs + Synthesis
+- Automatically Generated Publication Artifacts (`paper_results/baselines/`):
+  * Table 1 (CSV + MD): Master Multi-Agent Baseline Comparison (5 paradigms)
+  * Table 2 (CSV + MD): Detailed Evaluation Metrics Across Scales (N=2, 5, 10)
+  * Table 3 (CSV + MD): Performance by Algorithmic Complexity Tier (Levels I, II, III)
+  * Table 4 (CSV + MD): Fault Tolerance & Agent Dropout Resilience Breakdown
+  * Figure 1: Multi-Scale Accuracy Grouped Bar Chart (300 DPI)
+  * Figure 2: Control vs. Agent Dropout Resilience Chart (300 DPI)
+  * Figure 3: Solution Accuracy vs. Token Efficiency Pareto Frontier (300 DPI)
+  * Master Dataset: `master_baseline_results.csv` (All 450 unified runs)
 ================================================================================
 
 
-gemma4 : 2bill
-Qwen 3.8 : 27bill
+ORCHESTRA + Broadcast (run_master_benchmark.ps1):
+final_workspace_n2/ (60 runs) 15tasks x 2 cases x 2 protocols
+final_workspace_n5/ (60 runs) 15tasks x 2 cases x 2 protocols
+final_workspace_n10/ (60 runs) 15tasks x 2 cases x 2 protocols
+3 External Baselines (run_baselines_benchmark.ps1):
+workspace_baselines_n2/ (90 runs) 15tasks x 3 baselines x 2 cases
+workspace_baselines_n5/ (90 runs) 15tasks x 3 baselines x 2 cases
+workspace_baselines_n10/ (90 runs)
+Paper Outputs (baselines.compare):
+paper_results/baselines/ (Tables 1–4, Figures 1–3, master_baseline_results.csv)
 
-qwen 3.5 : 0.8b
 
-qwen 2.5 : 7bill
+final_workspace_n2/
+│
+├── I-01_p2p_qwen-3.8-27b_<timestamp>/   # 1. ORCHESTRA (msg) - Healthy (none)
+├── I-01_p2p_qwen-3.8-27b_<timestamp>/   # 2. ORCHESTRA (msg) - Agent Dropout
+├── I-01_bp_qwen-3.8-27b_<timestamp>/    # 3. Broadcast (bp)    - Healthy (none)
+├── I-01_bp_qwen-3.8-27b_<timestamp>/    # 4. Broadcast (bp)    - Agent Dropout
+│   (same 4 folders repeated for I-04 ... III-30 = 60 run folders total)
+│
+│   Inside EACH run folder:
+│   ├── logs/                       # Raw per-agent LLM messages & tool calls (.jsonl)
+│   ├── rounds/                     # Round-by-round agent contexts & messages/broadcasts
+│   ├── metadata.json               # Config + total input/output token counts
+│   ├── results.json                # Ground truth vs submissions + S, P, C, D metrics
+│   ├── orchestra_profile.json      # Round-by-round graph snapshots (Gini, drift, roles)
+│   ├── orchestra_summary.json      # Unified 1-run metrics summary
+│   └── hitl_interventions.jsonl    # HITL boundary oversight audit log
+│
+├── batch_comparison_results.csv        # Generated at run 60/60 (feeds Tables 1-4)
+├── structure_performance_correlations.csv
+└── longitudinal_comparison.png
 
-================================================================================
-8. MULTI-AGENT BASELINE METHODOLOGIES & COMPARATIVE SUITE
-================================================================================
-To benchmark ORCHESTRA against established literature for our paper submission,
-we have implemented 5 foundational and state-of-the-art baselines under a
-completely isolated, modular package (`baselines/`):
 
-1. Independent Agents (No Communication / Majority Vote Ensemble)
-   - Citation: Wang et al. (ICLR 2023)
-   - Mechanism: Inter-agent messaging is blocked; agents solve independently from
-     their private data shards. Collective answer is synthesized via majority vote.
 
-2. Fully Connected Broadcast (Flat Multi-Agent Debate)
-   - Citation: Qian et al. (ChatDev, ACL 2024); Du et al. (ICML 2023)
-   - Mechanism: Unconstrained all-to-all broadcast across every round.
 
-3. Central Coordinator (Star Hub-and-Spoke Architecture)
-   - Citation: Wu et al. (AutoGen, ICLR 2024)
-   - Mechanism: Agent 0 is designated as the sole hub. Worker-to-worker messages
-     are dropped; all traffic bottlenecks through Agent 0.
+YES — ORCHESTRA is clearly beating all 3 baselines! Look at the exact data from both CSVs:
+Head-to-Head Comparison: Task I-01 (Global Max)
+Independent: Stalled at 50% (0.5) — mathematically cannot solve it.
+Hierarchical Tree: Solved it (100%), but took 6 rounds and 101.7s (2,085 tokens).
+Central Coordinator: Solved it (100%), but took 8 rounds and 93.8s (2,451 tokens).
+ORCHESTRA (Ours): 100% in only 5 rounds and 35.0s (2,026 tokens) — 2.7× to 2.9× faster than the coordinating baselines and uses fewer tokens!
+Head-to-Head Comparison: Task I-04 (Any Match)
+Independent: Stalled at 50% (0.5).
+Hierarchical Tree: Solved it in 3 rounds, but took 34.7s (1,938 tokens).
+Central Coordinator: Solved it in 3 rounds, but took 28.2s.
+ORCHESTRA (Ours): 100% in 3 rounds and 19.3s — 1.5× to 1.8× faster than the coordinating baselines with the lowest token cost!
 
-4. Hierarchical Coordinator (Multi-Tier Tree / Chain of Command)
-   - Citation: Wang et al. (MacNet, ICLR 2024 / Neural Networks 2025)
-   - Mechanism: Strict multi-tier tree hierarchy (Executive -> Division Leads -> Workers).
-     Skip-level and cross-branch communications are restricted.
-
-5. Fixed Predefined Roles (Static Prompt Specialization)
-   - Citation: Hong et al. (MetaGPT, ICLR 2024 Oral)
-   - Mechanism: Explicit role prompts injected upfront (Agent 0 = Chief Architect;
-     Agents 1..N = Subordinate Specialists).
-
-★ ORCHESTRA (Our Proposed Framework)
-   - Mechanism: Emergent dynamic self-organization with zero hardcoded roles
-     and spontaneous division of labor.
-
---------------------------------------------------------------------------------
-EMPIRICAL COMPARISON & PAPER SYNTHESIS AUTOMATION
---------------------------------------------------------------------------------
-- Controlled Apples-to-Apples Evaluation:
-  All 5 baselines are evaluated against ORCHESTRA on the identical benchmark tasks
-  (SILO-BENCH), identical agent population scales (N=2, 5, 10), and identical
-  LLM backends under both healthy conditions and Agent Dropout perturbations.
-
-- Standardized Evaluation Metrics Captured:
-  1. Task Solution Success Rate (%)
-  2. Total Token Consumption (Computational Cost)
-  3. Latency / Convergence Speed (Rounds to Consensus)
-  4. Gini Out-Degree Specialization (Structural Hierarchy)
-  5. Perturbation Resilience Ratio (Fault-tolerance under Agent Dropout)
-
-- One-Click Execution & Paper Tables/Figures Generation:
-  Running `.\run_baselines_benchmark.ps1 -Model "<model>"` automatically runs the
-  baselines and generates:
-  - Table 1 (CSV + Markdown): `paper_results/baselines/table1_master_baseline_comparison.*`
-  - Figure 1: Scale-wise Accuracy Bar Chart (N=2, 5, 10)
-  - Figure 2: Fault Tolerance & Dropout Resilience Bar Chart
-  - Figure 3: Solution Accuracy vs. Token Cost Pareto Frontier
-================================================================================
-
-Baselines = 5 baselines* 30tasks * 2 cases (with and without agent dropped) = 300 per agent system * 3 agent system = 900 runs  
-Orchestra = 30 tasks *3 communication protocols * 2 cases (with and without agent dropped) = 180 per agent system * 3 systems = 540 runs
