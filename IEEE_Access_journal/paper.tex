@@ -951,7 +951,7 @@ Hierarchical Tree (MacNet) & 18.7\% & 13,918 & 14.8 & 0.257 & \textbf{0.0\%} & \
 
 \subsection{Scaling Dynamics: From Dyads to Societies ($N=2 \to N=5$)}
 \label{subsec:scaling_analysis}
-Comparing the two-agent setup (Table~\ref{tab:results_n2}) against the five-agent collective (Table~\ref{tab:results_n5}) exposes the structural flaws of rigid graphs. Table~\ref{tab:scaling_degradation} summarizes how performance drops as size increases:
+Comparing the two-agent setup (Table~\ref{tab:results_n2}) against the five-agent collective (Table~\ref{tab:results_n5}) exposes the structural flaws of rigid graphs. Figure~\ref{fig:empirical_accuracy} visually benchmarks task success rates across all five coordination frameworks at both scales, while Table~\ref{tab:scaling_degradation} summarizes how performance drops as size increases:
 
 \subsubsection{Catastrophic Collapse of Hierarchical Trees}
 At $N=2$, Hierarchical Tree (MacNet) posted a strong 50.0\% accuracy. Two agents acting as boss and worker is straightforward. But scale that same tree to $N=5$, and MacNet suffers a brutal \textbf{-31.3 percentage point drop}, crashing down to 18.7\%. In a five-agent hierarchy, numbers must pass through multiple middle managers before reaching the root. Along the way, managers summarize or drop details, garbling constraints and severing leaf nodes from the final output.
@@ -990,12 +990,12 @@ Hierarchical Tree (MacNet) & 50.0\% & 18.7\% & \textbf{-31.3\% (Collapse)} & 1.9
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figure_baseline_accuracy_comparison.png}
-\caption{Empirical Accuracy Comparison Across Baselines and Complexity Tiers. ORCHESTRA achieves Rank~\#1 on Level~III complex distributed algorithms while preserving robust accuracy across tiers.}
+\caption{Empirical Accuracy Comparison Across Baselines and Group Scales ($N=2$ vs. $N=5$). While rigid hierarchies suffer severe degradation under scale expansion, ORCHESTRA preserves robust collective performance without fixed org charts.}
 \label{fig:empirical_accuracy}
 \end{figure}
 
 \subsection{Performance by Task Complexity Tiers}
-Table~\ref{tab:complexity_breakdown} and Figure~\ref{fig:empirical_accuracy} break down accuracy across the three SILO-BENCH tiers (Level I, Level II, Level III), combining data across both scales.
+Table~\ref{tab:complexity_breakdown} and Figure~\ref{fig:complexity_tiers_plot} break down accuracy across the three SILO-BENCH tiers (Level I, Level II, Level III), combining data across both scales.
 
 % ------------------------------------------------------------------------------
 % TABLE VIII: COMPLEXITY TIER BREAKDOWN
@@ -1081,7 +1081,7 @@ Level III (Global Shuffle) & 0.401 & 0.248 & 0.548 & 0.315 \\
 \end{table}
 
 \subsection{The Emergence Curve: Quantifying Self-Organization}
-A key empirical finding of our study is the \textit{Emergence Curve}, documented in Table~\ref{tab:emergence_curve} and plotted across rounds in Figure~\ref{fig:longitudinal_n2} ($N=2$) and Figure~\ref{fig:longitudinal_n5} ($N=5$).
+A key empirical finding of our study is the \textit{Emergence Curve}, documented in Table~\ref{tab:emergence_curve} and plotted across operational regimes in Figure~\ref{fig:emergence_curve_plot}.
 
 In traditional setups, Gini specialization is fixed by developer fiat: independent ensembles are locked at zero ($G \equiv 0.0$), broadcast forces artificial equality ($G = 0.154 \to 0.221$), and star coordinators hardcode Agent~0 as the hub ($G = 0.363$ at $N=5$).
 
@@ -1117,23 +1117,23 @@ ORCHESTRA holds the dominant upper-left frontier:
 By trimming redundant edges while keeping peer channels open, ORCHESTRA beats centralized managers on token economy while sidestepping the fatal brittleness of static trees.
 
 % ------------------------------------------------------------------------------
-% FIGURE 8: LONGITUDINAL DYNAMICS N=2
+% FIGURE 8: PERFORMANCE ACROSS COMPLEXITY TIERS
 % ------------------------------------------------------------------------------
-\begin{figure}[!t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figure_longitudinal_n2.png}
-\caption{Longitudinal Emergence Dynamics at Pair Scale $N=2$. Round-by-round evolution of Communication Density ($D$), Gini Specialization ($G$), and Jaccard Structural Drift ($J$). In dyadic collectives, communication density stabilizes rapidly with high reciprocity.}
-\label{fig:longitudinal_n2}
+\includegraphics[width=\columnwidth]{figure_complexity_tiers.png}
+\caption{Performance Breakdown Across Algorithmic Complexity Tiers (Combined $N=2$ and $N=5$). ORCHESTRA achieves Rank~\#1 on Level~III Global Shuffle kernels (22.0\% accuracy), outperforming rigid hierarchies and broadcast debate while maintaining competitive efficiency on simpler aggregation and routing tasks.}
+\label{fig:complexity_tiers_plot}
 \end{figure}
 
 % ------------------------------------------------------------------------------
-% FIGURE 9: LONGITUDINAL DYNAMICS N=5
+% FIGURE 9: THE EMERGENCE CURVE TRAJECTORY
 % ------------------------------------------------------------------------------
-\begin{figure}[!t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figure_longitudinal_n5.png}
-\caption{Longitudinal Emergence Dynamics at Collective Scale $N=5$. Round-by-round evolution of Communication Density ($D$), Gini Specialization ($G$), and Jaccard Structural Drift ($J$). Note the adaptive stabilization of $J$ during consensus and the emergence of degree concentration.}
-\label{fig:longitudinal_n5}
+\includegraphics[width=\columnwidth]{figure_emergence_curve.png}
+\caption{The Emergence Curve: Progression of Network Topology Metrics Across Algorithmic Complexity Tiers and Fault Perturbations. As problem difficulty intensifies from simple scalar reduction to global parallel sorting and fail-stop node crashes, ORCHESTRA agents spontaneously transition from a flat peer democracy ($G=0.266$) into specialized hub coordination ($G=0.401 \to 0.600$) without external prompt intervention.}
+\label{fig:emergence_curve_plot}
 \end{figure}
 
 % ------------------------------------------------------------------------------
