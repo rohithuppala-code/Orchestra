@@ -232,11 +232,12 @@ def plot_complexity_tiers():
                     fontsize=10.5, fontweight="bold")
 
     # Value annotations on Level I bars
-    for rect in [r1[0], r2[0], r3[0], r4[0], r5[0]]:
-        h = rect.get_height()
-        ax.annotate(f"{h:.0f}%", xy=(rect.get_x() + rect.get_width()/2, h),
-                    xytext=(0, 2), textcoords="offset points", ha="center", va="bottom",
-                    fontsize=10.5, fontweight="bold")
+    ax.annotate("18%", xy=(r1[0].get_x() + r1[0].get_width()/2, 18), xytext=(0, 2), textcoords="offset points", ha="center", va="bottom", fontsize=10.5, fontweight="bold")
+    ax.annotate("57%", xy=(r2[0].get_x() + r2[0].get_width()/2, 57), xytext=(0, 2), textcoords="offset points", ha="center", va="bottom", fontsize=10.5, fontweight="bold")
+    ax.annotate("40%", xy=(r3[0].get_x() + r3[0].get_width()/2, 40), xytext=(0, 2), textcoords="offset points", ha="center", va="bottom", fontsize=10.5, fontweight="bold")
+    # Separate the adjacent 54% values on MacNet and ORCHESTRA with generous horizontal and vertical offsets
+    ax.annotate("54%", xy=(r4[0].get_x() + r4[0].get_width()/2, 54), xytext=(-6, 2), textcoords="offset points", ha="center", va="bottom", fontsize=10.5, fontweight="bold")
+    ax.annotate("54%", xy=(r5[0].get_x() + r5[0].get_width()/2, 54), xytext=(6, 5), textcoords="offset points", ha="center", va="bottom", fontsize=10.5, fontweight="bold")
         
     ax.set_ylabel("Task Success Rate (%)", fontweight="bold", fontsize=13.5)
     ax.set_xticks(x)
